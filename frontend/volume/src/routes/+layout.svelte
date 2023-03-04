@@ -1,37 +1,26 @@
 <script lang="ts">
   import "../app.postcss";
   import Header from "$lib/components/Header.svelte";
-  import { browser } from "$app/environment";
-  import "$lib/i18n";
-  import { _, isLoading, locale } from "svelte-i18n";
-  import Loader from "$lib/components/Loader.svelte";
-  import { onMount } from "svelte";
-  onMount(() => {
-    if (localStorage.getItem("locale") !== null) {
-      // extract the locale from the localStorage by parsing the JSON string
-      const lang = JSON.parse(localStorage.getItem("locale") || "");
-      locale.set(lang.locale || "en");
-    }
-  });
+  import { browser } from '$app/environment'
+  import '$lib/i18n'
+  import { _, isLoading } from 'svelte-i18n';
+	import Loader from "$lib/components/Loader.svelte";
 </script>
-
 {#if $isLoading}
   <Loader />
 {:else}
-  <div class="app">
-    <Header />
-    <main>
-      <slot />
-    </main>
-    <footer>
-      <p>
-        {$_("footer")} <a href="https://github.com/Obult">Oswin</a>,
-        <a href="https://github.com/W2Wizard">Leon</a>,
-        <a href="https://github.com/LithiumOx">Mees</a>
-        & <a href="https://youtube.com/watch?v=dQw4w9WgXcQ">Astley</a>
-      </p>
-    </footer>
-  </div>
+<div class="app">
+  <Header />
+  <main>
+    <slot />
+  </main>
+  <footer>
+    <p>
+      {$_('footer')} <a href="https://github.com/Obult">Oswin</a>,
+      <a href="https://github.com/W2Wizard">Leon</a>, <a href="https://github.com/LithiumOx">Mees</a> & <a href="https://youtube.com/watch?v=dQw4w9WgXcQ">Astley</a>
+    </p>
+  </footer>
+</div>
 {/if}
 
 <style>

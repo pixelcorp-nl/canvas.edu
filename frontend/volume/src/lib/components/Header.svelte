@@ -1,7 +1,6 @@
 <script>
 		import { _ } from 'svelte-i18n'
 	import Locale from './Locale.svelte';
-	import { page } from '$app/stores';
 </script>
 
 <nav
@@ -21,11 +20,11 @@
       <a class="rounded-lg px-3 py-2" href="/"> Home </a>
     </li> -->
 
-    <li><a class="underline-offset-2 decoration-wavy decoration-slate-400 rounded-lg px-3 py-2" class:underline={$page.route.id === '/'} href="/"> {$_('header.canvas')} </a></li>
+    <li><a class="rounded-lg px-3 py-2" href="/"> {$_('header.canvas')} </a></li>
 
     <li>
       <a
-        class="underline-offset-2 decoration-wavy decoration-slate-400 inline-flex items-center gap-2 rounded-lg px-3 py-2" class:underline={$page.route.id === '/info'}
+        class="inline-flex items-center gap-2 rounded-lg px-3 py-2"
         href="/info"
       >
 		{$_('header.info')}
