@@ -10,18 +10,21 @@
 {#if $isLoading}
   <Loader />
 {:else}
-<div class="app">
-  <Header />
-  <main>
-    <slot />
-  </main>
-  <footer>
-    <p>
-      {$_('footer')} <a href="https://github.com/Obult">Oswin</a>,
-      <a href="https://github.com/W2Wizard">Leon</a>, <a href="https://github.com/LithiumOx">Mees</a> & <a href="https://youtube.com/watch?v=dQw4w9WgXcQ">Astley</a>
-    </p>
-  </footer>
-</div>
+  <div class="app">
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>
+        {$_("footer")} <a href="https://github.com/Obult">Oswin</a>,
+        <a href="https://github.com/W2Wizard">Leon</a>,
+        <a href="https://github.com/LithiumOx">Mees</a>
+        & <a href="https://youtube.com/watch?v=dQw4w9WgXcQ">Astley</a>
+      </p>
+    </footer>
+  </div>
+{/if}
 
 <style>
   .app {
