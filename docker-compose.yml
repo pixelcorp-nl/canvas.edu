@@ -13,6 +13,7 @@ services:
       POSTGRES_DB: canvasDB
     networks:
       - canvasnetwork
+    restart: always
   frontend:
     build:
       context: ./frontend
@@ -26,6 +27,7 @@ services:
       - backend
     networks:
       - canvasnetwork
+    restart: always
   backend:
     build:
       context: ./backend
@@ -41,6 +43,7 @@ services:
       DATABASE_URL: postgres://dbuser:dbpassword@db:5432/canvasDB
     networks:
       - canvasnetwork
+    restart: always
 
 networks:
   canvasnetwork:
