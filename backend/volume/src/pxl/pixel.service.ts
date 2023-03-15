@@ -62,10 +62,11 @@ export class PrismaPixelService {
 
 
   async findCurrentPxl(x: number, y: number) : Promise<Pixel>{
+    const numbers = [x, y];
     return await this.prisma.pixel.findFirst({
       where: {
         location: {
-          equals: [x, y]
+          equals: numbers,
         }
       },
       orderBy: {
