@@ -30,18 +30,19 @@ export class CanvasController {
     private readonly passService: PassService,
   ) {}
 
-  async addPxlToDatabase(request: Request, data: imageDataDto) {
+  async addPxlToDatabase(request: Request, imgData: imageDataDto) {
     const realIp = extractRealIp(request);
 
-    // if user does not exists it will be created with 'unknown' as name
-    // const user = await this.userService.getOrCreateUser(realIp, 'unknown');
+    const {x, y, data} = imgData;
+    if (typeof x !== "number" || typeof y !== "number")
+      return new HttpException({ status: HttpStatus.UNPROCESSABLE_ENTITY, error: 'expect number values' }, HttpStatus.UNPROCESSABLE_ENTITY);
 
     this.pixelService.createPixel({
-      location: [data.x, data.y],
+      location: [x, y],
       artist: {connect: {
         ip: realIp,
       }},
-      color: Array.from(data.data),
+      color: Array.from(data),
     })
 
     // update the users timestamp
@@ -90,7 +91,11 @@ export class CanvasController {
     }
 
     const user = await this.userService.getOrCreateUser(extractRealIp(request), 'unknown');
-    this.addPxlToDatabase(request, pxlData);
+
+    // cannot throw from sub function so return and throw it here
+    const error = await this.addPxlToDatabase(request, pxlData);
+    if (typeof error !== "undefined")
+      throw error;
     return this.canvasGate.paintToCanvas(pxlData);
   }
 
