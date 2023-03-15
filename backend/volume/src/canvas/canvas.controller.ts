@@ -104,6 +104,8 @@ export class CanvasController {
     await this.timeoutCheck(request, pxlDataArr.length);
     const user = await this.userService.getOrCreateUser(extractRealIp(request), 'unknown');
     
+    if (pxlDataArr.length > 42)
+      throw new HttpException({ status: HttpStatus.PAYLOAD_TOO_LARGE, error: 'invalid code' }, HttpStatus.PAYLOAD_TOO_LARGE);
     pxlDataArr.forEach((pxl) => {
       const tmpData = new Uint8ClampedArray(pxl.data);
       if (tmpData.length != 4 || pxl.x < 0 || pxl.y < 0 || pxl.x > 199 || pxl.y > 199)
