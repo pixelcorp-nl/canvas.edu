@@ -3,6 +3,9 @@ import { onMount } from "svelte";
 import io from 'socket.io-client';
 
 let canvas: HTMLCanvasElement;
+let onCanvasX: number = 0;
+let onCanvasY: number = 0;
+let color: Uint8ClampedArray;
 
 onMount(() => {
 	const socket = io('http://api.pixels.codam.nl/canvas');
@@ -50,6 +53,16 @@ onMount(() => {
 	});
 });
 
+function logPosition(event: any)	{
+	const rect = canvas.getBoundingClientRect();
+	const x = Math.floor((event.clientX - rect.left) / 4) - 1;
+  const y = Math.floor((event.clientY - rect.top) / 4) - 1;
+	if (x < 0 || y < 0)
+		return ;
+	onCanvasX = x;
+	onCanvasY = y;
+}
+
 </script>
 
 <svelte:head>
@@ -58,8 +71,10 @@ onMount(() => {
 </svelte:head>
 
 <section>
-	<canvas width="800" height="800" bind:this={canvas}></canvas>
+	<canvas width="800" height="800" bind:this={canvas} on:mousemove={logPosition}></canvas>
 </section>
+
+<p class="text-center mt-5 font-mono">x: {onCanvasX}, y: {onCanvasY}</p>
 
 <style>
 	section {
