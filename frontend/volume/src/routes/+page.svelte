@@ -7,8 +7,11 @@ let onCanvasX: number = 0;
 let onCanvasY: number = 0;
 let color: Uint8ClampedArray;
 
-onMount(() => {
-	const socket = io('http://api.pixels.codam.nl/canvas');
+onMount(async () => {
+	const response = await fetch('/src/config-linked.json');
+	const configData = await response.json();
+	console.log(configData.api + '/canvas');
+	const socket = io(configData.api + '/canvas');
 	const ctx = canvas.getContext("2d")!; // TODO: Error handling
 	ctx.imageSmoothingEnabled = false;
 	ctx.scale(4, 4);

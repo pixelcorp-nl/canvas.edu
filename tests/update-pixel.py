@@ -38,10 +38,10 @@ x, y = 20, 80 # starting coordinates
 # #     x += 1 # move one unit to the right
 # #     y -= 2 # move one unit up
 
-x, y = 80, 4 # starting coordinates
+x, y = 2, 2 # starting coordinates
 # for i in range(100):
 #     # create pxlInfo object with updated coordinates
-data = pxlInfo(x, y, [0, 255, 0, 255])
+data = pxlInfo(x, y, [255, 0, 0, 255])
 response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
     # x += 1 # move one unit to the right
     # y -= 2 # move one unit up
