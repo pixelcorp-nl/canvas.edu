@@ -22,7 +22,6 @@ onMount(async () => {
 	const socket = io(configData.api + '/canvas');
 	const ctx = canvas.getContext("2d")!; // TODO: Error handling
 	ctx.imageSmoothingEnabled = false;
-	// ctx.scale(pScalar, pScalar);
 
 	/**
 	 * Increase the size of the array to 64.

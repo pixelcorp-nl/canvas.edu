@@ -1,9 +1,13 @@
 import {
   Controller,
+  HttpException,
+  HttpStatus,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
-// import { CanvasGateway } from 'src/canvas/canvas.gateway';
+import { CanvasGateway } from 'src/canvas/canvas.gateway';
+import { PrismaPixelService } from 'src/pxl/pixel.service';
 import { AdminService } from './admin.service';
 import { PassService } from './password.service';
 
@@ -13,10 +17,9 @@ export class AdminController {
   constructor(
     private readonly passService: PassService,
     private readonly adminService: AdminService,
-    // private readonly canvasGate: CanvasGateway,
-  ) {
-    // this.adminService = new AdminService;
-  }
+    private readonly pixelService: PrismaPixelService,
+    private readonly canvasGate: CanvasGateway,
+  ) {}
 
   @Post('timeout')
   changeTimeout(@Query('time') timeout: number, @Query('code') code: string) {
@@ -26,12 +29,16 @@ export class AdminController {
     console.log('timeout set to: ', timeout);
   }
 
-  // start repaly event of all changes in the database
-  // @Post('replay')
-  // startReplay(@Query('code') code: string) {
-  //   if (this.passService.checkCode(code) == false)
-  //     return ;
-  //   // startReplay
-  // }
+  @Post('playback')
+  async playbackFromDatabase(@Req() request: Request, @Query('code') code: string) {
+    if (this.passService.checkCode(code) == false)
+      throw new HttpException({ status: HttpStatus.FORBIDDEN, error: 'invalid code' }, HttpStatus.FORBIDDEN);
+    const pxlData = await this.pixelService.Pixels({
+      orderBy: {
+      stamp: "asc",
+      },
+    });
+    this.canvasGate.playBack(pxlData);
+  }
 
  }

@@ -5,5 +5,7 @@
   "canvasWidth": 200,
   "canvasHeight": 200,
   "timeout": 1000,
-  "pictureInterval": 60
+  "pictureInterval": 60,
+  "replayTimeout": 42,
+  "replayPxlCount": 42
 }

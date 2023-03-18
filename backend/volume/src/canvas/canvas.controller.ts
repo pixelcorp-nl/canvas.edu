@@ -28,7 +28,6 @@ export class CanvasController {
     private readonly pixelService: PrismaPixelService,
     private readonly identityService: IdentityService,
     private readonly adminService: AdminService,
-    private readonly passService: PassService,
   ) {}
 
   async addPxlToDatabase(request: Request, imgData: imageDataDto) {
@@ -126,18 +125,6 @@ export class CanvasController {
     await this.timeoutCheck(request);
     const realIp = extractRealIp(request);
     return await this.userService.updateOrCreateUser(realIp, username);
-  }
-
-  @Post('playback')
-  async playbackFromDatabase(@Req() request: Request, @Param('code') code: string) {
-    if (!this.passService.checkCode(code))
-      throw new HttpException({ status: HttpStatus.FORBIDDEN, error: 'invalid code' }, HttpStatus.FORBIDDEN);
-    const pxlData = await this.pixelService.Pixels({
-      orderBy: {
-      stamp: "asc",
-      },
-    });
-    this.canvasGate.playBack(pxlData);
   }
 
   @Get('coordinates')

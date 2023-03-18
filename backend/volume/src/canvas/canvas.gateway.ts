@@ -4,7 +4,7 @@ import { PrismaPixelService } from 'src/pxl/pixel.service';
 import { imageDataDto } from './dto/imageDataDto';
 import { PxlDataDto, RGBA } from './dto/pixelDataDto';
 import { Pixel } from '@prisma/client';
-import { canvasWidth, canvasHeight } from '../config-linked.json';
+import { canvasWidth, canvasHeight, replayTimeout, replayPxlCount } from '../config-linked.json';
 
 const bytesPerColor = 4;
 
@@ -25,6 +25,7 @@ function sleep(ms: number): Promise<void> {
   namespace: '/canvas'
 })
 export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  private isReplaying = false;
   constructor(
     private readonly pixelService: PrismaPixelService,
   ) {}
@@ -58,15 +59,18 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
   async playBack(pixelData: Pixel[]) {
+    this.isReplaying = true;
     const pixels = pixelData.map(pixel => ({
       x: pixel.location[0],
       y: pixel.location[1],
       data: pixel.color,
     }))
-    for (let i = 0; i < pixels.length / 30; i++)  {
-      this.server.emit('multiple-update', pixels.splice(i * 30, i * 30 + 30));
-      sleep(400);
+    for (let i = 0; i < pixels.length / replayPxlCount; i++)  {
+      this.server.emit('multiple-update', pixels.splice(i * replayPxlCount, i * replayPxlCount + replayPxlCount));
+      sleep(replayTimeout);
     }
+    this.isReplaying = false;
+    this.server.emit('init', this.canvas);
   }
 
   afterInit(server: Server) {
@@ -86,14 +90,10 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   // api call resolver
   paintToCanvas(add: imageDataDto) {
     modifyRegion(this.canvas.data, (add.y * this.canvas.width + add.x) * bytesPerColor, [Number(add.data[0]), Number(add.data[1]), Number(add.data[2]), Number(add.data[3])]);
+    if (this.isReplaying == true)
+      return ;
     this.server.emit('update', add);
   }
-
-  // send replay of everything in the database to the screen in chunks
-  // without changing the picture in Ram
-  // startReplay(allData: imageDataDto[]) {
-
-  // }
 
   getPxlData(x: number, y: number) {
     const dataStartLocation = (y * this.canvas.width + x) * bytesPerColor;

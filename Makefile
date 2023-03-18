@@ -14,9 +14,9 @@ clean:
 		docker-compose down --remove-orphans
 
 # danger, removes database volume!
-fclean:
-		docker-compose down --volumes --remove-orphans
-fre: 			fclean build run
+# fclean:
+# 		docker-compose down --volumes --remove-orphans
+# fre: 			fclean build run
 
 # view container status
 ps:
