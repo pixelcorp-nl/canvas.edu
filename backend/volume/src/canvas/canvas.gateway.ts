@@ -60,7 +60,8 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   async playBack(pixelData: Pixel[]) {
     this.isReplaying = true;
-    this.server.emit("init", new Uint8ClampedArray(canvasHeight * canvasWidth * bytesPerColor));
+    const emptyCanvas = new Uint8ClampedArray(canvasHeight * canvasWidth * bytesPerColor);
+    this.server.emit("init", emptyCanvas);
     const pixels = pixelData.map(pixel => ({
       x: pixel.location[0],
       y: pixel.location[1],
@@ -72,6 +73,7 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     // }
     for (let i = 0; i < pixels.length; i++) {
       this.server.emit("update", pixels[i]);
+      sleep(2);
     }
     for (let i = 0; i < pixels.length / replayPxlCount; i++)  {
       this.server.emit('multiple-update', pixels.splice(i * replayPxlCount, i * replayPxlCount + replayPxlCount));
