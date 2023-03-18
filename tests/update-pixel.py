@@ -5,7 +5,7 @@ import time
 url = "http://api.pixels.codam.nl/canvas/single"
 urlb = "http://localhost:3000/canvas/nameUser/renameduser"
 urlc = "http://localhost:3000/canvas/single"
-url = urlc
+# url = urlc
 headers = {'Content-Type': 'application/json',
            'x-real-ip': 'my.amazing.fake.ip'}
 
@@ -38,7 +38,7 @@ x, y = 20, 80 # starting coordinates
 # #     x += 1 # move one unit to the right
 # #     y -= 2 # move one unit up
 
-x, y = 2, 2 # starting coordinates
+x, y = 4, 1 # starting coordinates
 # for i in range(100):
 #     # create pxlInfo object with updated coordinates
 data = pxlInfo(x, y, [255, 0, 0, 255])

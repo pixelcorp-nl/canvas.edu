@@ -1,6 +1,7 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import io from 'socket.io-client';
+    import Button from "../../lib/components/Button.svelte";
 
 let canvas: HTMLCanvasElement;
 let onCanvasX: number = 0;
@@ -11,18 +12,23 @@ const bytesPerColor = 4;
 let pScalar: number;
 let canvasHeight: number;
 let canvasWidth: number;
+let api: string;
+
+async function startReplay()	{
+	const socket =
+}
 
 onMount(async () => {
 	const response = await fetch('/src/config-linked.json');
 	const configData = await response.json();
+	api = configData.api;
 	pScalar = configData.pixelScalar;
 	canvasHeight = configData.canvasHeight;
 	canvasWidth = configData.canvasWidth;
 
 	const socket = io(configData.api + '/canvas');
-	const ctx = canvas.getContext("2d")!; // TODO: Error handling
+	const ctx = canvas.getContext("2d")!;
 	ctx.imageSmoothingEnabled = false;
-	// ctx.scale(pScalar, pScalar);
 
 	/**
 	 * Increase the size of the array to 64.
@@ -47,25 +53,6 @@ onMount(async () => {
 			ctx.putImageData(new ImageData(tmpData, 4, 4), p.x * 4, p.y * 4);
 		});
 	});
-
-	// We just connected, and we get the canvas data
-	socket.on('init', canvas => {
-		console.log(canvas);
-		const imageData = new ImageData(new Uint8ClampedArray(canvas.data), canvas.width, canvas.height);
-
-		// Absolutely disgusting hack to get the image data to the canvas
-		const tmpCanvas = document.createElement('canvas');
-		const tmpctx = tmpCanvas.getContext('2d')!;
-		ctx.imageSmoothingEnabled = false;
-		ctx.scale(pScalar, pScalar);
-		tmpCanvas.width = pScalar * configData.canvasWidth;
-		tmpCanvas.height = pScalar * configData.canvasHeight;
-
-		tmpctx.putImageData(imageData, 0, 0);
-		ctx.imageSmoothingEnabled = false;
-		ctx.drawImage(tmpctx.canvas, 0, 0);
-	});
-
 });
 
 function logPosition(event: any)	{
@@ -86,6 +73,7 @@ function logPosition(event: any)	{
 </svelte:head>
 
 <section>
+	<button on:click={startReplay}>Replay</button>
 	<canvas width={canvasWidth * pScalar} height={canvasHeight * pScalar} bind:this={canvas} on:mousemove={logPosition}></canvas>
 </section>
 

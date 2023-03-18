@@ -18,6 +18,7 @@ import { IdentityService} from 'src/identity/identity.service';
 import { extractRealIp } from 'src/ip/ip.service';
 import { AdminService } from 'src/auth/admin.service';
 import { PassService } from 'src/auth/password.service';
+import { canvasWidth, canvasHeight } from '../config-linked.json';
 
 @Controller('canvas')
 export class CanvasController {
@@ -82,7 +83,8 @@ export class CanvasController {
       }, HttpStatus.BAD_REQUEST, {});
     }
 
-    if (pxlData.x < 0 || pxlData.y < 0 || pxlData.x > 199 || pxlData.y > 199) // magic (bound checking should be based on canvas size)
+    // out of bounds check
+    if (pxlData.x < 0 || pxlData.y < 0 || pxlData.x >= canvasWidth || pxlData.y >= canvasHeight)
     {
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
@@ -108,8 +110,11 @@ export class CanvasController {
       throw new HttpException({ status: HttpStatus.PAYLOAD_TOO_LARGE, error: 'invalid code' }, HttpStatus.PAYLOAD_TOO_LARGE);
     pxlDataArr.forEach((pxl) => {
       const tmpData = new Uint8ClampedArray(pxl.data);
-      if (tmpData.length != 4 || pxl.x < 0 || pxl.y < 0 || pxl.x > 199 || pxl.y > 199)
+
+      // out of bounds check
+      if (tmpData.length != 4 || pxl.x < 0 || pxl.y < 0 || pxl.x >= canvasWidth || pxl.y >= canvasHeight)
         return ;
+      
       this.addPxlToDatabase(request, pxl);
       this.canvasGate.paintToCanvas(pxl);
     });

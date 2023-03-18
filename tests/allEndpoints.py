@@ -8,8 +8,8 @@ url = "http://api.pixels.codam.nl/"
 headers = {'Content-Type': 'application/json'}
 
 # place pixel
-response = requests.post(url + 'canvas/single', headers=headers, data=json.dumps({'x': 10, 'y': 8, 'data': [255, 0, 0, 255]}))
-print(response, response.content)
+# response = requests.post(url + 'canvas/single', headers=headers, data=json.dumps({'x': 10, 'y': 8, 'data': [255, 0, 0, 255]}))
+# print(response, response.content)
 # 201 (creation of recourse), could return 200 instead with 204 (no content)
 
 # # set timeout
@@ -40,9 +40,9 @@ print(response, response.content)
 # # print(response, response.content)
 # # returned nothing (weird)
 
-# # get allPixels
-# response = requests.get(url + 'canvas/allPixels', headers=headers)
-# print(response, response.content)
+# get allPixels
+response = requests.get(url + 'canvas/allPixels', headers=headers)
+print(response, response.content)
 # returned everything (succes)
 
 # backend is still alive

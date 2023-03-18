@@ -4,6 +4,9 @@ import { PrismaPixelService } from 'src/pxl/pixel.service';
 import { imageDataDto } from './dto/imageDataDto';
 import { PxlDataDto, RGBA } from './dto/pixelDataDto';
 import { Pixel } from '@prisma/client';
+import { canvasWidth, canvasHeight } from '../config-linked.json';
+
+const bytesPerColor = 4;
 
 function modifyRegion(data: Uint8ClampedArray, regionStart: number, newValues: [number, number, number, number]) {
   for (let i = 0; i < 4; i++) {
@@ -14,7 +17,6 @@ function modifyRegion(data: Uint8ClampedArray, regionStart: number, newValues: [
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-
 @WebSocketGateway({
   // transports: ['websocket'],
   cors: {
@@ -31,9 +33,9 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     width: number;
     data: Uint8ClampedArray;
   } = {
-    height: 200,
-    width: 200,
-    data: new Uint8ClampedArray(200 * 200 * 4)
+    height: canvasHeight,
+    width: canvasWidth,
+    data: new Uint8ClampedArray(canvasHeight * canvasWidth * bytesPerColor)
   };
   // private server: Server;
   @WebSocketServer() server: Server;
@@ -50,7 +52,7 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         y: pxl.location[1],
         data: pxl.color,
       };
-      modifyRegion(this.canvas.data, (pixel.y * this.canvas.width + pixel.x) * 4, [Number(pixel.data[0]), Number(pixel.data[1]), Number(pixel.data[2]), Number(pixel.data[3])]);
+      modifyRegion(this.canvas.data, (pixel.y * this.canvas.width + pixel.x) * bytesPerColor, [Number(pixel.data[0]), Number(pixel.data[1]), Number(pixel.data[2]), Number(pixel.data[3])]);
       this.server.emit('update', pixel);
     });
   }
@@ -83,7 +85,7 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   // api call resolver
   paintToCanvas(add: imageDataDto) {
-    modifyRegion(this.canvas.data, (add.y * this.canvas.width + add.x) * 4, [Number(add.data[0]), Number(add.data[1]), Number(add.data[2]), Number(add.data[3])]);
+    modifyRegion(this.canvas.data, (add.y * this.canvas.width + add.x) * bytesPerColor, [Number(add.data[0]), Number(add.data[1]), Number(add.data[2]), Number(add.data[3])]);
     this.server.emit('update', add);
   }
 
@@ -94,7 +96,7 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   // }
 
   getPxlData(x: number, y: number) {
-    const dataStartLocation = (y * this.canvas.width + x) * 4;
-    return (new PxlDataDto(x, y, new RGBA(this.canvas.data.slice(dataStartLocation, dataStartLocation + 4))));
+    const dataStartLocation = (y * this.canvas.width + x) * bytesPerColor;
+    return (new PxlDataDto(x, y, new RGBA(this.canvas.data.slice(dataStartLocation, dataStartLocation + bytesPerColor))));
   }
 }

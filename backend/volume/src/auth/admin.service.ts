@@ -1,10 +1,10 @@
-// import { Injectable } from '@nestjs/common';
+import { timeout } from '../config-linked.json'
 
 export class AdminService {
   // default timeout is 1000 milliseconds
   private timeout: number;
   constructor() {
-    this.timeout = 1000;
+    this.timeout = timeout;
   }
 
   getTimeOut() :  number {
