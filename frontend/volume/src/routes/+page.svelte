@@ -49,7 +49,7 @@ onMount(async () => {
 
 	// We just connected, and we get the canvas data
 	socket.on('init', canvas => {
-		console.log(canvas);
+		console.log("init event");
 		const imageData = new ImageData(new Uint8ClampedArray(canvas.data), canvas.width, canvas.height);
 
 		// Absolutely disgusting hack to get the image data to the canvas
