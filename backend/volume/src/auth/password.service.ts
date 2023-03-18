@@ -17,7 +17,6 @@ export class PassService {
   }
 
   checkCode(code: string): boolean {
-    console.log(code, this.passcode);
     return (code === this.passcode);
   }
 
