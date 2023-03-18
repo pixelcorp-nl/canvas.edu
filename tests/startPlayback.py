@@ -2,9 +2,9 @@ import requests
 import json
 import time
 
-# url = "http://api.pixels.codam.nl"
-url = "http://localhost:3000"
-code = "4d720f1b"
+url = "http://api.pixels.codam.nl"
+# url = "http://localhost:3000"
+code = "76380ad0"
 url = url + f"/admin/playback?code=" + code
 headers = {'Content-Type': 'application/json',
            'x-real-ip': 'my.amazing.fake.ip'}

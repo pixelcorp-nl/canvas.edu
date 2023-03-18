@@ -2,10 +2,10 @@
 import { onMount } from "svelte";
 import io from 'socket.io-client';
 
+let scaled = false;
 let canvas: HTMLCanvasElement;
 let onCanvasX: number = 0;
 let onCanvasY: number = 0;
-let color: Uint8ClampedArray;
 
 const bytesPerColor = 4;
 let pScalar: number;
@@ -56,7 +56,10 @@ onMount(async () => {
 		const tmpCanvas = document.createElement('canvas');
 		const tmpctx = tmpCanvas.getContext('2d')!;
 		ctx.imageSmoothingEnabled = false;
-		ctx.scale(pScalar, pScalar);
+		if (scaled == false)	{
+			scaled = true;
+			ctx.scale(pScalar, pScalar);
+		}
 		tmpCanvas.width = pScalar * configData.canvasWidth;
 		tmpCanvas.height = pScalar * configData.canvasHeight;
 
