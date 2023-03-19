@@ -5,7 +5,7 @@ import time
 url = "http://api.pixels.codam.nl/canvas/single"
 urlb = "http://localhost:3000/canvas/nameUser/renameduser"
 urlc = "http://localhost:3000/canvas/single"
-url = urlc
+# url = urlc
 headers = {'Content-Type': 'application/json',
            'x-real-ip': 'my.amazing.fake.ip'}
 

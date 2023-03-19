@@ -46,10 +46,9 @@ onMount(async () => {
 	});
 
 		socket.on('multiple-update', pixel => {
-		pixel.forEach(async (p: any) => {
+		pixel.forEach((p: any) => {
 			let tmpData = increaseArraySize(new Uint8ClampedArray(p.data));
 			ctx.putImageData(new ImageData(tmpData, 4, 4), p.x * 4, p.y * 4);
-			await sleep(1);
 		});
 	});
 
