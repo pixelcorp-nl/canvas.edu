@@ -7,5 +7,5 @@
   "timeout": 1000,
   "pictureInterval": 60,
   "replayTimeout": 42,
-  "replayPxlCount": 42
+  "replayPxlCount": 10
 }
