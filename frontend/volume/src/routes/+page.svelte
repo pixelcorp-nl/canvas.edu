@@ -36,6 +36,7 @@ onMount(async () => {
 
 	// Someone else updated the pixel
 	socket.on('update', pixel => {
+		console.log("update");
         let tmpData = increaseArraySize(new Uint8ClampedArray(pixel.data));
         ctx.putImageData(new ImageData(tmpData, pScalar, pScalar), pixel.x * pScalar, pixel.y * pScalar);
 	});
@@ -49,7 +50,7 @@ onMount(async () => {
 
 	// We just connected, and we get the canvas data
 	socket.on('init', canvas => {
-		console.log("init event");
+		console.log("init event w: ", canvas.width, " h: ", canvas.height, " l: ", canvas.data.lenght);
 		const imageData = new ImageData(new Uint8ClampedArray(canvas.data), canvas.width, canvas.height);
 
 		// Absolutely disgusting hack to get the image data to the canvas
