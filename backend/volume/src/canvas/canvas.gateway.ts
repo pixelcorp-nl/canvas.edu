@@ -60,10 +60,8 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   async playBack(pixelData: Pixel[]) {
     this.isReplaying = true;
-    const whiteBg = new Uint8ClampedArray(canvasHeight * canvasWidth * bytesPerColor);
-    for (let i = 0; i <whiteBg.length; i++) {
-      whiteBg.buffer[i] = 255;
-    }
+    const whiteBg = new Uint8ClampedArray(canvasHeight * canvasWidth * bytesPerColor).fill(255);
+    console.log(whiteBg.buffer[0]);
     const emptyCanvas = {
       height: canvasHeight,
       width: canvasWidth,
