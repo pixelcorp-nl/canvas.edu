@@ -134,7 +134,7 @@ export class CanvasController {
   }
 
   @Get('colorCheck')
-  async getColor(@Query('x') x: number, @Query('y') y: number, @Req() request: Request) {
+  async getColor(@Query('x') x: number, @Query('y') y: number) {
     return this.canvasGate.getPxlData(x, y);
   }
 
