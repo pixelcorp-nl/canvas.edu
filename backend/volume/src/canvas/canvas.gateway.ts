@@ -67,17 +67,17 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       width: canvasWidth,
       data: whiteBg,
     }
+    const pixels: imageDataDto[] = pixelData.map(pixel => ({
+      x: pixel.location[0],
+      y: pixel.location[1],
+      data: new Uint8ClampedArray(pixel.color),
+    }))
     this.server.emit("init", emptyCanvas);
-    // const pixels: imageDataDto[] = pixelData.map(pixel => ({
-    //   x: pixel.location[0],
-    //   y: pixel.location[1],
-    //   data: new Uint8ClampedArray(pixel.color),
-    // }))
-    await sleep(5000);
-    // for (let i = 0; i < pixels.length; i++) {
-    //   this.server.emit("update", pixels[i]);
-    //   sleep(42);
-    // }
+    await sleep(500);
+    for (let i = 0; i < pixels.length; i++) {
+      this.server.emit("update", pixels[i]);
+      await sleep(2);
+    }
     // for (let i = 0; i < pixels.length / replayPxlCount; i++)  {
     //   this.server.emit('multiple-update', pixels.splice(i * replayPxlCount, i * replayPxlCount + replayPxlCount));
     //   sleep(replayTimeout);
