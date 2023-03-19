@@ -36,9 +36,9 @@ onMount(async () => {
 
 	// Someone else updated the pixel
 	socket.on('update', pixel => {
-		console.log("update");
-        let tmpData = increaseArraySize(new Uint8ClampedArray(pixel.data));
-        ctx.putImageData(new ImageData(tmpData, pScalar, pScalar), pixel.x * pScalar, pixel.y * pScalar);
+		// console.log("update");
+		let tmpData = increaseArraySize(new Uint8ClampedArray(pixel.data));
+		ctx.putImageData(new ImageData(tmpData, pScalar, pScalar), pixel.x * pScalar, pixel.y * pScalar);
 	});
 
 		socket.on('multiple-update', pixel => {
