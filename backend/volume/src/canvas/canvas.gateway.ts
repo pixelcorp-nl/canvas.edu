@@ -74,14 +74,14 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     }))
     this.server.emit("init", emptyCanvas);
     await sleep(500);
-    for (let i = 0; i < pixels.length; i++) {
-      this.server.emit("update", pixels[i]);
-      await sleep(2);
-    }
-    // for (let i = 0; i < pixels.length / replayPxlCount; i++)  {
-    //   this.server.emit('multiple-update', pixels.splice(i * replayPxlCount, i * replayPxlCount + replayPxlCount));
-    //   sleep(replayTimeout);
+    // for (let i = 0; i < pixels.length; i++) {
+    //   this.server.emit("update", pixels[i]);
+    //   await sleep(2);
     // }
+    for (let i = 0; i < pixels.length / replayPxlCount; i++)  {
+      this.server.emit('multiple-update', pixels.splice(i * replayPxlCount, i * replayPxlCount + replayPxlCount));
+      await sleep(replayTimeout);
+    }
     this.isReplaying = false;
     this.server.emit('init', this.canvas);
   }
