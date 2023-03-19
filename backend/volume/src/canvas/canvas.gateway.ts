@@ -64,9 +64,9 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     whiteBg.forEach(byte => {
       byte = 255;
     })
-    const emptyCanvas: imageDataDto = {
-      x: canvasWidth,
-      y: canvasHeight,
+    const emptyCanvas = {
+      width: canvasWidth,
+      height: canvasHeight,
       data: whiteBg,
     }
     this.server.emit("init", emptyCanvas);
