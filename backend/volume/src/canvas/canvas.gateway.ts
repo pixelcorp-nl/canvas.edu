@@ -76,6 +76,7 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       data: new Uint8ClampedArray(pixel.color),
     }))
     console.log(pixels.length);
+    sleep(5000);
     // for (let i = 0; i < pixels.length; i++) {
     //   this.server.emit("update", pixels[i]);
     //   sleep(42);
