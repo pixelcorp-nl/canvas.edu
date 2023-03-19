@@ -133,6 +133,11 @@ export class CanvasController {
     return this.pixelService.findCurrentPxl(x, y);
   }
 
+  @Get('colorCheck')
+  async getColor(@Query('x') x: number, @Query('y') y: number, @Req() request: Request) {
+    return this.canvasGate.getPxlData(x, y);
+  }
+
   @Get('myPixels')
   async getMyPixels(@Req() request: Request)  {
     await this.timeoutCheck(request)
