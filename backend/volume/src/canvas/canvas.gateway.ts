@@ -18,7 +18,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 @WebSocketGateway({
-  // transports: ['websocket'],
+  transports: ['websocket', 'polling'],
   cors: {
     origin: '*',
   },
