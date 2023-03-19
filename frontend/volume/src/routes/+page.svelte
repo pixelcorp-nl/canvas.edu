@@ -12,6 +12,10 @@ let pScalar: number;
 let canvasHeight: number;
 let canvasWidth: number;
 
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 onMount(async () => {
 	const response = await fetch('/src/config-linked.json');
 	const configData = await response.json();
@@ -42,17 +46,16 @@ onMount(async () => {
 	});
 
 		socket.on('multiple-update', pixel => {
-		pixel.forEach((p: any) => {
+		pixel.forEach(async (p: any) => {
 			let tmpData = increaseArraySize(new Uint8ClampedArray(p.data));
 			ctx.putImageData(new ImageData(tmpData, 4, 4), p.x * 4, p.y * 4);
+			await sleep(1);
 		});
 	});
 
 	// We just connected, and we get the canvas data
 	socket.on('init', canvas => {
-		console.log("init event w: ", canvas.width, " h: ", canvas.height);
 		let imageData = new ImageData(new Uint8ClampedArray(canvas.data), canvas.width, canvas.height);
-		console.log(canvas.data);
 
 		// Absolutely disgusting hack to get the image data to the canvas
 		let tmpCanvas = document.createElement('canvas');
@@ -65,8 +68,6 @@ onMount(async () => {
 			scaled = true;
 			ctx.scale(pScalar, pScalar);
 		}
-
-		console.log(imageData.data);
 
 		tmpctx.putImageData(imageData, 0, 0);
 		ctx.imageSmoothingEnabled = false;
