@@ -50,19 +50,23 @@ onMount(async () => {
 
 	// We just connected, and we get the canvas data
 	socket.on('init', canvas => {
-		console.log("init event w: ", canvas.width, " h: ", canvas.height, " l: ", canvas.data.lenght);
-		const imageData = new ImageData(new Uint8ClampedArray(canvas.data), canvas.width, canvas.height);
+		console.log("init event w: ", canvas.width, " h: ", canvas.height);
+		let imageData = new ImageData(new Uint8ClampedArray(canvas.data), canvas.width, canvas.height);
+		console.log(canvas.data);
 
 		// Absolutely disgusting hack to get the image data to the canvas
-		const tmpCanvas = document.createElement('canvas');
-		const tmpctx = tmpCanvas.getContext('2d')!;
+		let tmpCanvas = document.createElement('canvas');
+		tmpCanvas.width = pScalar * configData.canvasWidth;
+		tmpCanvas.height = pScalar * configData.canvasHeight;
+
+		let tmpctx = tmpCanvas.getContext('2d')!;
 		ctx.imageSmoothingEnabled = false;
 		if (scaled == false)	{
 			scaled = true;
 			ctx.scale(pScalar, pScalar);
 		}
-		tmpCanvas.width = pScalar * configData.canvasWidth;
-		tmpCanvas.height = pScalar * configData.canvasHeight;
+
+		console.log(imageData.data);
 
 		tmpctx.putImageData(imageData, 0, 0);
 		ctx.imageSmoothingEnabled = false;

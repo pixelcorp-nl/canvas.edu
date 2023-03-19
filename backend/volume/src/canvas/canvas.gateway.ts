@@ -61,21 +61,20 @@ export class CanvasGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   async playBack(pixelData: Pixel[]) {
     this.isReplaying = true;
     const whiteBg = new Uint8ClampedArray(canvasHeight * canvasWidth * bytesPerColor);
-    whiteBg.forEach(byte => {
-      byte = 255;
-    })
+    for (let i = 0; i <whiteBg.length; i++) {
+      whiteBg.buffer[i] = 255;
+    }
     const emptyCanvas = {
-      width: canvasWidth,
       height: canvasHeight,
+      width: canvasWidth,
       data: whiteBg,
     }
     this.server.emit("init", emptyCanvas);
-    const pixels: imageDataDto[] = pixelData.map(pixel => ({
-      x: pixel.location[0],
-      y: pixel.location[1],
-      data: new Uint8ClampedArray(pixel.color),
-    }))
-    console.log(pixels.length);
+    // const pixels: imageDataDto[] = pixelData.map(pixel => ({
+    //   x: pixel.location[0],
+    //   y: pixel.location[1],
+    //   data: new Uint8ClampedArray(pixel.color),
+    // }))
     await sleep(5000);
     // for (let i = 0; i < pixels.length; i++) {
     //   this.server.emit("update", pixels[i]);
