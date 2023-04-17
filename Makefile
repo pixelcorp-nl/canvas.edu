@@ -22,10 +22,6 @@ clean:
 ps:
 		docker-compose ps
 
-# lint and fix
-lfix:
-		@bash .github/scripts/eslint.sh --fix
-
 # seed db with base values, empty for this project
 seed:
 		docker exec -it backend npx prisma db seed \
