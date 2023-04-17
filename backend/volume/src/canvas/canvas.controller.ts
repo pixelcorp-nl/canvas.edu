@@ -8,6 +8,7 @@ import {
   HttpStatus,
   HttpException,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { CanvasGateway } from './canvas.gateway';
 import { imageDataDto } from './dto/imageDataDto';
@@ -17,8 +18,7 @@ import { PrismaPixelService } from 'src/pxl/pixel.service';
 import { IdentityService} from 'src/identity/identity.service';
 import { extractRealIp } from 'src/ip/ip.service';
 import { AdminService } from 'src/auth/admin.service';
-import { PassService } from 'src/auth/password.service';
-import { canvasWidth, canvasHeight } from '../config-linked.json';
+import { canvasWidth, canvasHeight } from '@src/config/config.json';
 
 @Controller('canvas')
 export class CanvasController {
@@ -130,7 +130,11 @@ export class CanvasController {
   @Get('coordinates')
   async findPxlData(@Query('x') x: number, @Query('y') y: number, @Req() request: Request) {
     await this.timeoutCheck(request);
-    return this.pixelService.findCurrentPxl(x, y);
+    try {
+      return this.pixelService.findCurrentPxl(x, y);
+    } catch (e) {
+      throw new NotFoundException('pixel is not in database');
+    }
   }
 
   @Get('colorCheck')
@@ -153,7 +157,7 @@ export class CanvasController {
   // get all pixels and return them to requester, only meant for total replay!!
   @Get('allPixels')
   async getAllPixels(@Req() request: Request)  {
-    await this.timeoutCheck(request, 5);  // magic add to config later to prevent spam
+    await this.timeoutCheck(request, 42);  // magic add to config later to prevent spam
     return this.pixelService.Pixels({});
   }
 }

@@ -1,10 +1,9 @@
 version: '3.7'
 services:
   db:
-    # ports:
-    #   - "5432:5432" # only for prisma studio, remove for production safety
     image: postgres:15
     container_name: db
+    restart: unless-stopped
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
@@ -16,12 +15,14 @@ services:
   frontend:
     build:
       context: ./frontend
-    image: vue-frontend
+    image: svelte-frontend
     container_name: frontend
+    restart: unless-stopped
     ports:
       - "8000:8000"
     volumes:
       - "./frontend/volume/src:/app/src"
+      - "./config:/app/src/config"
     depends_on:
       - backend
     networks:
@@ -31,10 +32,12 @@ services:
       context: ./backend
     image: nestjs-backend
     container_name: backend
+    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
       - "./backend/volume/src:/usr/src/app/src"
+      - "./config:/usr/src/app/src/config"
     depends_on:
       - db
     environment:
@@ -48,3 +51,5 @@ networks:
 
 volumes:
   pgdata:
+
+

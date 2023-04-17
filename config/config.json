@@ -1,9 +1,8 @@
 {
   "api": "http://api.pixels.codam.nl",
-  "url": "https://example.com",
-  "pixelScalar": 4,
-  "canvasWidth": 200,
-  "canvasHeight": 200,
+  "pixelScalar": 8,
+  "canvasWidth": 100,
+  "canvasHeight": 100,
   "timeout": 1000,
   "pictureInterval": 60,
   "replayTimeout": 420,

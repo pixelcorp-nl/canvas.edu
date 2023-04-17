@@ -4,7 +4,7 @@ import { PrismaPixelService } from 'src/pxl/pixel.service';
 import { imageDataDto } from './dto/imageDataDto';
 import { PxlDataDto, RGBA } from './dto/pixelDataDto';
 import { Pixel } from '@prisma/client';
-import { canvasWidth, canvasHeight, replayTimeout, replayPxlCount } from '../config-linked.json';
+import { canvasWidth, canvasHeight, replayTimeout, replayPxlCount } from '@src/config/config.json';
 
 const bytesPerColor = 4;
 

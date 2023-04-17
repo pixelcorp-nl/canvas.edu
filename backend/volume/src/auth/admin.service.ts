@@ -1,4 +1,4 @@
-import { timeout } from '../config-linked.json'
+import { timeout } from '@src/config/config.json'
 
 export class AdminService {
   // default timeout is 1000 milliseconds

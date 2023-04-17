@@ -4,7 +4,7 @@ import time
 
 url = "http://api.pixels.codam.nl"
 # url = "http://localhost:3000"
-code = "29483900"
+code = "906e0f2c"
 url = url + f"/admin/playback?code=" + code
 headers = {'Content-Type': 'application/json',
            'x-real-ip': 'my.amazing.fake.ip'}
