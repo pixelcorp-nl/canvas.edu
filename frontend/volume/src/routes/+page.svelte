@@ -23,7 +23,7 @@
 		canvasHeight = configData.canvasHeight;
 		canvasWidth = configData.canvasWidth;
 
-		const socket = io(configData.api + "/canvas");
+		const socket = io(configData.url + "/canvas");
 		const ctx = canvas.getContext("2d")!; // TODO: Error handling
 		ctx.imageSmoothingEnabled = false;
 
