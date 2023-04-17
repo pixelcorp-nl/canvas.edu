@@ -32,13 +32,13 @@ x, y = 20, 80 # starting coordinates
 # # time.sleep(0.03)
 
 
-x, y = 120, 80 # starting coordinates
-for i in range(100):
-    data = pxlInfo(x, y, [0, 0, 255, 255])
-    response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
-    x += 1 # move one unit to the right
-    y -= 2 # move one unit up
-    time.sleep(1)
+# x, y = 120, 80 # starting coordinates
+# for i in range(100):
+#     data = pxlInfo(x, y, [0, 0, 255, 255])
+#     response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
+#     x += 1 # move one unit to the right
+#     y -= 2 # move one unit up
+#     time.sleep(1)
 
 x, y = 5, 2 # starting coordinates
 # for i in range(100):

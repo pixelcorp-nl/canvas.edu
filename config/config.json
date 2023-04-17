@@ -1,6 +1,5 @@
 {
-  "api": "http://pixels.codam.nl/api",
-  "url": "http://pixels.codam.nl",
+  "api": "api.http://pixels.codam.nl",
   "pixelScalar": 8,
   "canvasWidth": 100,
   "canvasHeight": 100,
