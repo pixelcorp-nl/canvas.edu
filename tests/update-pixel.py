@@ -40,13 +40,13 @@ x, y = 20, 80 # starting coordinates
 #     y -= 2 # move one unit up
 #     time.sleep(1)
 
-x, y = 5, 2 # starting coordinates
+x, y = 0, 0 # starting coordinates
 # for i in range(100):
 #     # create pxlInfo object with updated coordinates
-data = pxlInfo(x, y, [255, 0, 0, 255])
-response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
-    # x += 1 # move one unit to the right
-    # y -= 2 # move one unit up
+for i in range(100):
+    for j in range(100):
+        data = pxlInfo(i, j, [255, 255, 255, 255])
+        response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
 
 # data = pxlInfo(199, 199, [0, 0, 0, 255, 1], "name")
 # response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
