@@ -22,7 +22,7 @@
 		<main>
 			<slot />
 		</main>
-		<footer>
+		<footer id="footer">
 			<p>
 				{$_('footer')} <a href="https://github.com/Obult">Oswin</a>,
 				<a href="https://github.com/W2Wizard">Leon</a>, <a href="https://github.com/LithiumOx">Mees</a> & <a href="https://youtube.com/watch?v=dQw4w9WgXcQ">Astley</a>

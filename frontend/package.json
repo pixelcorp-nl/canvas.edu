@@ -11,8 +11,8 @@
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint:check": "eslint --cache --cache-location node_modules/.eslintcache src; prettier --check src",
-		"lint:fix": "eslint --fix src; prettier --write src"
+		"lint:check": "eslint --cache --cache-location node_modules/.eslintcache src tests; prettier --check src tests",
+		"lint:fix": "eslint --fix src tests; prettier --write src tests"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",
