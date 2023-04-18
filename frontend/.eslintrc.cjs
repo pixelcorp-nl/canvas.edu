@@ -39,5 +39,6 @@ module.exports = {
 		'require-await': 'error',
 		'no-constant-condition': ['error', { 'checkLoops': false }],
 		eqeqeq: ['error', 'smart'],
+		'@typescript-eslint/ban-ts-comment': 'off',
 	}
 };
