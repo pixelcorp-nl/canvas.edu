@@ -1,6 +1,7 @@
 <p align="center">
   <img src="./frontend/static/icons/android-chrome-192x192.png" alt="Pixels Logo">
 </p>
+
 # Pixels - Learn Programming through Pixel Art
 
 Pixels is an interactive learning platform that aims to teach kids programming by allowing them to create pixel art on a canvas using API calls. The project is built using SvelteKit, Redis, PostgreSQL, and Upstash as the hosting provider for the Redis database.
