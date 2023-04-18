@@ -29,6 +29,6 @@ jobs:
       with:
         version: 6.0.2
 
-    - run: npm ci
-    - run: npm run build
-    - run: npm run lint:check
+    - run: pnpm install
+    - run: pnpm run build
+    - run: pnpm run lint:check
