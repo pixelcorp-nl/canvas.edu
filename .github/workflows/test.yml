@@ -1,4 +1,4 @@
-name: ESLint
+name: Run tests
 
 on:
   push:
@@ -8,30 +8,25 @@ on:
     branches:
       - main
 
-
 jobs:
-  style:
-    name: run prettier and eslint
-    runs-on: ubuntu-22.04
+  test:
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
       run:
         working-directory: ./frontend
 
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Install node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
 
     - name: Install pnpm
       uses: pnpm/action-setup@v2
       with:
         version: 6.0.2
 
-    - run: pnpm install
-    - run: pnpm run build
-    - run: pnpm run lint:check
+    - name: Install dependencies
+      run: pnpm ci
+
+    - name: Run tests
+      run: pnpm run test
