@@ -3,28 +3,34 @@ name: ESLint
 on:
   push:
     branches: [ 'main' ]
-    paths: [ '**.js', '**.jsx', '**.ts', '**.tsx', '**.vue' ]
   pull_request:
     branches: [ 'main' ]
   workflow_dispatch:
 
 jobs:
-  eslint:
+  style:
+    name: run prettier and eslint
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
-    runs-on: ubuntu-latest
-    
+    working-directory: ./frontend
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    
+
     - name: Install node
       uses: actions/setup-node@v3
-      with:
-        node-version: 16
-  
-    - name: Install dependencies
-      working-directory: ./frontend/rubenpong
-      run: npm install
+        with:
+          node-version: 18.x
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
 
-    - name: Run eslint
-      run: bash .github/scripts/eslint.sh
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+        with:
+          version: 6.0.2
+
+    - run: npm ci
+    - run: npm run build
+    - run: npm run lint:check
