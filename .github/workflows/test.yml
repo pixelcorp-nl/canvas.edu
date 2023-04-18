@@ -24,7 +24,7 @@ jobs:
         version: 6.0.2
 
     - name: Install dependencies
-      run: pnpm ci
+      run: pnpm install
 
     - name: Run tests
       run: pnpm run test
