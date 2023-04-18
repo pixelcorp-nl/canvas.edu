@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { locale } from 'svelte-i18n'
-	import { localeStore as lang } from '$lib/Stores/Locale';
+	import { localeStore as lang } from '$lib/Stores/Locale'
 	function handleLanguageChange() {
 		if ($lang.locale === 'en') {
 			locale.set('nl')
-			lang.set({locale: 'nl'})
+			lang.set({ locale: 'nl' })
 		} else {
 			locale.set('en')
-			lang.set({locale: 'en'})
+			lang.set({ locale: 'en' })
 		}
 	}
 </script>

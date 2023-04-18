@@ -1,18 +1,17 @@
 <!-- Script -->
 <script lang="ts">
-	import { dev } from '$app/environment';
-	import Highlight from 'svelte-highlight';
-	import python from 'svelte-highlight/languages/python';
-	import json from 'svelte-highlight/languages/json';
-	import { _ } from 'svelte-i18n';
-	import atomOneDark from 'svelte-highlight/styles/atom-one-dark';
-	import Button from '$lib/components/Button.svelte';
+	import Highlight from 'svelte-highlight'
+	import python from 'svelte-highlight/languages/python'
+	import json from 'svelte-highlight/languages/json'
+	import { _ } from 'svelte-i18n'
+	import atomOneDark from 'svelte-highlight/styles/atom-one-dark'
+	import Button from '$lib/components/Button.svelte'
 
 	const jsonExample = `{
 	"x": 42,
 	"y": 42,
 	"data": [255, 0, 0, 255], // rgba
-}`;
+}`
 
 	const code = `import requests
 import json
@@ -34,17 +33,7 @@ if response.ok:
 else:
     # If the request was unsuccessful, print an error message that includes the HTTP status code
     print("Failed to change pixel:", response.status_code)
-`;
-
-	let copyButton = 'Copy';
-
-	function handleCopy(code:string) {
-		navigator.clipboard.writeText(code);
-		copyButton = 'Copied!';
-		setTimeout(function () {
-			copyButton = 'Copy';
-		}, 2000);
-	}
+`
 </script>
 
 <svelte:head>
@@ -53,14 +42,12 @@ else:
 	{@html atomOneDark}
 </svelte:head>
 
-
-
 <!-- HTML -->
 <article class="text-column prose lg:prose-lg mx-auto mb-5">
 	<div>
 		<h1 class="font-bold text-3xl">{$_('info.title')}</h1>
 		<blockquote class="text-sm font-light">
-		{$_('info.subtitle')}
+			{$_('info.subtitle')}
 		</blockquote>
 	</div>
 	<h2 class="text-xl font-semibold">{$_('info.header1')}</h2>
@@ -76,12 +63,9 @@ else:
 		{$_('info.content4')}
 	</p>
 	<div class="flex flex-col mt-2">
-		<div
-			class="flex justify-between h-16 -my-1 items-center bg-slate-100 rounded-t-xl"
-		>
+		<div class="flex justify-between h-16 -my-1 items-center bg-slate-100 rounded-t-xl">
 			<span class="font-semibold ml-2.5">{$_('code.json.title')}</span>
 			<Button code={jsonExample} />
-
 		</div>
 		<Highlight class="bg-[#282c34] !m-0 hover:scale-[101%] transition-all duration-1000" language={json} code={jsonExample} />
 	</div>
@@ -90,9 +74,7 @@ else:
 		{$_('info.content5')}
 	</p>
 	<div class="flex flex-col">
-		<div
-			class="flex justify-between h-16 -my-1 items-center bg-slate-100 rounded-t-xl"
-		>
+		<div class="flex justify-between h-16 -my-1 items-center bg-slate-100 rounded-t-xl">
 			<span class="font-semibold ml-2.5">{$_('code.python.title')}</span>
 			<Button {code} />
 		</div>
