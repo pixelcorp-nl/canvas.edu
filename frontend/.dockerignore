@@ -1,5 +1,0 @@
-volume/node_modules/
-volume/package-lock.json
-Dockerfile
-.dockerignore
-.gitignore
