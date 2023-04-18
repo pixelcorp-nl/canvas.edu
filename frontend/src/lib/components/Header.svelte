@@ -26,7 +26,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="https://github.com/Obult/canvas.edu"><img src="/images/github.svg" alt="github" class="m-1 w-8 h-8 hover:scale-95 transition-all" /></a>
+			<a href="https://github.com/pixelcorp-nl/canvas.edu"><img src="/images/github.svg" alt="github" class="m-1 w-8 h-8 hover:scale-95 transition-all" /></a>
 		</li>
 		<li>
 			<Locale />
