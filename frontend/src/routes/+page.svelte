@@ -17,8 +17,16 @@
 	}
 
 	onMount(async () => {
-		const response = await fetch("/src/config/config.json");
-		const configData = await response.json();
+		const configData = {
+			api: 'http://api.pixels.codam.nl',
+			pixelScalar: 8,
+			canvasWidth: 100,
+			canvasHeight: 100,
+			timeout: 1000,
+			pictureInterval: 60,
+			replayTimeout: 420,
+			replayPxlCount: 42
+		}
 		pScalar = configData.pixelScalar;
 		canvasHeight = configData.canvasHeight;
 		canvasWidth = configData.canvasWidth;
