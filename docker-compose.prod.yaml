@@ -2,7 +2,7 @@ version: '3.7'
 services:
   frontend:
     container_name: frontend
-    image: ghcr.io/pixelcorp-nl/frontend/frontend:latest
+    image: ghcr.io/pixelcorp-nl/canvas.edu/canvas.edu:latest
     restart: unless-stopped
     ports:
       - 8000:8000
