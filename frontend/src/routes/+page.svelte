@@ -1,117 +1,121 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
-	import io from 'socket.io-client'
+	import {
+		PUBLIC_CANVAS_HEIGHT,
+		PUBLIC_CANVAS_WIDTH,
+		PUBLIC_SCALAR,
+	} from '$env/static/public';
+	import { onMount } from 'svelte';
 
-	let scaled = false
-	let canvas: HTMLCanvasElement
-	let onCanvasX = 0
-	let onCanvasY = 0
+	const canvasWidth = Number(PUBLIC_CANVAS_WIDTH);
+	const canvasHeight = Number(PUBLIC_CANVAS_HEIGHT);
+	const pScalar = parseFloat(PUBLIC_SCALAR) || 1;
 
-	const bytesPerColor = 4
-	let pScalar: number
-	let canvasHeight: number
-	let canvasWidth: number
+	let canvas: HTMLCanvasElement;
 
-	type Pixel = {
-		x: number
-		y: number
-		data: [number, number, number, number]
-	}
+	export let data;
 
-	type Event = {
-		clientX: number
-		clientY: number
-	}
 	onMount(() => {
-		const configData = {
-			api: 'http://api.pixels.codam.nl',
-			pixelScalar: 8,
-			canvasWidth: 100,
-			canvasHeight: 100,
-			timeout: 1000,
-			pictureInterval: 60,
-			replayTimeout: 420,
-			replayPxlCount: 42
-		}
-		pScalar = configData.pixelScalar
-		canvasHeight = configData.canvasHeight
-		canvasWidth = configData.canvasWidth
+		const { canvasSize, pixelSize } = calculateNewCanvasSize(
+			pScalar,
+			canvasWidth,
+			canvasHeight,
+		);
+		canvas.width = canvasSize.width;
+		canvas.height = canvasSize.height;
+		drawObjectOnCanvas(data.props, canvas, pixelSize);
+	});
 
-		const socket = io(`${configData.api}/canvas`)
-		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D // TODO: Error handling
-		ctx.imageSmoothingEnabled = false
+	function calculateNewCanvasSize(
+		scalingFactor: number,
+		canvasWidth: number,
+		canvasHeight: number,
+	) {
+		const newCanvasWidth = Math.round(canvasWidth * scalingFactor);
+		const newCanvasHeight = Math.round(canvasHeight * scalingFactor);
+		const pixelSize = scalingFactor;
 
-		/**
-		 * Increase the size of the array to 64.
-		 * @param inputArray The array to increase.
-		 */
-		function increaseArraySize(inputArray: Uint8ClampedArray) {
-			const outputArray = new Uint8ClampedArray(64)
-			for (let i = 0; i < pScalar ** 2 * bytesPerColor; i++) {
-				// @ts-ignore
-				outputArray[i] = inputArray[i % 4]
-			}
-			return outputArray
-		}
+		return {
+			canvasSize: { width: newCanvasWidth, height: newCanvasHeight },
+			pixelSize,
+		};
+	}
 
-		// Someone else updated the pixel
-		socket.on('update', pixel => {
-			// console.log("update");
-			const tmpData = increaseArraySize(new Uint8ClampedArray(pixel.data))
-			ctx.putImageData(new ImageData(tmpData, pScalar, pScalar), pixel.x * pScalar, pixel.y * pScalar)
-		})
+	function drawObjectOnCanvas(
+		colorData: Record<string, string>,
+		canvas: HTMLCanvasElement,
+		pixelSize: number,
+	): void {
+		const ctx = canvas.getContext('2d');
+		const animationDuration = 1000; // Duration in milliseconds
+		const startTime = performance.now();
 
-		socket.on('multiple-update', (pixels: Pixel[]) => {
-			pixels.forEach(p => {
-				const tmpData = increaseArraySize(new Uint8ClampedArray(p.data))
-				ctx.putImageData(new ImageData(tmpData, 4, 4), p.x * 4, p.y * 4)
-			})
-		})
+		const draw = (timestamp: number) => {
+			const elapsedTime = timestamp - startTime;
+			const progress = Math.min(elapsedTime / animationDuration, 1);
 
-		// We just connected, and we get the canvas data
-		socket.on('init', canvas => {
-			const imageData = new ImageData(new Uint8ClampedArray(canvas.data), canvas.width, canvas.height)
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-			// Absolutely disgusting hack to get the image data to the canvas
-			const tmpCanvas = document.createElement('canvas')
-			tmpCanvas.width = pScalar * configData.canvasWidth
-			tmpCanvas.height = pScalar * configData.canvasHeight
+			for (const key in colorData) {
+				const [x, y] = key.split(',').map(Number);
+				const color = colorData[key];
 
-			const tmpctx = tmpCanvas.getContext('2d') as CanvasRenderingContext2D // TODO: Error handling
-			ctx.imageSmoothingEnabled = false
-			if (scaled === false) {
-				scaled = true
-				ctx.scale(pScalar, pScalar)
+				ctx.fillStyle = changeColorOpacity(color, progress);
+				ctx.fillRect(
+					x * pixelSize,
+					y * pixelSize,
+					pixelSize,
+					pixelSize,
+				);
 			}
 
-			tmpctx.putImageData(imageData, 0, 0)
-			ctx.imageSmoothingEnabled = false
-			ctx.drawImage(tmpctx.canvas, 0, 0)
-		})
-	})
+			if (progress < 1) {
+				window.requestAnimationFrame(draw);
+			}
+		};
 
-	function logPosition(event: Event) {
-		const rect = canvas.getBoundingClientRect()
-		const x = Math.floor((event.clientX - rect.left) / pScalar) - 1
-		const y = Math.floor((event.clientY - rect.top) / pScalar) - 1
-		if (x < 0 || y < 0) {
-			return
+		window.requestAnimationFrame(draw);
+	}
+
+	function changeColorOpacity(color: string, opacity: number): string {
+		const rgba =
+			/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/i.exec(
+				color,
+			);
+		let [r, g, b] = [0, 0, 0];
+
+		if (rgba) {
+			r = parseInt(rgba[1], 10);
+			g = parseInt(rgba[2], 10);
+			b = parseInt(rgba[3], 10);
+		} else {
+			const hex = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
+			if (hex) {
+				r = parseInt(hex[1], 16);
+				g = parseInt(hex[2], 16);
+				b = parseInt(hex[3], 16);
+			}
 		}
-		onCanvasX = x
-		onCanvasY = y
+
+		return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+	}
+
+	function logPosition(event: MouseEvent) {
+		console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
 	}
 </script>
 
-<svelte:head>
-	<title>Codam - Canvas Project</title>
-	<meta name="description" content="pixel-canvas" />
-</svelte:head>
-
 <section>
-	<canvas width={canvasWidth * pScalar} height={canvasHeight * pScalar} bind:this={canvas} on:mousemove={logPosition} />
+	<canvas
+		bind:this={canvas}
+		width={canvasWidth * pScalar}
+		height={canvasHeight * pScalar}
+		on:mousemove={logPosition}
+	/>
 </section>
 
-<p class="text-center mt-5 font-mono">x: {onCanvasX}, y: {onCanvasY}</p>
+<!-- <p class="text-center mt-5 font-mono">x: {onCanvasX}, y: {onCanvasY}</p> -->
+
+<!-- {JSON.stringify(data)} -->
 
 <style>
 	section {
