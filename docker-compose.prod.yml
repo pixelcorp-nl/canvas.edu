@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  frontend:
+    container_name: frontend
+    image: ghcr.io/pixelcorp-nl/frontend/frontend:latest
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: frontend
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+      - WATCHTOWER_POLL_INTERVAL=30
+      - WATCHTOWER_ROLLING_RESTART=true

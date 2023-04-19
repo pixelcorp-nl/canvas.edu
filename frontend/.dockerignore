@@ -1,0 +1,10 @@
+**/.DS_Store*
+**/node_modules
+**/README.md
+**/.dockerignore
+**/README.*
+
+/build
+/.git
+/Dockerfile*
+/docker-compose.yml
