@@ -4,7 +4,8 @@
 **/.dockerignore
 **/README.*
 
+/.svelte-kit
 /build
 /.git
 /Dockerfile*
-/docker-compose.yml
+/docker-compose*.yaml
