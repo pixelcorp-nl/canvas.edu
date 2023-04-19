@@ -1,10 +1,11 @@
 name: Containerize
 
 on:
-  push:
-    branches:
-      - main
-  pull_request: # TODO: delete this line after testing
+  workflow_run:
+    workflows: ["Tests"]
+    branches: [main]
+    types:
+      - completed
 
 jobs:
   build-and-publish:
