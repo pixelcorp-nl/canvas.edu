@@ -16,5 +16,5 @@ COPY . .
 RUN pnpm run lint:check
 RUN pnpm run build
 
-USER node
+# USER node
 ENTRYPOINT [ "pnpm", "start" ]
