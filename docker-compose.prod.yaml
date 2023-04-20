@@ -5,7 +5,9 @@ services:
     image: ghcr.io/pixelcorp-nl/canvas.edu/canvas.edu:latest
     restart: unless-stopped
     ports:
-      - 8000:8000
+      - 80:5173
+    env_file:
+      - .env
 
   watchtower:
     container_name: watchtower
