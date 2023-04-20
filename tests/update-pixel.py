@@ -4,16 +4,17 @@ import time
 
 url = "http://api.pixels.codam.nl/canvas/single"
 urlb = "http://localhost:3000/canvas/nameUser/renameduser"
-urlc = "http://localhost:3000/canvas/single"
-# url = urlc
+urlc = "http://localhost:5173/api/batch"
+url = urlc
 headers = {'Content-Type': 'application/json',
            'x-real-ip': 'my.amazing.fake.ip'}
 
+
 class pxlInfo:
-  def __init__(self, width, height, data):
-    self.x = width
-    self.y = height
-    self.data = data
+    def __init__(self, width, height, data):
+        self.x = width
+        self.y = height
+        self.data = data
 
 # class name:
 #   def __init__(self, name):
@@ -22,7 +23,8 @@ class pxlInfo:
 # name = name('newName')
 # response = requests.post(urlb, headers=headers)
 
-x, y = 20, 80 # starting coordinates
+
+x, y = 20, 80  # starting coordinates
 #     # create pxlInfo object with updated coordinates
 # data = pxlInfo(x, y, [random.random() * 255, random.random() * 255, random.random() * 255, 255])
 # data = pxlInfo(x, y, [0, 33, 255, 255])
@@ -40,18 +42,24 @@ x, y = 20, 80 # starting coordinates
 #     y -= 2 # move one unit up
 #     time.sleep(1)
 
-x, y = 0, 0 # starting coordinates
+x, y = 0, 0  # starting coordinates
 # for i in range(100):
 #     # create pxlInfo object with updated coordinates
-for i in range(100):
-    for j in range(100):
-        data = pxlInfo(i, j, [255, 255, 255, 255])
-        response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
+color = [255, 255, 240, 255]
+for x in range(200):
+    for y in range(200):
+        data = {
+            "x": x,
+            "y": y,
+            "color": color
+        }
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+        time.sleep(0.1)
 
 # data = pxlInfo(199, 199, [0, 0, 0, 255, 1], "name")
 # response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
 
 if response.status_code == 200 | 201:
-  print("Successfully sent data")
+    print("Successfully sent data")
 else:
-  print("Failed to send data", response.status_code)
+    print("Failed to send data", response.status_code)
