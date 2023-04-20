@@ -26,7 +26,7 @@ async function processBatch() {
 		const pixelKey = `${x},${y}`
 		return { ...acc, [pixelKey]: rgba }
 	}, {})
-	console.log(batchData, '\nSent to Redis')
+	console.log('Sending batch data to Redis', batchData)
 
 	// Send the data to Redis
 	await r.hset(PUBLIC_CANVAS_ID, batchData)
@@ -44,7 +44,7 @@ export async function POST({ request }) {
 	if (!isValidRequest(x, y, color)) {
 		throw error(400, 'This request is not valid please make sure you have x, y, and color like this: {x: 0, y: 0, color: [0, 0, 0, 1]}')
 	}
-	const rgba = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`
+	const rgba = `${color[0]},${color[1]},${color[2]},${color[3]}`
 
 	const q = queues[currentQueue] as Queue[]
 	q.push({ x, y, rgba })

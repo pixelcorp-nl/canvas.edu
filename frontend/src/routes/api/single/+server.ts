@@ -9,7 +9,7 @@ export async function POST({ request }) {
 	if (!isValidRequest(x, y, color)) {
 		throw error(400, 'This request is not valid please make sure you have x, y, and color like this: {x: 0, y: 0, color: [0, 0, 0, 1]}')
 	}
-	const rgba = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`
+	const rgba = `${color[0]},${color[1]},${color[2]},${color[3]}`
 	const pixelKey = `${x},${y}`
 
 	const data = await r.hset(PUBLIC_CANVAS_ID, {

@@ -58,12 +58,10 @@
 	}
 
 	function changeColorOpacity(color: string, opacity: number): string {
-		const rgba = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/i.exec(color)
+		const rgba = color.split(',').map(Number) as [number, number, number, number]
+
 		if (rgba) {
-			const r = parseInt(rgba[1] as string)
-			const g = parseInt(rgba[2] as string)
-			const b = parseInt(rgba[3] as string)
-			return `rgba(${r},${g},${b},${opacity})`
+			return `rgba(${rgba[0]},${rgba[1]},${rgba[2]},${rgba[3]})`
 		}
 
 		const hex = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color)
