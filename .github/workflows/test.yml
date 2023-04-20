@@ -18,6 +18,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Setup .env file
+      run: env >> .env
+
     - name: Install pnpm
       uses: pnpm/action-setup@v2
       with:
