@@ -1,10 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { r } from '$api/_redis';
-import {
-	PUBLIC_CANVAS_HEIGHT,
-	PUBLIC_CANVAS_ID,
-	PUBLIC_CANVAS_WIDTH,
-} from '$env/static/public';
+import { PUBLIC_CANVAS_ID } from '$env/static/public';
+import { requestValidity } from '$api/_utils.js';
 
 type Queue = {
 	x: number;
@@ -12,7 +9,7 @@ type Queue = {
 	rgba: string;
 }[][];
 
-let queues: Queue = [[], []];
+const queues: Queue = [[], []];
 let currentQueue = 0;
 let isBatching = false;
 
@@ -44,34 +41,21 @@ async function processBatch() {
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
 	const { x, y, color } = await request.json();
-	// ... (existing code for validation)
-	if (
-		x < 0 ||
-		x > PUBLIC_CANVAS_WIDTH ||
-		y < 0 ||
-		y > PUBLIC_CANVAS_HEIGHT ||
-		!color
-	) {
-		throw error(400, 'Missing x, y, or color or out of bounds');
-	} else if (color.length !== 4) {
-		throw error(400, 'Color must be an array of 4 numbers');
-	} else if (color.some((c: number) => c < 0 || c > 255)) {
-		throw error(400, 'Color values must be between 0 and 255');
-	} else if (color.some((c: number) => isNaN(c))) {
-		throw error(400, 'Color values must be numbers');
-	} else if (typeof x !== 'number' || typeof y !== 'number') {
-		throw error(400, 'x and y must be numbers');
-	}
-	const rgba = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
-	// Add the request data to the current queue
-	queues[currentQueue].push({ x, y, rgba });
+	if (!requestValidity(x, y, color)) {
+		throw error(
+			400,
+			'This request is not valid please make sure you have x, y, and color like this: {x: 0, y: 0, color: [0, 0, 0, 1]}',
+		);
+	} else {
+		const rgba = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
 
-	// If not batching, start a new batch
-	if (!isBatching) {
-		isBatching = true;
-		setTimeout(processBatch, BATCH_INTERVAL);
-	}
+		queues[currentQueue].push({ x, y, rgba });
 
-	// Return a response indicating the request has been added to the batch
-	return json({ message: 'Request added to batch', x, y, color });
+		if (!isBatching) {
+			isBatching = true;
+			setTimeout(processBatch, BATCH_INTERVAL);
+		}
+
+		return json({ message: 'Request added to batch', x, y, color });
+	}
 }
