@@ -1,7 +1,7 @@
 import { Redis } from '@upstash/redis'
-import { PRIVATE_REDIS_TOKEN, PRIVATE_REDIS_URL } from '$env/static/private'
+import { env } from '$env/dynamic/private'
 
 export const r = new Redis({
-	url: PRIVATE_REDIS_URL,
-	token: PRIVATE_REDIS_TOKEN
+	url: env.PRIVATE_REDIS_URL,
+	token: env.PRIVATE_REDIS_TOKEN
 })
