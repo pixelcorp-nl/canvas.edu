@@ -23,9 +23,6 @@ jobs:
       with:
         secrets: ${{ toJSON(secrets) }}
 
-    - name: Setup .env file
-      run: env >> .env
-
     - name: Install pnpm
       uses: pnpm/action-setup@v2
       with:
