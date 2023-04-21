@@ -3,6 +3,5 @@ This directory contains all scrips and config files required to run this project
 
 # Deploying
 `git clone --depth=1 git@github.com:pixelcorp-nl/canvas.edu.git`
-`mv canvas.edu/deployment/* .`
-create `.env` file in the `deployment` folder
-`docker-compose -f deployment/docker-compose.prod.yaml up -d`
+create `.env` file in the `canvas.edu.git/deployment` folder
+`docker-compose -f canvas.edu.git/deployment/docker-compose.prod.yaml up -d`
