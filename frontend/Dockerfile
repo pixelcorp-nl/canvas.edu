@@ -15,6 +15,7 @@ RUN pnpm install
 COPY . .
 RUN pnpm run lint:check
 RUN pnpm run build
+ENV PORT=5173
 
 # USER node
 ENTRYPOINT [ "pnpm", "start" ]
