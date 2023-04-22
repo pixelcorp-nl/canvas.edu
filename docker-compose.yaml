@@ -6,6 +6,10 @@ services:
     build: ./frontend
     ports:
       - 3000:3000
+    volumes:
+      - ~/AppData/Local/pnpm/store:/root/.pnpm-store # MacOS
+      # - ~/.pnpm-store:/root/.pnpm-store # Linux
+
   redis:
     container_name: redis
     image: redis:alpine
