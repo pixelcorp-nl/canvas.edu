@@ -1,33 +1,15 @@
-build:
-		@docker-compose build || echo "\033[1;31mDid you start docker?"
+# Start dependencies run frontend and backend seperately
+start-deps:
+	docker compose up --remove-orphans redis
 
+# Starts all containers in dev mode
 start:
-		docker-compose up -d
-run:			start
-rs: 			stop start
-re:	 			build rs	#first build for reduced downtime, then restart
+	docker compose up --remove-orphans
 
-stop:
-		docker-compose down
+# Stops all containers
+down:
+	docker-compose down --remove-orphans
 
-clean:
-		docker-compose down --remove-orphans
-
-# danger, removes database volume!
-# fclean:
-# 		docker-compose down --volumes --remove-orphans
-# fre: 			fclean build run
-
-# view container status
+# Lists all containers
 ps:
-		docker-compose ps
-
-# seed db with base values, empty for this project
-seed:
-		docker exec -it backend npx prisma db seed \
-			|| echo "\033[1;31mCould it be the container is not running?"
-
-# in local mode can be used to view database
-studio:
-		export DATABASE_URL='postgres://dbuser:dbpassword@localhost:5432/canvasDB' && \
-		cd backend/volume/ && npx prisma studio
+	docker container list --no-trunc --format "table {{.Names}}\t{{.Status}}\t{{.Command}}\t{{.Ports}}"
