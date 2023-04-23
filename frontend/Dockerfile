@@ -13,8 +13,8 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
 
 COPY . .
-RUN pnpm run lint:check
 RUN pnpm run build
+RUN pnpm run lint:check
 ENV PORT=5173
 
 # USER node
