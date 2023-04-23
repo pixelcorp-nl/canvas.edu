@@ -1,8 +1,9 @@
 name: Containerize
 
 on:
-  workflow_run:
-    branches: [main]
+  push:
+    branches:
+      - main
 
 jobs:
   build-and-publish:
