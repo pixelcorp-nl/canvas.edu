@@ -26,8 +26,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Inject GitHub secrets into env
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+
+      - name: Setup .env file
+        run: env >> .env
+
       - name: Build Docker image
-        run: docker build -t docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}:latest .
+        run: docker build --env-file=.env -t docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}:latest .
 
       - name: Push Docker image to GitHub Package Registry
         run: docker push docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}:latest
