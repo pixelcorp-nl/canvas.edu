@@ -8,7 +8,7 @@
 	const canvasHeight = Number(PUBLIC_CANVAS_HEIGHT)
 	const pScalar = parseFloat(PUBLIC_SCALAR) || 1
 
-	let { X: x, Y: y } = { X: 0, Y: 0 }
+	let { x, y } = { x: 0, y: 0 }
 
 	let canvas: HTMLCanvasElement
 
