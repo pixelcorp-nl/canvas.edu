@@ -2,10 +2,7 @@ name: Containerize
 
 on:
   workflow_run:
-    workflows: ["Tests"]
     branches: [main]
-    types:
-      - completed
 
 jobs:
   build-and-publish:
