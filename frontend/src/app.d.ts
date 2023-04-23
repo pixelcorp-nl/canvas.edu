@@ -3,7 +3,9 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			io: import('socket.io').Server
+		}
 		// interface PageData {}
 		// interface Platform {}
 	}

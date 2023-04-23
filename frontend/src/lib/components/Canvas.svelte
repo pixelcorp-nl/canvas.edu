@@ -1,15 +1,24 @@
 <script lang="ts">
+	import { io } from 'socket.io-client'
+	import type { SocketIOMessages } from '$lib/sharedTypes'
+
 	import { PUBLIC_CANVAS_HEIGHT, PUBLIC_CANVAS_WIDTH, PUBLIC_SCALAR } from '$env/static/public'
 	import { onMount } from 'svelte'
 	const canvasWidth = Number(PUBLIC_CANVAS_WIDTH)
 	const canvasHeight = Number(PUBLIC_CANVAS_HEIGHT)
 	const pScalar = parseFloat(PUBLIC_SCALAR) || 1
 
-	let { X, Y } = { X: 0, Y: 0 }
+	let { X: x, Y: y } = { X: 0, Y: 0 }
 
 	let canvas: HTMLCanvasElement
 
 	onMount(async () => {
+		const socket = io()
+		socket.on('pixel', (pixel: SocketIOMessages['pixel']['message']) => {
+			const { x, y, color } = pixel
+			drawPixelOnCanvas(x, y, color, pScalar)
+		})
+
 		const data = (await fetch('/api/canvas').then(res => res.json())) as Record<string, string>
 
 		// console.log(await data);
@@ -30,62 +39,35 @@
 		}
 	}
 
-	function drawObjectOnCanvas(colorData: Record<string, string>, canvas: HTMLCanvasElement, pixelSize: number): void {
+	function drawPixelOnCanvas(x: number, y: number, color: string, pixelSize: number): void {
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-		const animationDuration = 1000 // Duration in milliseconds
-		const startTime = performance.now()
-
-		const draw = (timestamp: number) => {
-			const elapsedTime = timestamp - startTime
-			const progress = Math.min(elapsedTime / animationDuration, 1)
-
-			ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-			for (const key in colorData) {
-				const [x, y] = key.split(',').map(Number) as [number, number]
-				const color = colorData[key] as keyof typeof colorData
-
-				ctx.fillStyle = changeColorOpacity(color, progress)
-				ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize)
-			}
-
-			if (progress < 1) {
-				window.requestAnimationFrame(draw)
-			}
-		}
-
-		window.requestAnimationFrame(draw)
+		ctx.fillStyle = color
+		ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize)
 	}
 
-	function changeColorOpacity(color: string, opacity: number): string {
-		const rgba = color.split(',').map(Number) as [number, number, number, number]
+	function drawObjectOnCanvas(colorData: Record<string, string>, canvas: HTMLCanvasElement, pixelSize: number): void {
+		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+		ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-		if (rgba) {
-			return `rgba(${rgba[0]},${rgba[1]},${rgba[2]},${rgba[3]})`
+		for (const key in colorData) {
+			const [x, y] = key.split(',').map(Number) as [number, number]
+			const color = colorData[key] as keyof typeof colorData
+
+			drawPixelOnCanvas(x, y, color, pixelSize)
 		}
-
-		const hex = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color)
-		if (hex) {
-			const r = parseInt(hex[1] as string, 16)
-			const g = parseInt(hex[2] as string, 16)
-			const b = parseInt(hex[3] as string, 16)
-			return `rgba(${r},${g},${b},${opacity})`
-		}
-
-		return `rgba(0, 0, 0, ${opacity})`
 	}
 
 	function logPosition(event: MouseEvent) {
 		// calculate the actual position in the origional canvas by dividing the offset by the scalar
-		X = Math.floor(event.offsetX / pScalar)
-		Y = Math.floor(event.offsetY / pScalar)
+		x = Math.floor(event.offsetX / pScalar)
+		y = Math.floor(event.offsetY / pScalar)
 	}
 </script>
 
 <section>
 	<canvas bind:this={canvas} width={canvasWidth * pScalar} height={canvasHeight * pScalar} on:mousemove={logPosition} />
 	<p class="mt-5">
-		{X}, {Y}
+		{x}, {y}
 	</p>
 </section>
 
