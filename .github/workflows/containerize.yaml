@@ -35,7 +35,7 @@ jobs:
         run: env >> .env
 
       - name: Build Docker image
-        run: docker build --env-file=.env -t docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}:latest .
+        run: docker build -t docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}:latest .
 
       - name: Push Docker image to GitHub Package Registry
         run: docker push docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}:latest
