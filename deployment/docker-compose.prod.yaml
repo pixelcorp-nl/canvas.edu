@@ -15,8 +15,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./redis-db:/data
-    ports:
-      - 6379:6379
 
   watchtower:
     container_name: watchtower
