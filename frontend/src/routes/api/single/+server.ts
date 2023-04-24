@@ -35,13 +35,13 @@ async function processBatch(io: Server) {
 	lastBatch = now
 
 	const queueObj = Object.fromEntries(queue)
+	queue.clear()
 
 	const pixelValues: SocketIOMessages['pixels']['message'] = Object.values(queueObj)
 	io.emit('pixels', pixelValues)
 
 	const mapped = mapObject(queueObj, (_, { rgba }) => rgba)
 	await r.hset(PUBLIC_CANVAS_ID, mapped)
-	queue.clear()
 }
 
 export const POST: RequestHandler = async ({ request, locals }) => {
