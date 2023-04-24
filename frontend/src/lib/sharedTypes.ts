@@ -1,11 +1,17 @@
+export type Pixel = {
+	x: number
+	y: number
+	rgba: string
+}
+
 export type SocketIOMessages = {
 	pixel: {
 		key: 'pixel'
-		message: {
-			x: number
-			y: number
-			color: string
-		}
+		message: Pixel
+	}
+	pixels: {
+		key: 'pixels'
+		message: Pixel[]
 	}
 }
 

@@ -14,9 +14,10 @@
 
 	onMount(async () => {
 		const socket = io()
-		socket.on('pixel', (pixel: SocketIOMessages['pixel']['message']) => {
-			const { x, y, color } = pixel
-			drawPixelOnCanvas(x, y, color, pScalar)
+		socket.on('pixels', (pixels: SocketIOMessages['pixels']['message']) => {
+			for (const { x, y, rgba } of pixels) {
+				drawPixelOnCanvas(x, y, rgba, pScalar)
+			}
 		})
 
 		const data = (await fetch('/api/canvas').then(res => res.json())) as Record<string, string>
@@ -41,7 +42,7 @@
 
 	function drawPixelOnCanvas(x: number, y: number, color: string, pixelSize: number): void {
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-		ctx.fillStyle = color
+		ctx.fillStyle = `rgba(${color})`
 		ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize)
 	}
 
