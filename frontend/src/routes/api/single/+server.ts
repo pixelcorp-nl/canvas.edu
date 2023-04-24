@@ -34,6 +34,9 @@ async function processBatch(io: Server) {
 	}
 	lastBatch = now
 
+	if (!queue.size) {
+		return
+	}
 	const queueObj = Object.fromEntries(queue)
 	queue.clear()
 
