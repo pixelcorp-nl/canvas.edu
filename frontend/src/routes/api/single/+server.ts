@@ -1,7 +1,7 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { r } from '$api/_redis'
 import { PUBLIC_CANVAS_ID } from '$env/static/public'
-import { isValidRequest } from '$api/_utils'
+import { ParsedPixel } from '$api/_utils'
 import type { Pixel, SocketIOMessages } from '$lib/sharedTypes'
 import type { Server } from 'socket.io'
 import { mapObject, type Brand } from '$util/util'
@@ -45,10 +45,11 @@ async function processBatch(io: Server) {
 }
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-	const { x, y, color } = await request.json()
-	if (!isValidRequest(x, y, color)) {
+	const parsed = await ParsedPixel.safeParseAsync(await request.json())
+	if (!parsed.success) {
 		throw error(400, 'This request is not valid please make sure you have x, y, and color like this: {x: 0, y: 0, color: [0, 0, 0, 1]}')
 	}
+	const { x, y, color } = parsed.data
 	const rgba = `${color[0]},${color[1]},${color[2]},${color[3]}`
 	const pixel: Pixel = { x, y, rgba }
 
