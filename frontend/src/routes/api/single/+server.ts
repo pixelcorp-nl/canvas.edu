@@ -8,7 +8,9 @@ import { mapObject, type Brand } from '$util/util'
 
 type Identifier = Brand<string, 'Identifier'>
 
-const BATCH_INTERVAL = 500 // Adjust this value to control how often data is sent to Redis (in milliseconds)
+// Adjust this value to control how often data is sent to Redis (in milliseconds)
+const BATCH_INTERVAL = 100
+
 let lastBatch = 0
 let timeout: NodeJS.Timeout | undefined
 const queue = new Map<Identifier, Pixel>()
@@ -39,7 +41,7 @@ async function processBatch(io: Server) {
 
 	const mapped = mapObject(queueObj, (_, { rgba }) => rgba)
 	await r.hset(PUBLIC_CANVAS_ID, mapped)
-	console.log('Batch sent to Redis', new Date())
+	queue.clear()
 }
 
 export const POST: RequestHandler = async ({ request, locals }) => {
