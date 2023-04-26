@@ -1,65 +1,22 @@
 import requests
 import json
 import time
+from random import *
+import threading
 
-url = "http://api.pixels.codam.nl/canvas/single"
-urlb = "http://localhost:3000/canvas/nameUser/renameduser"
-urlc = "http://localhost:5173/api/batch"
-url = urlc
+# url = "http://pixels.codam.nl/api/single"
+url = "http://localhost:5173/api/single"
 headers = {'Content-Type': 'application/json',
-           'x-real-ip': 'my.amazing.fake.ip'}
+		   'x-real-ip': 'my.amazing.fake.ip'}
 
+data = {
+	"x": 10,
+	"y": 10,
+	"color": [255, 0, 0, 255]
+}
+response = requests.post(url, headers=headers, data=json.dumps(data))
 
-class pxlInfo:
-    def __init__(self, width, height, data):
-        self.x = width
-        self.y = height
-        self.data = data
-
-# class name:
-#   def __init__(self, name):
-#     self.username = name
-
-# name = name('newName')
-# response = requests.post(urlb, headers=headers)
-
-
-x, y = 20, 80  # starting coordinates
-#     # create pxlInfo object with updated coordinates
-# data = pxlInfo(x, y, [random.random() * 255, random.random() * 255, random.random() * 255, 255])
-# data = pxlInfo(x, y, [0, 33, 255, 255])
-# print(data)
-# response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
-
-# # time.sleep(0.03)
-
-
-# x, y = 120, 80 # starting coordinates
-# for i in range(100):
-#     data = pxlInfo(x, y, [0, 0, 255, 255])
-#     response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
-#     x += 1 # move one unit to the right
-#     y -= 2 # move one unit up
-#     time.sleep(1)
-
-x, y = 0, 0  # starting coordinates
-# for i in range(100):
-#     # create pxlInfo object with updated coordinates
-color = [255, 255, 240, 255]
-for x in range(200):
-    for y in range(200):
-        data = {
-            "x": x,
-            "y": y,
-            "color": color
-        }
-        response = requests.post(url, headers=headers, data=json.dumps(data))
-        time.sleep(0.1)
-
-# data = pxlInfo(199, 199, [0, 0, 0, 255, 1], "name")
-# response = requests.post(url, headers=headers, data=json.dumps(data.__dict__))
-
-if response.status_code == 200 | 201:
-    print("Successfully sent data")
+if response.status_code == 200:
+	print("Send", data['x'], data['y'], data['color'], "successfully")
 else:
-    print("Failed to send data", response.status_code)
+	print("Failed to send", response.status_code, response.text)
