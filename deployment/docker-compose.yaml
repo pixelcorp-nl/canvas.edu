@@ -23,6 +23,9 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /root/update-docker-compose.sh:/root/update-docker-compose.sh
+    labels:
+      - com.centurylinklabs.watchtower.lifecycle.pre-update=/root/update-docker-compose.sh
     command: frontend
     environment:
       - WATCHTOWER_CLEANUP=true
