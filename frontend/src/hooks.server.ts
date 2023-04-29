@@ -1,4 +1,4 @@
-import type { Server } from 'socket.io'
+import type { Server } from '$lib/sharedTypes'
 import type { Handle } from '@sveltejs/kit'
 
 // This file is rather weird because of a hack in adapter-node-ws

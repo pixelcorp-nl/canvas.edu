@@ -2,8 +2,7 @@ import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { r } from '$api/_redis'
 import { PUBLIC_CANVAS_ID } from '$env/static/public'
 import { ParsedPixel } from '$api/_utils'
-import type { Pixel, SocketIOMessages } from '$lib/sharedTypes'
-import type { Server } from 'socket.io'
+import type { Pixel, Server } from '$lib/sharedTypes'
 import { mapObject, type Brand } from '$util/util'
 
 type Identifier = Brand<string, 'Identifier'>
@@ -40,8 +39,7 @@ async function processBatch(io: Server) {
 	const queueObj = Object.fromEntries(queue)
 	queue.clear()
 
-	const pixelValues: SocketIOMessages['pixels']['message'] = Object.values(queueObj)
-	io.emit('pixels', pixelValues)
+	io.emit('pixels', Object.values(queueObj))
 
 	const mapped = mapObject(queueObj, (_, { rgba }) => rgba)
 	await r.hset(PUBLIC_CANVAS_ID, mapped)

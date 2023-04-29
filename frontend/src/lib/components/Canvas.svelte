@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { io } from 'socket.io-client'
-	import type { SocketIOMessages } from '$lib/sharedTypes'
-
+	import type { Socket } from '$lib/sharedTypes'
 	import { PUBLIC_CANVAS_HEIGHT, PUBLIC_CANVAS_WIDTH, PUBLIC_SCALAR } from '$env/static/public'
 	import { onMount } from 'svelte'
+
 	const canvasWidth = Number(PUBLIC_CANVAS_WIDTH)
 	const canvasHeight = Number(PUBLIC_CANVAS_HEIGHT)
 	const pScalar = parseFloat(PUBLIC_SCALAR) || 1
@@ -13,8 +13,8 @@
 	let canvas: HTMLCanvasElement
 
 	onMount(async () => {
-		const socket = io()
-		socket.on('pixels', (pixels: SocketIOMessages['pixels']['message']) => {
+		const socket: Socket = io()
+		socket.on('pixels', pixels => {
 			for (const { x, y, rgba } of pixels) {
 				drawPixelOnCanvas(x, y, rgba, pScalar)
 			}
