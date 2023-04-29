@@ -1,14 +1,14 @@
 # Start dependencies run frontend and backend seperately
 start-deps:
-	docker compose up --remove-orphans --detach redis
+	docker compose up --remove-orphans --build --detach redis
 
 # Starts all containers in dev mode
 start:
-	docker compose up --remove-orphans
+	docker compose up --remove-orphans --build
 
 # Stops all containers
 down:
-	docker-compose down --remove-orphans
+	docker-compose down --remove-orphans --timeout 4
 
 # Lists all containers
 ps:
