@@ -9,6 +9,10 @@ services:
     volumes:
       - ~/AppData/Local/pnpm/store:/root/.pnpm-store # MacOS
       # - ~/.pnpm-store:/root/.pnpm-store # Linux
+    env_file:
+      - ./frontend/.env
+    environment:
+      PRIVATE_REDIS_URL: redis://redis:6379
 
   redis:
     container_name: redis
