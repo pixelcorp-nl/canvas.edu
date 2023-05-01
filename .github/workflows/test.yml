@@ -23,7 +23,9 @@ jobs:
         secrets: ${{ toJSON(secrets) }}
 
     - name: Setup .env file
-      run: env >> frontend/.env
+      run: |
+        ls -l
+        env >> frontend/.env
 
     - name: Start services
       run: docker compose up --remove-orphans --build --detach
