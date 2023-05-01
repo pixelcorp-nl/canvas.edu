@@ -66,7 +66,7 @@
 </script>
 
 <section>
-	<canvas bind:this={canvas} width={canvasWidth * pScalar} height={canvasHeight * pScalar} on:mousemove={logPosition} />
+	<canvas bind:this={canvas} width={canvasWidth * pScalar} height={canvasHeight * pScalar} on:mousemove={logPosition} id="canvas" />
 	<p class="mt-5">
 		{x}, {y}
 	</p>

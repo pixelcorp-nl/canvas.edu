@@ -9,6 +9,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "playwright test",
+		"test:dev": "playwright test --watch",
+		"test:view": "playwright test --headed",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint:check": "eslint --cache --cache-location node_modules/.eslintcache src tests; prettier --check src tests",

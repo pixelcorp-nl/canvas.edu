@@ -1,7 +1,54 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
+
+type Pixel = {
+	x: number
+	y: number
+	color: [number, number, number, number]
+}
+
+async function putPixel(pixel: Pixel): Promise<Record<string, unknown>> {
+	const resp = await fetch('http://localhost:5173/api/single', {
+		method: 'POST',
+		body: JSON.stringify(pixel)
+	})
+	const json = await resp?.json()
+	return json
+}
+
+async function getPixel(page: Page, x: number, y: number): Promise<Pixel> {
+	const data = await page.evaluate(() => {
+		const canvas = document.querySelector('canvas')
+		const ctx = canvas?.getContext('2d')
+		return ctx?.getImageData(2, 2, 1, 1)
+	})
+
+	const pixel: Pixel = {
+		x,
+		y,
+		color: [data?.data[0], data?.data[1], data?.data[2], data?.data[3]] as [number, number, number, number]
+	}
+	if (pixel.color.some(c => c === undefined)) {
+		throw new Error('Pixel color is undefined')
+	}
+	return pixel
+}
 
 test('Check page is rendered', async ({ page }) => {
-	page.goto('/')
+	await page.goto('http://localhost:5173')
 	const html = await page.locator('#footer').innerHTML()
 	expect(html).toContain('Oswin')
+})
+
+test('Check pixel can be put', async ({ page }) => {
+	const pixel: Pixel = { x: 0, y: 0, color: [123, 45, 67, 255] }
+
+	expect(await putPixel(pixel)).toStrictEqual({ ...pixel, message: 'Request added to batch' })
+
+	await page.goto('http://localhost:5173')
+	await expect(page.locator('#canvas')).toBeVisible()
+
+	await page.waitForTimeout(2000) // Wait for canvas to draw
+
+	const canvasPixel = await getPixel(page, pixel.x, pixel.y)
+	expect(canvasPixel).toStrictEqual(pixel)
 })
