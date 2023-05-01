@@ -15,27 +15,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - uses: docker-practice/actions-setup-docker@master
+
+    - name: Install playwright browsers
+      run: npx playwright install --with-deps
+
     - name: Inject GitHub secrets into env
       uses: oNaiPs/secrets-to-env-action@v1
       with:
         secrets: ${{ toJSON(secrets) }}
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 6.0.2
+    - name: Setup .env file
+      run: env >> frontend/.env
 
-    - name: Install dependencies
-      run: pnpm install
+    - name: Start services
+      run: docker compose up --remove-orphans --build --detach
 
-    - name: Install playwright browsers
-      run: npx playwright install --with-deps
-
-    - name: build
-      run: pnpm run build
-
-    - name: check linting
-      run: pnpm run lint:check
-
-    - name: Run tests
-      run: pnpm run test
+    - name: Start tests
+      run: cd frontend && npm run test

@@ -10,6 +10,9 @@ start:
 down:
 	docker-compose down --remove-orphans --timeout 4
 
+test:
+	docker compose up --remove-orphans --build --detach
+	(cd frontend && npm run test)
 # Lists all containers
 ps:
 	docker container list --no-trunc --format "table {{.Names}}\t{{.Status}}\t{{.Command}}\t{{.Ports}}"
