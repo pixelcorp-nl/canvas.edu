@@ -33,22 +33,31 @@ async function getPixel(page: Page, x: number, y: number): Promise<Pixel> {
 	return pixel
 }
 
-test('Check page is rendered', async ({ page }) => {
-	await page.goto('http://localhost:5173')
-	const html = await page.locator('#footer').innerHTML()
-	expect(html).toContain('Oswin')
-})
-
-test('Check pixel can be put', async ({ page }) => {
-	const pixel: Pixel = { x: 0, y: 0, color: [123, 45, 67, 255] }
-
-	expect(await putPixel(pixel)).toStrictEqual({ ...pixel, message: 'Request added to batch' })
-
-	await page.goto('http://localhost:5173')
+async function assertPixel(page: Page, pixel: Pixel) {
 	await expect(page.locator('#canvas')).toBeVisible()
 
 	await page.waitForTimeout(2000) // Wait for canvas to draw
 
 	const canvasPixel = await getPixel(page, pixel.x, pixel.y)
 	expect(canvasPixel).toStrictEqual(pixel)
+}
+
+test('Check page is rendered', async ({ page }) => {
+	await page.goto('http://localhost:5173')
+	const html = await page.locator('#footer').innerHTML()
+	expect(html).toContain('Oswin')
+})
+
+test('Check pixel can be put and then changed', async ({ page }) => {
+	await page.goto('http://localhost:5173')
+
+	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50, 255] }
+	expect(await putPixel(pixel)).toStrictEqual({ ...pixel, message: 'Request added to batch' })
+	await page.waitForTimeout(2000) // Wait for canvas to draw
+	await assertPixel(page, pixel)
+
+	const newPixel: Pixel = { ...pixel, color: [100, 100, 100, 255] }
+	await putPixel(newPixel)
+	await page.waitForTimeout(2000) // Wait for canvas to draw
+	await assertPixel(page, newPixel)
 })
