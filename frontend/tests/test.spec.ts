@@ -46,16 +46,22 @@ test('Check page is rendered', async ({ page }) => {
 	expect(html).toContain('Oswin')
 })
 
+test('Can put pixel', async () => {
+	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42, 255] }
+	expect(await putPixel(pixel)).toStrictEqual({ ...pixel, message: 'Request added to batch' })
+})
+
 test('Check pixel can be put and then changed', async ({ page }) => {
 	await page.goto('http://localhost:5173')
+	await page.waitForTimeout(1000) // Wait for canvas to draw
 
 	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50, 255] }
-	expect(await putPixel(pixel)).toStrictEqual({ ...pixel, message: 'Request added to batch' })
-	await page.waitForTimeout(2000) // Wait for canvas to draw
+	await putPixel(pixel)
+	await page.waitForTimeout(1000)
 	await assertPixel(page, pixel)
 
 	const newPixel: Pixel = { ...pixel, color: [100, 100, 100, 255] }
 	await putPixel(newPixel)
-	await page.waitForTimeout(2000) // Wait for canvas to draw
+	await page.waitForTimeout(1000)
 	await assertPixel(page, newPixel)
 })
