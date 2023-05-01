@@ -36,8 +36,6 @@ async function getPixel(page: Page, x: number, y: number): Promise<Pixel> {
 async function assertPixel(page: Page, pixel: Pixel) {
 	await expect(page.locator('#canvas')).toBeVisible()
 
-	await page.waitForTimeout(2000) // Wait for canvas to draw
-
 	const canvasPixel = await getPixel(page, pixel.x, pixel.y)
 	expect(canvasPixel).toStrictEqual(pixel)
 }
