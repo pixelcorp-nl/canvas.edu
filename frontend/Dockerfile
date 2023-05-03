@@ -2,8 +2,7 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# TODO: Add healthcheck
-# HEALTHCHECK --interval=5s --timeout=10s --start-period=5s --retries=1 CMD wget -q -O - http://localhost:8080/
+HEALTHCHECK --interval=5s --timeout=10s --start-period=5s --retries=1 CMD wget -q -O - http://localhost:5173/health
 
 EXPOSE 8080
 
