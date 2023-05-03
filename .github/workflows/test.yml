@@ -14,8 +14,19 @@ jobs:
 
     - uses: docker-practice/actions-setup-docker@master
 
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+
+    - name: Install make
+      run: sudo apt-get install make
+
+    - name: Install playwright package
+      run: cd frontend && pnpm i @playwright/test
+
     - name: Install playwright browsers
-      run: npx playwright install --with-deps
+      run: cd frontend && npx playwright install --with-deps
 
     - name: Inject GitHub secrets into env
       uses: oNaiPs/secrets-to-env-action@v1
@@ -23,12 +34,10 @@ jobs:
         secrets: ${{ toJSON(secrets) }}
 
     - name: Setup .env file
-      run: |
-        ls -l
-        env >> frontend/.env
+      run: env >> frontend/.env
 
     - name: Start services
-      run: docker compose up --remove-orphans --build --detach
+      run: make start-detached
 
     - name: Start tests
-      run: cd frontend && npm run test
+      run: make test

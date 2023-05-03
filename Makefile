@@ -2,9 +2,13 @@
 start-deps:
 	docker compose up --remove-orphans --build --detach redis
 
-# Starts all containers in dev mode
+# Starts all containers
 start:
 	docker compose up --remove-orphans --build
+
+# Starts all containers detached
+start-detached:
+	docker compose up --remove-orphans --build --detach
 
 # Stops all containers
 down:
@@ -12,7 +16,7 @@ down:
 
 test:
 	docker compose up --remove-orphans --build --detach
-	(cd frontend && npm run test)
+	(cd frontend && pnpm run test)
 # Lists all containers
 ps:
 	docker container list --no-trunc --format "table {{.Names}}\t{{.Status}}\t{{.Command}}\t{{.Ports}}"
