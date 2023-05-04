@@ -2,7 +2,7 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-HEALTHCHECK --interval=5s --timeout=10s --start-period=5s --retries=1 CMD wget -q -O - http://localhost:5173/health
+HEALTHCHECK --interval=5s --timeout=5s --start-period=5s --retries=3 CMD wget -q -O - http://localhost:5173/health
 
 EXPOSE 8080
 
@@ -17,4 +17,4 @@ RUN pnpm run lint:check
 ENV PORT=5173
 
 # USER node
-ENTRYPOINT [ "pnpm", "start" ]
+ENTRYPOINT [ "npm", "start" ]

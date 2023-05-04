@@ -11,9 +11,14 @@ start-detached:
 	docker compose up --remove-orphans --build --detach
 
 # Wait for services to start
-wait-for-healthcheck: SHELL:=/bin/bash
-wait-for-healthcheck:
-	until [ "$$(docker inspect -f {{.State.Health.Status}} frontend)" = "healthy" ]; do sleep 0.5; echo -n .; done
+wait-for-healthcheck: $(eval SHELL:=/bin/bash)
+	while [ 1 ]; do \
+		STATUS=$$(docker inspect -f {{.State.Health.Status}} frontend); \
+		echo "$$STATUS"; \
+		[[ "$$STATUS" = "unhealthy" ]] && sleep 1 && docker compose logs && exit 1; \
+		[[ "$$STATUS" = "healthy" ]] && exit 0; \
+		sleep 1; \
+	done;
 
 # Stops all containers
 down:
@@ -22,13 +27,12 @@ down:
 # Run tests
 test:
 	docker compose up --remove-orphans --build --detach
-	(cd frontend && pnpm run test)
+	(cd frontend && npm run test)
 
 # Lists all containers
 ps:
-	docker container list --no-trunc --format "table {{.Names}}\t{{.Status}}\t{{.Command}}\t{{.Ports}}"
+	docker container list -a --no-trunc --format "table {{.Names}}\t{{.Status}}\t{{.Command}}\t{{.Ports}}"
 
 # Print and follow logs for all containers
 logs:
 	docker compose logs -f --tail=1000
-docker inspect --format='{{json .State.Health}}' db

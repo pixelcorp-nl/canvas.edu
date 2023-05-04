@@ -26,7 +26,7 @@ jobs:
       run: cd frontend && pnpm i @playwright/test
 
     - name: Install playwright browsers
-      run: cd frontend && npx playwright install --with-deps
+      run: cd frontend && npx playwright install chromium
 
     - name: Inject GitHub secrets into env
       uses: oNaiPs/secrets-to-env-action@v1
@@ -39,7 +39,7 @@ jobs:
     - name: Start services
       run: make start-detached
 
-    - name: Wait for sercices to start
+    - name: Wait for services to start
       run: make wait-for-healthcheck
 
     - name: Start tests
