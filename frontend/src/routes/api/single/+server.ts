@@ -57,6 +57,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	queue.set(getIdentifier(pixel), pixel)
 	void processBatch(locals.io)
 
-	locals.statsd.increment('pixel.post')
+	locals.statsd.increment('pixel')
 	return json({ message: 'Request added to batch', x, y, color })
 }
