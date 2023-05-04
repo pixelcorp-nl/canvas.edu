@@ -6,7 +6,8 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			io: Server
+			io: import('socket.io').Server
+			statsd: import('./util/statsd').StatsD
 		}
 		// interface PageData {}
 		// interface Platform {}
