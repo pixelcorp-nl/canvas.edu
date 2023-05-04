@@ -7,7 +7,7 @@ export class StatsD {
 		const defaultOpt: ClientOptions = {
 			port: 8125,
 			host: 'datadog-agent', // TODO use env
-			errorHandler: console.error,
+			errorHandler: console.error
 		}
 		this.client = new StatsDObj({ ...defaultOpt, ...opt })
 		if (!this.isValidDataDogStr(globalPrefix)) {
