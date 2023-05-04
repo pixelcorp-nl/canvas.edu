@@ -10,9 +10,11 @@ export const handleWs = (io: Server) => {
 	globalIo = io
 }
 
-// Injecting the socket.io server into the event object
+const statsd = new StatsD('pixels')
+
+// Injecting global variables into the event object
 export const handle: Handle = ({ event, resolve }) => {
 	event.locals.io = globalIo as Server
-	event.locals.statsd = new StatsD('pixels')
+	event.locals.statsd = statsd
 	return resolve(event)
 }
