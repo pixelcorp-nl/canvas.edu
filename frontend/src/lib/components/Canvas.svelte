@@ -13,10 +13,8 @@
 	let canvas: HTMLCanvasElement
 
 	onMount(async () => {
-		const data = (await fetch('/api/canvas').then(res => res.json())) as Record<string, string>
-
-		const socket = io()
-		socket.on('pixels', (pixels: SocketIOMessages['pixels']['message']) => {
+		const socket: Socket = io()
+		socket.on('pixels', pixels => {
 			for (const { x, y, rgba } of pixels) {
 				drawPixelOnCanvas(x, y, rgba, pScalar)
 			}
