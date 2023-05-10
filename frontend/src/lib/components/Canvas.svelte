@@ -24,7 +24,7 @@
 		const { canvasSize, pixelSize } = calculateNewCanvasSize(pScalar, canvasWidth, canvasHeight)
 		canvas.width = canvasSize.width
 		canvas.height = canvasSize.height
-		drawObjectOnCanvas(data, canvas, pixelSize)
+		drawObjectOnCanvas(data.canvas, canvas, pixelSize)
 	})
 
 	function calculateNewCanvasSize(scalingFactor: number, canvasWidth: number, canvasHeight: number) {
