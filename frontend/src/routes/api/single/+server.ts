@@ -47,27 +47,32 @@ async function processBatch(io: Server) {
 }
 
 export const POST: RequestHandler = async ({ request, locals, getClientAddress }) => {
-	const { success, timeToWait } = await ratelimit(getClientAddress(), {
-		timePeriodSeconds: 1,
-		maxRequests: 10,
-		route: 'post-pixel'
-	})
+	try {
+		const { success, timeToWait } = await ratelimit(getClientAddress(), {
+			timePeriodSeconds: 1,
+			maxRequests: 10,
+			route: 'post-pixel'
+		})
 
-	if (!success) {
-		return json({ success, timeToWait }, { status: 429 })
-	} else {
-		const parsed = await ParsedPixel.safeParseAsync(await request.json())
-		if (!parsed.success) {
-			throw error(400, 'This request is not valid please make sure you have x, y, and color like this: {x: 0, y: 0, color: [0, 0, 0, 1]}')
+		if (!success) {
+			return json({ success, timeToWait }, { status: 429 })
+		} else {
+			const parsed = await ParsedPixel.safeParseAsync(await request.json())
+			if (!parsed.success) {
+				throw error(400, 'This request is not valid please make sure you have x, y, and color like this: {x: 0, y: 0, color: [0, 0, 0, 1]}')
+			}
+			const { x, y, color } = parsed.data
+			const rgba = `${color[0]},${color[1]},${color[2]},${color[3]}`
+			const pixel: Pixel = { x, y, rgba }
+
+			queue.set(getIdentifier(pixel), pixel)
+			void processBatch(locals.io)
+
+			locals.statsd.increment('pixel')
+			return json({ success: true, message: 'Request added to batch', x, y, color })
 		}
-		const { x, y, color } = parsed.data
-		const rgba = `${color[0]},${color[1]},${color[2]},${color[3]}`
-		const pixel: Pixel = { x, y, rgba }
-
-		queue.set(getIdentifier(pixel), pixel)
-		void processBatch(locals.io)
-
-		// locals.statsd.increment('pixel')
-		return json({ success: true, message: 'Request added to batch', x, y, color })
+	} catch (error) {
+		console.error(error)
+		return json({ success: false, error }, { status: 500 })
 	}
 }

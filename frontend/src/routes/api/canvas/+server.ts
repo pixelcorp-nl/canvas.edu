@@ -11,7 +11,7 @@ export async function GET({ getClientAddress }) {
 			maxRequests: 10,
 			route: 'get-canvas'
 		})
-		// console.log('ratelimitResult:', ratelimitResult)
+
 		if (!ratelimitResult.success) {
 			return json(ratelimitResult, { status: 429 })
 		}

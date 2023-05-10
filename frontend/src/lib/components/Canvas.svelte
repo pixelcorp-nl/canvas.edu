@@ -2,7 +2,7 @@
 	import { io } from 'socket.io-client'
 	import type { Socket } from '$lib/sharedTypes'
 	import { PUBLIC_CANVAS_HEIGHT, PUBLIC_CANVAS_WIDTH, PUBLIC_SCALAR } from '$env/static/public'
-	import { onMount } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 
 	const canvasWidth = Number(PUBLIC_CANVAS_WIDTH)
 	const canvasHeight = Number(PUBLIC_CANVAS_HEIGHT)
@@ -12,19 +12,30 @@
 
 	let canvas: HTMLCanvasElement
 
+	type Data = {
+		canvas: Record<string, string>
+		success: boolean
+	}
+
+	const socket: Socket = io()
 	onMount(async () => {
-		const socket: Socket = io()
 		socket.on('pixels', pixels => {
 			for (const { x, y, rgba } of pixels) {
 				drawPixelOnCanvas(x, y, rgba, pScalar)
 			}
 		})
 
+		const data: Data = await fetch('/api/canvas').then(res => res.json())
+
 		// console.log(await data);
 		const { canvasSize, pixelSize } = calculateNewCanvasSize(pScalar, canvasWidth, canvasHeight)
 		canvas.width = canvasSize.width
 		canvas.height = canvasSize.height
 		drawObjectOnCanvas(data.canvas, canvas, pixelSize)
+	})
+
+	onDestroy(() => {
+		socket.disconnect()
 	})
 
 	function calculateNewCanvasSize(scalingFactor: number, canvasWidth: number, canvasHeight: number) {
