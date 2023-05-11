@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { io } from 'socket.io-client'
+	import { publicEnv } from '../../publicEnv'
 	import type { Socket } from '$lib/sharedTypes'
-	import { PUBLIC_CANVAS_HEIGHT, PUBLIC_CANVAS_WIDTH, PUBLIC_SCALAR } from '$env/static/public'
 	import { onDestroy, onMount } from 'svelte'
 
 	const { canvasHeight, canvasWidth, pScalar } = publicEnv
-
 	let { x, y } = { x: 0, y: 0 }
 
 	let canvas: HTMLCanvasElement
