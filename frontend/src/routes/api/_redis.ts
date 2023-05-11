@@ -11,10 +11,3 @@ export async function setPixelMap(canvasId: string, pixelMap: PixelMap): Promise
 export async function getPixelMap(canvasId: string): Promise<PixelMap> {
 	return (await r.hgetall(canvasId)) as PixelMap
 }
-
-export function forEachPixel(pixels: PixelMap, callback: (x: number, y: number, rgba: string) => void): void {
-	for (const [key, rgba] of Object.entries(pixels)) {
-		const [x, y] = key.split(',').map(Number) as [number, number]
-		callback(x, y, rgba)
-	}
-}

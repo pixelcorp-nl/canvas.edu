@@ -3,7 +3,7 @@
 	import { publicEnv } from '../../publicEnv'
 	import type { Socket } from '$lib/sharedTypes'
 	import { onDestroy, onMount } from 'svelte'
-	import { forEachPixel } from '$api/_redis'
+	import { forEachPixel } from '$api/_utils'
 
 	const { canvasHeight, canvasWidth, pScalar } = publicEnv
 	let { x, y } = { x: 0, y: 0 }
