@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { io } from 'socket.io-client'
-	import type { SocketIOMessages } from '$lib/sharedTypes'
-	import { publicEnv } from '../../publicEnv'
-	import { onMount } from 'svelte'
+	import type { Socket } from '$lib/sharedTypes'
+	import { PUBLIC_CANVAS_HEIGHT, PUBLIC_CANVAS_WIDTH, PUBLIC_SCALAR } from '$env/static/public'
+	import { onDestroy, onMount } from 'svelte'
 
 	const { canvasHeight, canvasWidth, pScalar } = publicEnv
 
