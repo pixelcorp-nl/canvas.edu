@@ -18,17 +18,27 @@ export class StatsD {
 	}
 
 	public increment(stat: string, tag?: string): void {
-		if (process.env['NODE_ENV'] !== 'production') {
+		if (!this.validInput(stat, tag)) {
 			return
 		}
+		this.client.increment(`${this.globalPrefix}-${stat}`, tag ? [tag] : [])
+	}
 
+	public gauge(stat: string, value: number, tag?: string): void {
+		if (!this.validInput(stat, tag)) {
+			return
+		}
+		this.client.gauge(`${this.globalPrefix}-${stat}`, value, tag ? [tag] : [])
+	}
+
+	private validInput(stat: string, tag?: string): boolean {
 		if (!this.isValidDataDogStr(stat)) {
-			return console.error(`Invalid stat ${stat}`)
+			return false
 		}
 		if (tag && !this.isValidDataDogStr(tag)) {
-			return console.error(`Invalid tag ${tag} for stat ${stat}`)
+			return false
 		}
-		this.client.increment(`${this.globalPrefix}-${stat}`, tag ? [tag] : [])
+		return true
 	}
 
 	public strToTag(prefix: string, str: string): string {
