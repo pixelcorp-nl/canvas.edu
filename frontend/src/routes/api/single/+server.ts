@@ -1,6 +1,6 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { r } from '$api/_redis'
-import { PUBLIC_CANVAS_ID } from '$env/static/public'
+import { publicEnv } from '../../../publicEnv'
 import { ParsedPixel } from '$api/_utils'
 import type { Pixel, Server } from '$lib/sharedTypes'
 import { mapObject, type Brand } from '$util/util'
@@ -43,7 +43,7 @@ async function processBatch(io: Server) {
 	io.emit('pixels', Object.values(queueObj))
 
 	const mapped = mapObject(queueObj, (_, { rgba }) => rgba)
-	await r.hset(PUBLIC_CANVAS_ID, mapped)
+	await r.hset(publicEnv.canvasId, mapped)
 }
 
 export const POST: RequestHandler = async ({ request, locals, getClientAddress }) => {

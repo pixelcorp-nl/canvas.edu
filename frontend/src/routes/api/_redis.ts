@@ -1,4 +1,4 @@
 import Redis from 'ioredis'
-import { env } from '$env/dynamic/private'
+import { privateEnv } from '../../privateEnv'
 
-export const r = new Redis(env.PRIVATE_REDIS_URL)
+export const r = new Redis(privateEnv.redisUrl)

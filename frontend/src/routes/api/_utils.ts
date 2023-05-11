@@ -1,8 +1,6 @@
-import { PUBLIC_CANVAS_HEIGHT, PUBLIC_CANVAS_WIDTH } from '$env/static/public'
+import { publicEnv } from '../../publicEnv'
 import { z } from 'zod'
-
-const canvasHeight = Number(PUBLIC_CANVAS_HEIGHT)
-const canvasWidth = Number(PUBLIC_CANVAS_WIDTH)
+const { canvasHeight, canvasWidth } = publicEnv
 
 const rgbValue = z.number().min(0).max(255)
 
