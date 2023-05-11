@@ -69,7 +69,7 @@ export const POST: RequestHandler = async ({ request, locals, getClientAddress }
 		void processBatch(locals.io)
 
 		locals.statsd.increment('pixel')
-		return json({ success: true, message: 'Request added to batch', x, y, color })
+		return json({ success: true, x, y, color })
 	} catch (error) {
 		console.error(error)
 		return json({ success: false, error }, { status: 500 })

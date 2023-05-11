@@ -48,7 +48,7 @@ test('Check page is rendered', async ({ page }) => {
 
 test('Can put pixel', async () => {
 	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42, 255] }
-	expect(await putPixel(pixel)).toStrictEqual({ ...pixel, message: 'Request added to batch' })
+	expect(await putPixel(pixel)).toStrictEqual({ success: true, ...pixel })
 })
 
 test('Check pixel can be put and then changed', async ({ page }) => {
