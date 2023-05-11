@@ -1,10 +1,9 @@
-import { error, json } from '@sveltejs/kit'
+import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { r } from '$api/_redis'
-import { publicEnv } from '../../../publicEnv'
+import { ratelimit } from '$api/_ratelimit'
+import { PUBLIC_CANVAS_ID } from '$env/static/public'
 
-/** @type {import('./$types').RequestHandler} */
-
-export async function GET({ getClientAddress }) {
+export const GET: RequestHandler = async ({ getClientAddress }) => {
 	try {
 		const ratelimitResult = await ratelimit(getClientAddress(), {
 			timePeriodSeconds: 60,
@@ -16,10 +15,10 @@ export async function GET({ getClientAddress }) {
 			return json(ratelimitResult, { status: 429 })
 		}
 
-	const data = await r.hgetall(publicEnv.canvasId)
-	if (data) {
-		cache = data as Cache
-		last_request = Date.now()
-		return json(data)
+		const canvas = await r.hgetall(PUBLIC_CANVAS_ID)
+		return json({ succes: true, canvas })
+	} catch (err) {
+		console.error('Error getting canvas:', err)
+		throw error(500, 'Could not get canvas')
 	}
 }
