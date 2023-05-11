@@ -1,6 +1,13 @@
 import { StatsD as StatsDObj, type ClientOptions } from 'hot-shots'
 import { privateEnv } from '../privateEnv'
 
+const stats = [
+	'pixel',
+	'connections'
+] as const
+
+export type Stat = typeof stats[number]
+
 export class StatsD {
 	private client: StatsDObj
 	private globalPrefix: string
@@ -17,14 +24,14 @@ export class StatsD {
 		this.globalPrefix = globalPrefix
 	}
 
-	public increment(stat: string, tag?: string): void {
+	public increment(stat: Stat, tag?: string): void {
 		if (!this.validInput(stat, tag)) {
 			return
 		}
 		this.client.increment(`${this.globalPrefix}-${stat}`, tag ? [tag] : [])
 	}
 
-	public gauge(stat: string, value: number, tag?: string): void {
+	public gauge(stat: Stat, value: number, tag?: string): void {
 		if (!this.validInput(stat, tag)) {
 			return
 		}

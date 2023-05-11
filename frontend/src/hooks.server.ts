@@ -10,14 +10,13 @@ let listenerCount = 0
 let globalIo: Server | undefined = undefined
 export const handleWs = (io: Server) => {
 	globalIo = io
-	console.log('handlews')
 
 	io.on('connection', (socket) => {
 		listenerCount++
-		statsd.gauge('sockets', listenerCount)
+		statsd.gauge('connections', listenerCount)
 		socket.on('disconnect', () => {
 			listenerCount--
-			statsd.gauge('sockets', listenerCount)
+			statsd.gauge('connections', listenerCount)
 		})
 	})
 }
