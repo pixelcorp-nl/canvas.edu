@@ -1,13 +1,6 @@
 import { StatsD as StatsDObj, type ClientOptions } from 'hot-shots'
 import { privateEnv } from '../privateEnv'
 
-const stats = [
-	'pixel',
-	'connections'
-] as const
-
-export type Stat = typeof stats[number]
-
 export class StatsD {
 	private client: StatsDObj
 	private globalPrefix: string
@@ -24,28 +17,18 @@ export class StatsD {
 		this.globalPrefix = globalPrefix
 	}
 
-	public increment(stat: Stat, tag?: string): void {
-		if (!this.validInput(stat, tag)) {
+	public increment(stat: string, tag?: string): void {
+		if (process.env['NODE_ENV'] !== 'production') {
 			return
 		}
-		this.client.increment(`${this.globalPrefix}-${stat}`, tag ? [tag] : [])
-	}
 
-	public gauge(stat: Stat, value: number, tag?: string): void {
-		if (!this.validInput(stat, tag)) {
-			return
-		}
-		this.client.gauge(`${this.globalPrefix}-${stat}`, value, tag ? [tag] : [])
-	}
-
-	private validInput(stat: string, tag?: string): boolean {
 		if (!this.isValidDataDogStr(stat)) {
-			return false
+			return console.error(`Invalid stat ${stat}`)
 		}
 		if (tag && !this.isValidDataDogStr(tag)) {
-			return false
+			return console.error(`Invalid tag ${tag} for stat ${stat}`)
 		}
-		return true
+		this.client.increment(`${this.globalPrefix}-${stat}`, tag ? [tag] : [])
 	}
 
 	public strToTag(prefix: string, str: string): string {
