@@ -1,5 +1,5 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
-import { r } from '$api/_redis'
+import { setPixelMap } from '$api/_redis'
 import { publicEnv } from '../../../publicEnv'
 import { ParsedPixel } from '$api/_utils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
@@ -34,7 +34,7 @@ async function processBatch(io: Server) {
 	queue.clear()
 
 	io.emit('pixelMap', queueObj)
-	await r.hset(publicEnv.canvasId, queueObj)
+	await setPixelMap(publicEnv.canvasId, queueObj)
 }
 
 export const POST: RequestHandler = async ({ request, locals, getClientAddress }) => {
