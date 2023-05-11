@@ -1,5 +1,5 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
-import { r } from '$api/_redis'
+import { getPixels as getPixelMap } from '$api/_redis'
 import { publicEnv } from '../../../publicEnv'
 import { ratelimit } from '$api/_ratelimit'
 
@@ -15,8 +15,8 @@ export const GET: RequestHandler = async ({ getClientAddress }) => {
 			return json(ratelimitResult, { status: 429 })
 		}
 
-		const canvas = await r.hgetall(publicEnv.canvasId)
-		return json({ succes: true, canvas })
+		const pixelMap = await getPixelMap(publicEnv.canvasId)
+		return json({ succes: true, canvas: pixelMap })
 	} catch (err) {
 		console.error('Error getting canvas:', err)
 		throw error(500, 'Could not get canvas')
