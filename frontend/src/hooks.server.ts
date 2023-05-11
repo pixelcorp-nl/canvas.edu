@@ -13,7 +13,7 @@ let globalIo: Server | undefined = undefined
 export const handleWs = (io: Server) => {
 	globalIo = io
 
-	io.on('connection', socket => {
+	io.on('connection', async socket => {
 		listenerCount++
 		statsd.gauge('connections', listenerCount)
 		socket.on('disconnect', () => {

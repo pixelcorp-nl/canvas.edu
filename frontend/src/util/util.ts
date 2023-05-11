@@ -1,4 +1,4 @@
-import type { PixelMap } from "$lib/sharedTypes"
+import type { PixelMap } from '$lib/sharedTypes'
 
 export function forEachPixel(pixels: PixelMap, callback: (x: number, y: number, rgba: string) => void): void {
 	for (const [key, rgba] of Object.entries(pixels)) {

@@ -11,7 +11,7 @@
 	let canvas: HTMLCanvasElement
 
 	const socket: Socket = io()
-	onMount(async () => {
+	onMount(() => {
 		socket.on('pixelMap', pixelMap => {
 			forEachPixel(pixelMap, (x, y, color) => {
 				drawPixelOnCanvas(x, y, color, pScalar)
