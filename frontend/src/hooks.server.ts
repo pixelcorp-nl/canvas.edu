@@ -1,7 +1,7 @@
 import type { Server } from '$lib/sharedTypes'
 import type { Handle } from '@sveltejs/kit'
 import { StatsD } from './util/statsd'
-import { getPixels } from '$api/_redis'
+import { getPixelMap } from '$api/_redis'
 import { publicEnv } from './publicEnv'
 
 let listenerCount = 0
@@ -22,6 +22,8 @@ export const handleWs = (io: Server) => {
 			listenerCount--
 			statsd.gauge('connections', listenerCount)
 		})
+		const pixels = await getPixelMap(publicEnv.canvasId)
+		socket.emit('pixelMap', pixels)
 	})
 }
 

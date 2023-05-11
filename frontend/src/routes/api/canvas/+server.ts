@@ -1,5 +1,5 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
-import { getPixels as getPixelMap } from '$api/_redis'
+import { getPixelMap } from '$api/_redis'
 import { publicEnv } from '../../../publicEnv'
 import { ratelimit } from '$api/_ratelimit'
 

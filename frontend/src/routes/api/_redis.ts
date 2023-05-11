@@ -4,7 +4,7 @@ import type { PixelMap } from '$lib/sharedTypes'
 
 export const r = new Redis(privateEnv.redisUrl)
 
-export async function getPixels(canvasId: string): Promise<PixelMap> {
+export async function getPixelMap(canvasId: string): Promise<PixelMap> {
 	return (await r.hgetall(canvasId)) as PixelMap
 }
 
