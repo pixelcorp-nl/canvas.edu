@@ -5,9 +5,9 @@
 </script>
 
 <nav aria-label="Site Nav" class=" flex w-full items-center justify-between p-4">
-	<a href="https://codam.nl" class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-black">
+	<a href="/" class="inline-flex h-10 w-10 items-center justify-center shadow-lg rounded-md">
 		<!-- <span class="sr-only">Logo</span> -->
-		<img src="/images/Codam.svg" class="m-1 p-1 w-full h-full hover:scale-95 transition-all" alt="" srcset="" />
+		<img src="pixels.svg" class="m-1 p-1 w-full h-full hover:scale-95 transition-all" alt="" srcset="" />
 	</a>
 
 	<ul class="flex items-center gap-2 text-sm font-medium text-gray-500">
@@ -15,13 +15,10 @@
       <a class="rounded-lg px-3 py-2" href="/"> Home </a>
     </li> -->
 
-		<li><a class="underline-offset-2 decoration-wavy decoration-slate-400 rounded-lg px-3 py-2" class:underline={$page.route.id === '/'} href="/"> {$_('header.canvas')} </a></li>
+		<li><a class="rounded-lg px-3 py-2" class:bg-gray-100={$page.route.id === '/'} href="/"> {$_('header.canvas')} </a></li>
 
 		<li>
-			<a
-				class="underline-offset-2 decoration-wavy decoration-slate-400 inline-flex items-center gap-2 rounded-lg px-3 py-2"
-				class:underline={$page.route.id === '/info'}
-				href="/info">
+			<a class="rounded-lg inline-flex items-center gap-2 px-3 py-2" class:bg-gray-100={$page.route.id === '/info'} href="/info">
 				{$_('header.info')}
 			</a>
 		</li>
