@@ -5,7 +5,7 @@ interface RateLimitOptions {
 	route: string
 	// Amount of time over which the requests function tracks the number of requests.
 	timePeriodSeconds: number
-	// Max amount of requsts over that time.
+	// Max amount of requests over that time.
 	maxRequests: number
 }
 
@@ -19,11 +19,10 @@ export async function ratelimit(identifier: string | undefined | null, options: 
 			const oldestRequestTime = parseInt(requests[0] as string, 10)
 			const timeToWait = Math.max(oldestRequestTime + options.timePeriodSeconds * 1000 - now, 0) // in milliseconds
 			return { success: false, timeToWait }
-		} else {
-			await r.zadd(`ratelimit:${options.route}:(${identifier})`, now, now.toString())
-			await r.expire(`ratelimit:${options.route}:(${identifier})`, options.timePeriodSeconds)
-			return { success: true }
 		}
+		await r.zadd(`ratelimit:${options.route}:(${identifier})`, now, now.toString())
+		await r.expire(`ratelimit:${options.route}:(${identifier})`, options.timePeriodSeconds)
+		return { success: true }
 	} catch (err) {
 		console.error('Error ratelimiting:', err)
 		return { success: false }
