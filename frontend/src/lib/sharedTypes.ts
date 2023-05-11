@@ -1,15 +1,14 @@
 import type { Socket as LibSocket } from 'socket.io-client'
 import type { Server as LibServer } from 'socket.io'
 
-export type Pixel = {
-	x: number
-	y: number
-	rgba: string
-}
+export type Brand<T, U> = T & { __brand: U }
+export type Coordinate = Brand<string, 'Coordinate'>
+export type RGBA = Brand<string, 'RGBA'>
+export type PixelMap = Record<Coordinate, RGBA>
 
 // https://socket.io/docs/v4/typescript/
 export type ServerToClientEvents = {
-	pixels: (pixels: Pixel[]) => void
+	pixelMap: (pixelMap: PixelMap) => void
 }
 
 export type ClientToServerEvents = {

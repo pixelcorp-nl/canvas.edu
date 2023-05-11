@@ -1,6 +1,8 @@
 import type { Server } from '$lib/sharedTypes'
 import type { Handle } from '@sveltejs/kit'
 import { StatsD } from './util/statsd'
+import { getPixels } from '$api/_redis'
+import { publicEnv } from './publicEnv'
 
 let listenerCount = 0
 
@@ -11,13 +13,15 @@ let globalIo: Server | undefined = undefined
 export const handleWs = (io: Server) => {
 	globalIo = io
 
-	io.on('connection', (socket) => {
+	io.on('connection', async (socket) => {
 		listenerCount++
 		statsd.gauge('connections', listenerCount)
 		socket.on('disconnect', () => {
 			listenerCount--
 			statsd.gauge('connections', listenerCount)
 		})
+		const pixels = await getPixels(publicEnv.canvasId)
+		socket.emit('pixelMap', pixels)
 	})
 }
 

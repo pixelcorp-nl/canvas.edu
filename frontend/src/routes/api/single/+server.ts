@@ -2,22 +2,15 @@ import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { r } from '$api/_redis'
 import { publicEnv } from '../../../publicEnv'
 import { ParsedPixel } from '$api/_utils'
-import type { Pixel, Server } from '$lib/sharedTypes'
-import { mapObject, type Brand } from '$util/util'
+import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$api/_ratelimit'
-
-type Identifier = Brand<string, 'Identifier'>
 
 // Adjust this value to control how often data is sent to Redis (in milliseconds)
 const BATCH_INTERVAL = 100
 
 let lastBatch = 0
 let timeout: NodeJS.Timeout | undefined
-const queue = new Map<Identifier, Pixel>()
-
-function getIdentifier({ x, y }: Pixel): Identifier {
-	return `${x},${y}` as Identifier
-}
+const queue = new Map<Coordinate, RGBA>()
 
 async function processBatch(io: Server) {
 	const now = Date.now()
@@ -40,10 +33,8 @@ async function processBatch(io: Server) {
 	const queueObj = Object.fromEntries(queue)
 	queue.clear()
 
-	io.emit('pixels', Object.values(queueObj))
-
-	const mapped = mapObject(queueObj, (_, { rgba }) => rgba)
-	await r.hset(publicEnv.canvasId, mapped)
+	io.emit('pixelMap', queueObj)
+	await r.hset(publicEnv.canvasId, queueObj)
 }
 
 export const POST: RequestHandler = async ({ request, locals, getClientAddress }) => {
@@ -63,9 +54,7 @@ export const POST: RequestHandler = async ({ request, locals, getClientAddress }
 		}
 		const { x, y, color } = parsed.data
 		const rgba = `${color[0]},${color[1]},${color[2]},${color[3]}`
-		const pixel: Pixel = { x, y, rgba }
-
-		queue.set(getIdentifier(pixel), pixel)
+		queue.set(`${x},${y}` as Coordinate, rgba as RGBA)
 		void processBatch(locals.io)
 
 		locals.statsd.increment('pixel')

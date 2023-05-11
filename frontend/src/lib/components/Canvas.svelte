@@ -3,32 +3,24 @@
 	import { publicEnv } from '../../publicEnv'
 	import type { Socket } from '$lib/sharedTypes'
 	import { onDestroy, onMount } from 'svelte'
+	import { forEachPixel } from '$util/util'
 
 	const { canvasHeight, canvasWidth, pScalar } = publicEnv
 	let { x, y } = { x: 0, y: 0 }
 
 	let canvas: HTMLCanvasElement
 
-	type Data = {
-		canvas: Record<string, string>
-		success: boolean
-	}
-
 	const socket: Socket = io()
 	onMount(async () => {
-		socket.on('pixels', pixels => {
-			for (const { x, y, rgba } of pixels) {
-				drawPixelOnCanvas(x, y, rgba, pScalar)
-			}
+		socket.on('pixelMap', pixelMap => {
+			forEachPixel(pixelMap, (x, y, color) => {
+				drawPixelOnCanvas(x, y, color, pScalar)
+			})
 		})
 
-		const data: Data = await fetch('/api/canvas').then(res => res.json())
-
-		// console.log(await data);
-		const { canvasSize, pixelSize } = calculateNewCanvasSize(pScalar, canvasWidth, canvasHeight)
+		const { canvasSize } = calculateNewCanvasSize(pScalar, canvasWidth, canvasHeight)
 		canvas.width = canvasSize.width
 		canvas.height = canvasSize.height
-		drawObjectOnCanvas(data.canvas, canvas, pixelSize)
 	})
 
 	onDestroy(() => {
@@ -50,18 +42,6 @@
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 		ctx.fillStyle = `rgba(${color})`
 		ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize)
-	}
-
-	function drawObjectOnCanvas(colorData: Record<string, string>, canvas: HTMLCanvasElement, pixelSize: number): void {
-		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-		ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-		for (const key in colorData) {
-			const [x, y] = key.split(',').map(Number) as [number, number]
-			const color = colorData[key] as keyof typeof colorData
-
-			drawPixelOnCanvas(x, y, color, pixelSize)
-		}
 	}
 
 	function logPosition(event: MouseEvent) {
