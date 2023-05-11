@@ -18,6 +18,10 @@ export class StatsD {
 	}
 
 	public increment(stat: string, tag?: string): void {
+		if (process.env['NODE_ENV'] !== 'production') {
+			return
+		}
+
 		if (!this.isValidDataDogStr(stat)) {
 			return console.error(`Invalid stat ${stat}`)
 		}
