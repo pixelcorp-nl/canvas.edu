@@ -1,12 +1,9 @@
 import { StatsD as StatsDObj, type ClientOptions } from 'hot-shots'
 import { privateEnv } from '../privateEnv'
 
-const stats = [
-	'pixel',
-	'connections'
-] as const
+const stats = ['pixel', 'connections'] as const
 
-export type Stat = typeof stats[number]
+export type Stat = (typeof stats)[number]
 
 export class StatsD {
 	private client: StatsDObj
