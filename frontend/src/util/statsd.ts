@@ -1,12 +1,13 @@
 import { StatsD as StatsDObj, type ClientOptions } from 'hot-shots'
+import { privateEnv } from '../privateEnv'
 
 export class StatsD {
 	private client: StatsDObj
 	private globalPrefix: string
 	constructor(globalPrefix: string, opt?: Partial<ClientOptions>) {
 		const defaultOpt: ClientOptions = {
-			port: 8125,
-			host: 'datadog-agent', // TODO use env
+			port: privateEnv.statsdPort,
+			host: privateEnv.statsdHost,
 			errorHandler: console.error
 		}
 		this.client = new StatsDObj({ ...defaultOpt, ...opt })
