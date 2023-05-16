@@ -1,0 +1,13 @@
+We use a linter for all JavaScript/TypeScript/Vue Files
+
+You can lint the repository by running:
+- make lint
+- make lint-fix
+
+If ESLint is not installed the script will complain and ask you to install it locally.
+Instructions are provided
+
+When merging with the main all linter errors and warnings should be solved
+if not the merge will be blocked
+
+You can download the ESLint extension to automatically lint

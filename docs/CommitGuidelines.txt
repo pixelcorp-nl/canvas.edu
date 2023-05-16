@@ -1,0 +1,39 @@
+To prevent a large project from becoming messy and opaque to its contributors 
+we should have a clear style guide when it comes to applying commits.
+
+This document may be edited over the duration of the project, but serves as a 
+reference point as an agreed upon format that all commits must try to adhere to.
+
+Let's treat this project as a portfolio piece, something implementing all the 
+best practices and as something you'd be proud to show off!
+
+Rule 1: The subject line of a commit should be in the imperative.
+	It should be able to be placed at the end of the following sentence:
+	"If applied, this commit will [...]"
+
+Rule 2: The body should be separated from the subject.
+	Most commits will be sizeable enough to warrant further explanation with a 
+	body. This body should be separated from the subject line by a single 
+	empty line.
+	This can be done by using the git commit command in the following way:
+	git commit -m "[subject line]" -m "[clarifying body]"
+
+Rule 3: The body should be relevant to the subject.
+	Do not mention anything in the body that is not a direct expansion on what
+	has been indicated by the subject line. The body is strictly where you add 
+	further details about the mentioned feature, not add new features.
+
+Rule 4: If the above rules cannot be followed, split your commit into multiple parts.
+	These rules are more than just about being a coding grammar-nazi. They're 
+	an indication that the underlying code is itself intelligible and a logical,
+	modular expansion to the existing project. A five person team needs this to 
+	understand every facet despite only writing (ideally) 20% themselves.
+
+Rule 5: Commit little and often.
+	The perfect commit introduces only one new feature, or changes an existing 
+	part in exactly one way. Try to force yourself to think in commits, rather 
+	than committing as an afterthought with everything you did that day.
+
+
+Sources / further reading:
+	https://gist.github.com/robertpainsi/b632364184e70900af4ab688decf6f53

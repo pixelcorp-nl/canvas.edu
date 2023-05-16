@@ -1,0 +1,48 @@
+version: '3.7'
+services:
+  frontend:
+    build:
+      context: ./frontend
+    image: vue-frontend
+    container_name: frontend
+    ports:
+      - "8000:80"
+    volumes:
+      - "./frontend/volume/src:/app/src"
+    depends_on:
+      - backend
+    networks:
+      - canvasnetwork
+  backend:
+    build:
+      context: ./backend
+    image: nestjs-backend
+    container_name: backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./backend/volume/src:/usr/src/app/src"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://dbuser:dbpassword@db:5432/canvasDB
+    networks:
+      - canvasnetwork
+  db:
+    image: postgres:15
+    container_name: db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpassword
+      POSTGRES_DB: canvasDB
+    networks:
+      - canvasnetwork
+
+networks:
+  canvasnetwork:
+    driver: bridge
+
+volumes:
+  pgdata:

@@ -1,0 +1,5 @@
+rubenpong/node_modules/
+rubenpong/package-lock.json
+Dockerfile
+.dockerignore
+.gitignore

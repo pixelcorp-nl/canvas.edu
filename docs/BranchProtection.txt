@@ -1,0 +1,43 @@
+Branch Protection Rules for the main branch
+
+To ensure that the code in the main branch of our project is of 
+high quality and free of errors, we have implemented a set of branch 
+protection rules. These rules are in place to help keep the main 
+branch stable and prevent bad commits from being merged.
+
+Require Pull Request Before Merging
+    All changes to the main branch must be made through pull requests. 
+    This allows team members to review and discuss the changes before 
+    they are merged.
+
+Require At Least 1 Approval
+    All pull requests must be reviewed and approved by at least one
+    other team member before they can be merged.
+
+Require Review from Code Owners
+    Certain files and directories in the project have been designated
+    as "code owners" which means that they have been assigned to 
+    specific team members who are responsible for reviewing changes 
+    to them. For pull requests that include changes to code owned by 
+    someone, review and approval from that code owner is required 
+    before the request can be merged.
+
+Require Approval of the Most Recent Push
+    To prevent a single team member from merging their own commits without
+    review, the most recent push to the pull request must be approved 
+    by someone other than the person who pushed it.
+
+Require Automatic Status Checks before merging
+    We will be requiring a set of automatic status checks to be passing
+    before merging any pull requests. This ensures that code is passing
+    all the pre-configured tests on build and quality check before merging.
+
+Require branch to be up to date before merging
+    All pull requests must be based on the most recent version of the
+    main branch and be merge using the "Rebase and merge" option. 
+    This helps ensure that the main branch stays up to date and 
+    free of merge conflicts.
+
+It is important that all team members follow these rules to ensure that
+the main branch of our project remains stable and of high quality. 
+If you have any questions or concerns about these rules, please reach out to @rvan-duy

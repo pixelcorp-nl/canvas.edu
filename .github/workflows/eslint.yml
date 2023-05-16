@@ -1,0 +1,30 @@
+name: ESLint
+
+on:
+  push:
+    branches: [ 'main' ]
+    paths: [ '**.js', '**.jsx', '**.ts', '**.tsx', '**.vue' ]
+  pull_request:
+    branches: [ 'main' ]
+  workflow_dispatch:
+
+jobs:
+  eslint:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: Install node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+  
+    - name: Install dependencies
+      working-directory: ./frontend/rubenpong
+      run: npm install
+
+    - name: Run eslint
+      run: bash .github/scripts/eslint.sh
