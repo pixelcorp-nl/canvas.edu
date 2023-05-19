@@ -7,7 +7,6 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			io: Server
-			statsd: import('./util/statsd').StatsD
 		}
 		// interface PageData {}
 		// interface Platform {}

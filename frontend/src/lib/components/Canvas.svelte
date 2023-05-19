@@ -45,14 +45,25 @@
 	}
 
 	function logPosition(event: MouseEvent) {
-		// calculate the actual position in the origional canvas by dividing the offset by the scalar
 		x = Math.floor(event.offsetX / pScalar)
 		y = Math.floor(event.offsetY / pScalar)
+		if (x > canvasWidth || y > canvasHeight || x < 0 || y < 0) {
+			x = 0
+			y = 0
+		}
 	}
 </script>
 
 <section>
-	<canvas bind:this={canvas} width={canvasWidth * pScalar} height={canvasHeight * pScalar} on:mousemove={logPosition} id="canvas" />
+	<canvas
+		bind:this={canvas}
+		width={canvasWidth * pScalar}
+		height={canvasHeight * pScalar}
+		on:mousemove={logPosition}
+		on:mouseleave={() => {
+			;(x = 0), (y = 0)
+		}}
+		id="canvas" />
 	<p class="mt-5">
 		{x}, {y}
 	</p>

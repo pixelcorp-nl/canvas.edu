@@ -17,20 +17,6 @@ services:
     volumes:
       - ./redis-db:/data
 
-  datadog-agent:
-    container_name: datadog-agent
-    image: gcr.io/datadoghq/agent:latest
-    pid: host
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /proc/:/host/proc/:ro
-      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
-    env_file: .env
-    environment:
-      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
-    ports:
-      - 8125:8125/udp
-
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower

@@ -1,10 +1,8 @@
 import type { Server } from '$lib/sharedTypes'
 import type { Handle } from '@sveltejs/kit'
-import { StatsD } from './util/statsd'
 import { getPixelMap } from '$api/_redis'
 import { publicEnv } from './publicEnv'
-
-let listenerCount = 0
+import { storeSocketData } from '$api/questdb/_index'
 
 // This file is rather weird because of a hack in adapter-node-ws
 // only allowing the handleWs function to have access to the socket.io server
@@ -14,22 +12,17 @@ export const handleWs = (io: Server) => {
 	globalIo = io
 
 	io.on('connection', async socket => {
-		listenerCount++
-		statsd.gauge('connections', listenerCount)
+		storeSocketData(publicEnv.canvasId, socket.id, 'connection', socket.handshake.address, 'socket')
 		socket.on('disconnect', () => {
-			listenerCount--
-			statsd.gauge('connections', listenerCount)
+			storeSocketData(publicEnv.canvasId, socket.id, 'disconnect', socket.handshake.address, 'socket')
 		})
 		const pixels = await getPixelMap(publicEnv.canvasId)
 		socket.emit('pixelMap', pixels)
 	})
 }
 
-const statsd = new StatsD('pixels')
-
 // Injecting global variables into the event object
 export const handle: Handle = ({ event, resolve }) => {
 	event.locals.io = globalIo as Server
-	event.locals.statsd = statsd
 	return resolve(event)
 }

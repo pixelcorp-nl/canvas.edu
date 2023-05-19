@@ -20,6 +20,7 @@
 		"@carlosv2/adapter-node-ws": "github:SirMorfield/adapter-node-ws#0.1.5",
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",
+		"@questdb/nodejs-client": "^1.0.2",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-node": "^1.2.1",
 		"@sveltejs/kit": "^1.5.0",

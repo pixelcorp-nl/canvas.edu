@@ -6,7 +6,7 @@ import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$api/_ratelimit'
 
 // Adjust this value to control how often data is sent to Redis (in milliseconds)
-const BATCH_INTERVAL = 100
+const BATCH_INTERVAL = 500
 
 let lastBatch = 0
 let timeout: NodeJS.Timeout | undefined
@@ -40,8 +40,8 @@ async function processBatch(io: Server) {
 export const POST: RequestHandler = async ({ request, locals, getClientAddress }) => {
 	try {
 		const { success, timeToWait } = await ratelimit(getClientAddress(), {
-			timePeriodSeconds: 1,
-			maxRequests: 10,
+			timePeriodSeconds: 10,
+			maxRequests: 10000,
 			route: 'post-pixel'
 		})
 		if (!success) {
@@ -57,7 +57,6 @@ export const POST: RequestHandler = async ({ request, locals, getClientAddress }
 		queue.set(`${x},${y}` as Coordinate, rgba as RGBA)
 		void processBatch(locals.io)
 
-		locals.statsd.increment('pixel')
 		return json({ success: true, x, y, color })
 	} catch (error) {
 		console.error(error)

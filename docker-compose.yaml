@@ -23,3 +23,30 @@ services:
       - ./redis-db:/data
     ports:
       - 6379:6379
+
+  questdb:
+    container_name: questdb
+    image: questdb/questdb:latest
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+      - 9003:9003
+      - 9009:9009
+      - 8812:8812
+    volumes:
+      - ./questdb:/root/.questdb
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - questdb
+
+volumes:
+  grafana-data:
