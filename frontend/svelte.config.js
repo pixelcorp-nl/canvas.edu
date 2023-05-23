@@ -21,6 +21,9 @@ const config = {
 			$util: './src/util',
 			$api: './src/routes/api',
 			$lib: './src/lib'
+		},
+		csrf: {
+			checkOrigin: false
 		}
 	}
 }
