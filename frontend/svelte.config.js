@@ -1,6 +1,6 @@
-import preprocess from 'svelte-preprocess';
+import preprocess from 'svelte-preprocess'
 import adapter from '@carlosv2/adapter-node-ws/adapter'
-import { vitePreprocess } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/kit/vite'
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -9,8 +9,8 @@ const config = {
 	preprocess: [
 		vitePreprocess(),
 		preprocess({
-			postcss: true,
-		}),
+			postcss: true
+		})
 	],
 
 	kit: {
@@ -20,9 +20,9 @@ const config = {
 			$stores: './src/lib/stores',
 			$util: './src/util',
 			$api: './src/routes/api',
-			$lib: './src/lib',
-		},
-	},
+			$lib: './src/lib'
+		}
+	}
 }
 
-export default config;
+export default config
