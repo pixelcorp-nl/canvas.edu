@@ -7,12 +7,16 @@ type Pixel = {
 }
 
 async function putPixel(pixel: Pixel): Promise<Record<string, unknown>> {
-	const resp = await fetch('http://localhost:5173/api/single', {
-		method: 'POST',
-		body: JSON.stringify(pixel)
-	})
-	const json = await resp?.json()
-	return json
+	try {
+		const resp = await fetch('http://localhost:5173/api/single', {
+			method: 'POST',
+			body: JSON.stringify(pixel)
+		})
+		return resp?.json()
+	} catch (err) {
+		console.error(err)
+		throw new Error('Failed to put pixel')
+	}
 }
 
 async function getPixel(page: Page, x: number, y: number): Promise<Pixel> {
