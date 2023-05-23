@@ -13,8 +13,8 @@
 		"test:view": "npx playwright test --headed",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint:check": "eslint --cache --cache-location node_modules/.eslintcache .",
-		"lint:fix": "eslint --cache --cache-location node_modules/.eslintcache --fix ."
+		"lint:check": "prettier --plugin-search-dir . --check . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
+		"lint:fix": "prettier --plugin-search-dir . --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
 	"dependencies": {
 		"@carlosv2/adapter-node-ws": "github:SirMorfield/adapter-node-ws#0.1.5",
