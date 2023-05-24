@@ -4,12 +4,12 @@ import time
 from random import *
 import threading
 
-# url = "http://pixels.codam.nl/api/single"
+# url = "http://pixelcorp.nl/api/single"
 url = "http://localhost:5173/api/single"
 headers = {'Content-Type': 'application/json',
            'x-real-ip': 'my.amazing.fake.ip'}
 
-threads = 5
+threads = 6
 
 
 def run():
@@ -17,10 +17,11 @@ def run():
     while True:
         x_start = randint(0, 160)
         y_start = randint(0, 160)
-        color = [randint(20, 255), randint(20, 255), randint(20, 255), 255]
+        color = [randint(0, 255), randint(0, 255),
+                 randint(0, 255), randint(0, 255)]
 
-        for x in range(x_start, x_start + 30):
-            for y in range(y_start, y_start + 30):
+        for x in range(x_start, x_start + 39):
+            for y in range(y_start, y_start + 39):
                 data = {
                     "x": x,
                     "y": y,
@@ -30,7 +31,7 @@ def run():
                 response = requests.post(
                     url, headers=headers, data=json.dumps(data), timeout=10)
                 if response.status_code != 200:
-                    print("Failed to send", response.status_code)
+                    print(response.text)
             print("Sent", total * threads, "pixels")
             # exit(1)
 

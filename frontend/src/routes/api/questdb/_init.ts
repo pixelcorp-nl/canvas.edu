@@ -52,4 +52,26 @@ export async function initQDBSocket() {
 	} catch (error) {
 		console.error('Error during initialization:', error)
 	}
+	await initQDBActiveConnections().catch(console.error)
+}
+
+const active_connections_table = `
+CREATE TABLE IF NOT EXISTS active_connections (
+	timestamp timestamp,
+	canvasId INT,
+	count INT
+	) timestamp(timestamp) PARTITION BY DAY;
+`
+
+export async function initQDBActiveConnections() {
+	try {
+		const resExists = await fetch(`http://localhost:9000/exec?query=${encodeURIComponent(active_connections_table)}`)
+		if (!resExists.ok) {
+			console.log('initQDBActiveConnections', resExists)
+		}
+		const jsonExists = await resExists.json()
+		console.log('initQDBActiveConnections', jsonExists)
+	} catch (error) {
+		console.error('Error during initialization:', error)
+	}
 }

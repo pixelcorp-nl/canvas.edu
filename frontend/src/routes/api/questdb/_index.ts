@@ -5,12 +5,15 @@ import { initQDB } from './_init'
 
 const sender: Sender = new Sender({ bufferSize: 4096 })
 let isConnected = false
+let isConnecting = false
 
 async function startQDBConnection() {
 	if (isConnected) {
 		return
 	}
+	console.log('Connecting to QuestDB...')
 	isConnected = await sender.connect({ port: 9009, host: 'localhost' })
+	console.log('Connected to QuestDB!')
 	if (isConnected) {
 		initQDB()
 	}
@@ -36,9 +39,12 @@ export async function storePixels(pixels: PixelMap, canvasId: string) {
 	await sender.flush()
 }
 
-export async function storeSocketData(canvasId: string, id: string, type: string, ip: string, metadata: string) {
+export async function storeSocketData(canvasId: string, id: string, type: string, ip: string, metadata: string, count: number | null) {
 	if (!isConnected) {
 		await startQDBConnection()
+	}
+	if (count !== null) {
+		sender.table('active_connections').intColumn('canvasId', Number(canvasId)).intColumn('count', count).atNow()
 	}
 	sender
 		.table('socket_data')
