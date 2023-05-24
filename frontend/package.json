@@ -17,7 +17,7 @@
 		"lint:fix": "prettier --plugin-search-dir . --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
 	"dependencies": {
-		"@carlosv2/adapter-node-ws": "github:SirMorfield/adapter-node-ws#0.1.5",
+		"@carlosv2/adapter-node-ws": "github:SirMorfield/adapter-node-ws#525d680e0f7082dd6c88855f983118318f8b4e9e",
 		"@fontsource/fira-mono": "^5.0.0",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@sveltejs/adapter-auto": "^2.1.0",
