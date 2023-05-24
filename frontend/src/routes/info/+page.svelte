@@ -6,22 +6,23 @@
 	import { _ } from 'svelte-i18n'
 	import atomOneDark from 'svelte-highlight/styles/atom-one-dark'
 	import Button from '$lib/components/Button.svelte'
+	import { page } from '$app/stores'
 
 	const jsonExample = `{
 	"x": 42,
 	"y": 42,
-	"data": [255, 0, 0, 255], // rgba
+	"color": [255, 0, 0, 255], // rgba
 }`
 
 	const code = `import requests
 import json
 
 # Define the URL of the API endpoint and the request headers
-url = "http://api.pixels.codam.nl/canvas/single"
+url = "http://${$page.url.hostname}/api/single"
 headers = {'Content-Type': 'application/json'}
 
 # Define the pixel data as a Python dictionary
-pixel = {'x': 42, 'y': 42, 'data': [0, 25, 255, 255]}
+pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255, 255]}
 
 # Send a POST request to the API endpoint with the pixel data as JSON
 response = requests.post(url, headers=headers, data=json.dumps(pixel))
@@ -37,8 +38,8 @@ else:
 </script>
 
 <svelte:head>
-	<title>Codam - Project description</title>
-	<meta name="description" content="About this app" />
+	<title>Pixels - information</title>
+	<meta name="description" content="Info on the project" />
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html atomOneDark}
 </svelte:head>
@@ -68,7 +69,7 @@ else:
 			<span class="font-semibold ml-2.5">{$_('code.json.title')}</span>
 			<Button code={jsonExample} />
 		</div>
-		<Highlight class="bg-[#282c34] !m-0 hover:scale-[101%] transition-all duration-1000" language={json} code={jsonExample} />
+		<Highlight class="bg-[#282c34] !m-0 transition-all duration-1000" language={json} code={jsonExample} />
 	</div>
 	<h2 class="text-xl font-semibold">{$_('info.header5')}</h2>
 	<p>
@@ -79,7 +80,7 @@ else:
 			<span class="font-semibold ml-2.5">{$_('code.python.title')}</span>
 			<Button {code} />
 		</div>
-		<Highlight class="bg-[#282c34] !m-0 hover:scale-[101%] transition-all duration-1000" language={python} {code} />
+		<Highlight class="bg-[#282c34] !m-0 transition-all duration-1000" language={python} {code} />
 	</div>
 	<h2 class="text-xl font-semibold">{$_('info.header3')}</h2>
 	<p>
