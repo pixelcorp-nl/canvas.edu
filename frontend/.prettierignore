@@ -1,13 +1,16 @@
-.DS_Store
-node_modules
-/build
-/.svelte-kit
-/package
-.env
-.env.*
-!.env.example
+# ignore all files by default (do not change these)
+*
+!*/
 
-# Ignore files for PNPM, NPM and YARN
-pnpm-lock.yaml
-package-lock.json
-yarn.lock
+# whitelist - prettier check these files
+!*.ts
+!*.svelte
+!*.js
+!*.json
+!*.cjs
+!.prettierrc
+
+# blacklist - prettier ignore these directories
+/.svelte-kit
+/build
+/dist

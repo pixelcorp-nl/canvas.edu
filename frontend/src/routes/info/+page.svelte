@@ -39,6 +39,7 @@ else:
 <svelte:head>
 	<title>Codam - Project description</title>
 	<meta name="description" content="About this app" />
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html atomOneDark}
 </svelte:head>
 

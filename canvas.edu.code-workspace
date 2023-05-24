@@ -7,5 +7,22 @@
 			"name": "root",
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"[typescript]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[javascript]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[svelte]": {
+			"editor.defaultFormatter": "svelte.svelte-vscode"
+		},
+		"editor.formatOnSave": true,
+		"eslint.validate": [
+			"typescript",
+			"svelte",
+			"javascript",
+		],
+	}
 }
