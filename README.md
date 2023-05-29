@@ -4,12 +4,12 @@
 
 # Pixels - Learn Programming through Pixel Art
 
-Pixels is an interactive learning platform that aims to teach kids programming by allowing them to create pixel art on a canvas any programming language.
+Pixels is an interactive learning platform that aims to teach highschool students programming by allowing them to create pixel art on a canvas using any programming language.
 
 
 ## Introduction
 
-Pixels introduces kids to the exciting world of programming by enabling them to create and manipulate pixel art simple code in any programming langue. Learners can develop their programming skills, as well as their creativity and problem-solving abilities.
+Pixels introduces students to the exciting world of programming by enabling them to create and manipulate pixel art simple through writing code in any programming language. Learners can develop their programming skills, as well as their creativity and problem-solving abilities.
 
 ## Features
 
