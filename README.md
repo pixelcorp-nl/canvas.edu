@@ -4,6 +4,8 @@
 
 # Pixels - Learn Programming through Pixel Art
 
+<img src="./media/sample-small.gif">
+
 Pixels is an interactive learning platform that aims to teach highschool students programming by allowing them to create pixel art on a canvas using any programming language.
 
 
