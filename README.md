@@ -1,10 +1,8 @@
+
+<h1> <img height="25" src="./frontend/static/icons/android-chrome-192x192.png" alt="Pixels Logo"> Pixels - Learn Programming through Pixel Art </h1>
 <p align="center">
-  <img src="./frontend/static/icons/android-chrome-192x192.png" alt="Pixels Logo">
+  <img width="400" src="./media/sample-small.gif" alt="sample gif">
 </p>
-
-# Pixels - Learn Programming through Pixel Art
-
-<img src="./media/sample-small.gif">
 
 Pixels is an interactive learning platform that aims to teach highschool students programming by allowing them to create pixel art on a canvas using any programming language.
 
