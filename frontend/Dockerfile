@@ -21,7 +21,7 @@ FROM node:18-alpine as main
 ENV NODE_ENV=production
 ENV PORT=5173
 WORKDIR /app
-HEALTHCHECK --interval=5s --timeout=5s --start-period=5s --retries=3 CMD wget -q -O - http://localhost:5173/health
+HEALTHCHECK --interval=5s --timeout=5s --start-period=10s --retries=3 CMD wget -q -O - http://localhost:5173/health
 
 # This cannot be shortend to only copy the /build folder
 # since some packages depend on the /src folder and many other files
