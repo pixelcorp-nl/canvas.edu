@@ -61,6 +61,9 @@ dependencies:
   tailwindcss:
     specifier: ^3.3.2
     version: 3.3.2
+  tslib:
+    specifier: ^2.5.2
+    version: 2.5.2
   vite:
     specifier: ^4.3.8
     version: 4.3.8(@types/node@18.15.11)
@@ -99,9 +102,6 @@ devDependencies:
   prettier-plugin-svelte:
     specifier: ^2.10.0
     version: 2.10.0(prettier@2.8.8)(svelte@3.59.1)
-  tslib:
-    specifier: ^2.5.2
-    version: 2.5.2
   typescript:
     specifier: 5.0.4
     version: 5.0.4
@@ -2606,6 +2606,7 @@ packages:
 
   /tslib@2.5.2:
     resolution: {integrity: sha512-5svOrSA2w3iGFDs1HibEVBGbDrAY82bFQ3HZ3ixB+88nsbsWQoKqDRb5UBYAUPEzbBn6dAp5gRNXglySbx1MlA==}
+    dev: false
 
   /tsutils@3.21.0(typescript@5.0.4):
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}

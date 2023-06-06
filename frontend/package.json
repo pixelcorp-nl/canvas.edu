@@ -4,14 +4,13 @@
 	"main": "build/app.js",
 	"type": "module",
 	"scripts": {
-		"start": "vite --host",
 		"dev": "vite dev",
 		"build": "vite build",
-		"preview": "vite preview",
+		"preview": "vite preview --host --port 5173",
 		"test": "npx playwright test",
 		"test:dev": "npx playwright test --watch",
 		"test:view": "npx playwright test --headed",
-		"sync": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"lint:check": "prettier --plugin-search-dir . --check . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
 		"lint:fix": "prettier --plugin-search-dir . --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
@@ -37,6 +36,7 @@
 		"svelte": "^3.59.1",
 		"tailwindcss": "^3.3.2",
 		"vite": "^4.3.8",
+		"tslib": "^2.5.2",
 		"zod": "^3.21.4"
 	},
 	"devDependencies": {
@@ -50,7 +50,6 @@
 		"eslint": "^8.41.0",
 		"prettier-plugin-svelte": "^2.10.0",
 		"prettier": "^2.8.8",
-		"tslib": "^2.5.2",
 		"typescript": "5.0.4"
 	},
 	"engines": {

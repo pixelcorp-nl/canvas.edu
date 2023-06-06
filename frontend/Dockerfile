@@ -1,17 +1,12 @@
-# ============== DEPS ===============
-FROM node:18-alpine as dependencies
-WORKDIR /app
-
-# ========== BUILDER MAIN ===========
-FROM dependencies as builder-main
+FROM node:18-alpine as builder-main
 WORKDIR /app
 
 RUN npm i -g pnpm
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 COPY . ./
 
-RUN pnpm run sync
+RUN pnpm run check
 RUN pnpm run lint:check
 RUN pnpm run build
 RUN pnpm prune --prod
@@ -27,4 +22,5 @@ HEALTHCHECK --interval=5s --timeout=5s --start-period=10s --retries=3 CMD wget -
 # since some packages depend on the /src folder and many other files
 COPY --from=builder-main /app ./
 
-ENTRYPOINT [ "npm", "start" ]
+# This can not be "node build/index.js" because of the incomplete build system
+ENTRYPOINT [ "npm", "run", "preview" ]
