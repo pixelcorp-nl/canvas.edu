@@ -11,6 +11,9 @@ let listenerCount = 0
 
 let globalIo: Server | undefined = undefined
 export const handleWs = (io: Server) => {
+	if (globalIo) {
+		return
+	}
 	globalIo = io
 
 	io.on('connection', async socket => {
