@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@carlosv2/adapter-node-ws':
     specifier: github:SirMorfield/adapter-node-ws#525d680e0f7082dd6c88855f983118318f8b4e9e
