@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 // Define the URL of the API endpoint and the request headers
 const url = "http://pixelcorp.nl/api/single";
 const headers = { 'Content-Type': 'application/json' };
