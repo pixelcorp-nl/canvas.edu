@@ -1,7 +1,7 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { setPixelMap } from '$api/_redis'
 import { publicEnv } from '../../../publicEnv'
-import { ParsedPixel } from '$api/_utils'
+import { ParsedPixel } from '$api/_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$api/_ratelimit'
 
