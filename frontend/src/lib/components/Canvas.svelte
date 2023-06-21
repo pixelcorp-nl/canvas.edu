@@ -3,18 +3,19 @@
 	import { publicEnv } from '../../publicEnv'
 	import type { Socket } from '$lib/sharedTypes'
 	import { onDestroy, onMount } from 'svelte'
-	import { forEachPixel } from '$api/_pixelUtils'
+	import { PixelObj, forEachPixel } from '$api/_pixelUtils'
 
 	const { canvasHeight, canvasWidth, pScalar } = publicEnv
-	let { x, y } = { x: 0, y: 0 }
+	let xMouse = 0
+	let yMouse = 0
 
 	let canvas: HTMLCanvasElement
 
 	const socket: Socket = io()
 	onMount(() => {
 		socket.on('pixelMap', pixelMap => {
-			forEachPixel(pixelMap, (x, y, color) => {
-				drawPixelOnCanvas(x, y, color, pScalar)
+			forEachPixel(pixelMap, pixel => {
+				drawPixelOnCanvas(pixel, pScalar)
 			})
 		})
 
@@ -38,23 +39,24 @@
 		}
 	}
 
-	function drawPixelOnCanvas(x: number, y: number, color: string, pixelSize: number): void {
+	function drawPixelOnCanvas(pixelObj: PixelObj, pixelSize: number): void {
+		const { x, y, color } = pixelObj
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-		ctx.fillStyle = `rgba(${color})`
+		ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`
 		ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize)
 	}
 
 	function logPosition(event: MouseEvent) {
 		// calculate the actual position in the origional canvas by dividing the offset by the scalar
-		x = Math.floor(event.offsetX / pScalar)
-		y = Math.floor(event.offsetY / pScalar)
+		xMouse = Math.floor(event.offsetX / pScalar)
+		yMouse = Math.floor(event.offsetY / pScalar)
 	}
 </script>
 
 <section>
 	<canvas bind:this={canvas} width={canvasWidth * pScalar} height={canvasHeight * pScalar} on:mousemove={logPosition} id="canvas" />
 	<p class="mt-5">
-		{x}, {y}
+		{xMouse}, {yMouse}
 	</p>
 </section>
 

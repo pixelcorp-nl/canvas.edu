@@ -1,7 +1,7 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { setPixelMap } from '$api/_redis'
 import { publicEnv } from '../../../publicEnv'
-import { ParsedPixel } from '$api/_pixelUtils'
+import { PixelObj, pixelObjToPixelKV } from '$api/_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$api/_ratelimit'
 
@@ -48,17 +48,16 @@ export const POST: RequestHandler = async ({ request, locals, getClientAddress }
 			return json({ success, timeToWait }, { status: 429 })
 		}
 
-		const parsed = await ParsedPixel.safeParseAsync(await request.json())
+		const parsed = await PixelObj.safeParseAsync(await request.json())
 		if (!parsed.success) {
 			throw error(400, 'This request is not valid please make sure you have x, y, and color like this: {x: 0, y: 0, color: [0, 0, 0, 1]}')
 		}
-		const { x, y, color } = parsed.data
-		const rgba = `${color[0]},${color[1]},${color[2]},${color[3]}`
-		queue.set(`${x},${y}` as Coordinate, rgba as RGBA)
+		const [coordinate, rgba] = pixelObjToPixelKV(parsed.data)
+		queue.set(coordinate, rgba)
 		void processBatch(locals.io)
 
 		locals.statsd.increment('pixel')
-		return json({ success: true, x, y, color })
+		return json({ success: true, x: parsed.data.x, y: parsed.data.y, color: parsed.data.color })
 	} catch (error) {
 		console.error(error)
 		return json({ success: false, error }, { status: 500 })
