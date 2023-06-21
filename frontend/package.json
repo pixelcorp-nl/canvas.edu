@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"preview": "vite preview --host --port 5173",
+		"production": "vite --host --port 5173",
 		"test": "npx playwright test",
 		"test:dev": "npx playwright test --watch",
 		"test:view": "npx playwright test --headed",

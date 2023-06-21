@@ -18,9 +18,7 @@ ENV PORT=5173
 WORKDIR /app
 HEALTHCHECK --interval=5s --timeout=5s --start-period=10s --retries=3 CMD wget -q -O - http://localhost:5173/health
 
-# This cannot be shortend to only copy the /build folder
-# since some packages depend on the /src folder and many other files
 COPY --from=builder-main /app ./
 
 # This can not be "node build/index.js" because of the incomplete build system
-ENTRYPOINT [ "npm", "run", "preview" ]
+ENTRYPOINT [ "npm", "run", "production" ]
