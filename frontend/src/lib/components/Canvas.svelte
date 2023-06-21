@@ -5,39 +5,29 @@
 	import { onDestroy, onMount } from 'svelte'
 	import { PixelObj, forEachPixel } from '$api/_pixelUtils'
 
-	const { canvasHeight, canvasWidth, pScalar } = publicEnv
 	let xMouse = 0
 	let yMouse = 0
 
 	let canvas: HTMLCanvasElement
+	let pScalar = 0
+	let sectionWidth = 0
 
 	const socket: Socket = io()
 	onMount(() => {
+		pScalar = sectionWidth / publicEnv.canvasWidth
+		canvas.width = sectionWidth
+		canvas.height = sectionWidth
+
 		socket.on('pixelMap', pixelMap => {
 			forEachPixel(pixelMap, pixel => {
 				drawPixelOnCanvas(pixel, pScalar)
 			})
 		})
-
-		const { canvasSize } = calculateNewCanvasSize(pScalar, canvasWidth, canvasHeight)
-		canvas.width = canvasSize.width
-		canvas.height = canvasSize.height
 	})
 
 	onDestroy(() => {
 		socket.disconnect()
 	})
-
-	function calculateNewCanvasSize(scalingFactor: number, canvasWidth: number, canvasHeight: number) {
-		const newCanvasWidth = Math.round(canvasWidth * scalingFactor)
-		const newCanvasHeight = Math.round(canvasHeight * scalingFactor)
-		const pixelSize = scalingFactor
-
-		return {
-			canvasSize: { width: newCanvasWidth, height: newCanvasHeight },
-			pixelSize
-		}
-	}
 
 	function drawPixelOnCanvas(pixelObj: PixelObj, pixelSize: number): void {
 		const { x, y, color } = pixelObj
@@ -47,14 +37,14 @@
 	}
 
 	function logPosition(event: MouseEvent) {
-		// calculate the actual position in the origional canvas by dividing the offset by the scalar
+		// calculate the actual position in the original canvas by dividing the offset by the scalar
 		xMouse = Math.floor(event.offsetX / pScalar)
 		yMouse = Math.floor(event.offsetY / pScalar)
 	}
 </script>
 
-<section>
-	<canvas bind:this={canvas} width={canvasWidth * pScalar} height={canvasHeight * pScalar} on:mousemove={logPosition} id="canvas" />
+<section bind:clientWidth={sectionWidth}>
+	<canvas bind:this={canvas} width={0} height={0} on:mousemove={logPosition} id="canvas" />
 	<p class="mt-5">
 		{xMouse}, {yMouse}
 	</p>
