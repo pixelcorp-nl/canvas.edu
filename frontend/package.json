@@ -4,24 +4,21 @@
 	"main": "build/app.js",
 	"type": "module",
 	"scripts": {
-		"start": "vite --host",
 		"dev": "vite dev",
 		"build": "vite build",
-		"preview": "vite preview",
 		"test": "npx playwright test",
 		"test:dev": "npx playwright test --watch",
 		"test:view": "npx playwright test --headed",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint:check": "prettier --plugin-search-dir . --check . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
 		"lint:fix": "prettier --plugin-search-dir . --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
-	"dependencies": {
-		"@carlosv2/adapter-node-ws": "github:SirMorfield/adapter-node-ws#525d680e0f7082dd6c88855f983118318f8b4e9e",
+	"dependencies": {},
+	"devDependencies": {
+		"@carlosv2/adapter-node-ws": "github:SirMorfield/adapter-node-ws#933fbd9506ebc2b2144e85e3dc018ada1cb432b5",
 		"@fontsource/fira-mono": "^5.0.0",
 		"@neoconfetti/svelte": "^1.0.0",
-		"@sveltejs/adapter-auto": "^2.1.0",
-		"@sveltejs/adapter-node": "^1.2.4",
+		"@playwright/test": "^1.34.0",
 		"@sveltejs/kit": "^1.18.0",
 		"@tailwindcss/typography": "^0.5.9",
 		"@types/cookie": "^0.5.1",
@@ -31,7 +28,6 @@
 		"autoprefixer": "^10.4.14",
 		"eslint": "^8.41.0",
 		"eslint-config-prettier": "^8.8.0",
-		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-svelte": "^2.29.0",
 		"highlight.js": "^11.8.0",
 		"hot-shots": "^10.0.0",
@@ -53,9 +49,6 @@
 		"typescript": "5.0.4",
 		"vite": "^4.3.8",
 		"zod": "^3.21.4"
-	},
-	"devDependencies": {
-		"@playwright/test": "^1.34.0"
 	},
 	"engines": {
 		"node": ">=18.0.0",

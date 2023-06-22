@@ -1,9 +1,5 @@
 **/.DS_Store*
 **/node_modules
-**/README.md
-**/.dockerignore
-**/README.*
-
 /.svelte-kit
 /build
 /.git

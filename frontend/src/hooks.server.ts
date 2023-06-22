@@ -3,6 +3,7 @@ import type { Handle } from '@sveltejs/kit'
 import { StatsD } from './util/statsd'
 import { getPixelMap } from '$api/_redis'
 import { publicEnv } from './publicEnv'
+import type { HandleWs } from '@carlosv2/adapter-node-ws'
 
 let listenerCount = 0
 
@@ -10,7 +11,10 @@ let listenerCount = 0
 // only allowing the handleWs function to have access to the socket.io server
 
 let globalIo: Server | undefined = undefined
-export const handleWs = (io: Server) => {
+export const handleWs: HandleWs = (io: Server) => {
+	if (globalIo) {
+		return
+	}
 	globalIo = io
 
 	io.on('connection', async socket => {
