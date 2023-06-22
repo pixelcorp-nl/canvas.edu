@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@carlosv2/adapter-node-ws':
-    specifier: github:SirMorfield/adapter-node-ws#525d680e0f7082dd6c88855f983118318f8b4e9e
-    version: github.com/SirMorfield/adapter-node-ws/525d680e0f7082dd6c88855f983118318f8b4e9e
+    specifier: github:SirMorfield/adapter-node-ws#933fbd9506ebc2b2144e85e3dc018ada1cb432b5
+    version: github.com/SirMorfield/adapter-node-ws/933fbd9506ebc2b2144e85e3dc018ada1cb432b5
   '@fontsource/fira-mono':
     specifier: ^5.0.0
     version: 5.0.0
@@ -2804,8 +2804,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/SirMorfield/adapter-node-ws/525d680e0f7082dd6c88855f983118318f8b4e9e:
-    resolution: {tarball: https://codeload.github.com/SirMorfield/adapter-node-ws/tar.gz/525d680e0f7082dd6c88855f983118318f8b4e9e}
+  github.com/SirMorfield/adapter-node-ws/933fbd9506ebc2b2144e85e3dc018ada1cb432b5:
+    resolution: {tarball: https://codeload.github.com/SirMorfield/adapter-node-ws/tar.gz/933fbd9506ebc2b2144e85e3dc018ada1cb432b5}
     name: '@carlosv2/adapter-node-ws'
     version: 0.1.4
     dependencies:

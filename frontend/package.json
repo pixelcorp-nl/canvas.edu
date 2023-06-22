@@ -6,7 +6,6 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"production": "vite --host --port 5173",
 		"test": "npx playwright test",
 		"test:dev": "npx playwright test --watch",
 		"test:view": "npx playwright test --headed",
@@ -15,7 +14,7 @@
 		"lint:fix": "prettier --plugin-search-dir . --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
 	"dependencies": {
-		"@carlosv2/adapter-node-ws": "github:SirMorfield/adapter-node-ws#525d680e0f7082dd6c88855f983118318f8b4e9e",
+		"@carlosv2/adapter-node-ws": "github:SirMorfield/adapter-node-ws#933fbd9506ebc2b2144e85e3dc018ada1cb432b5",
 		"@fontsource/fira-mono": "^5.0.0",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@sveltejs/kit": "^1.18.0",
