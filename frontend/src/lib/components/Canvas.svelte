@@ -3,58 +3,50 @@
 	import { publicEnv } from '../../publicEnv'
 	import type { Socket } from '$lib/sharedTypes'
 	import { onDestroy, onMount } from 'svelte'
-	import { forEachPixel } from '$api/_utils'
+	import { PixelObj, forEachPixel } from '$api/_pixelUtils'
 
-	const { canvasHeight, canvasWidth, pScalar } = publicEnv
-	let { x, y } = { x: 0, y: 0 }
+	let xMouse = 0
+	let yMouse = 0
 
 	let canvas: HTMLCanvasElement
+	let pScalar = 0
+	let sectionWidth = 0
 
 	const socket: Socket = io()
 	onMount(() => {
+		pScalar = sectionWidth / publicEnv.canvasWidth
+		canvas.width = sectionWidth
+		canvas.height = sectionWidth
+
 		socket.on('pixelMap', pixelMap => {
-			forEachPixel(pixelMap, (x, y, color) => {
-				drawPixelOnCanvas(x, y, color, pScalar)
+			forEachPixel(pixelMap, pixel => {
+				drawPixelOnCanvas(pixel, pScalar)
 			})
 		})
-
-		const { canvasSize } = calculateNewCanvasSize(pScalar, canvasWidth, canvasHeight)
-		canvas.width = canvasSize.width
-		canvas.height = canvasSize.height
 	})
 
 	onDestroy(() => {
 		socket.disconnect()
 	})
 
-	function calculateNewCanvasSize(scalingFactor: number, canvasWidth: number, canvasHeight: number) {
-		const newCanvasWidth = Math.round(canvasWidth * scalingFactor)
-		const newCanvasHeight = Math.round(canvasHeight * scalingFactor)
-		const pixelSize = scalingFactor
-
-		return {
-			canvasSize: { width: newCanvasWidth, height: newCanvasHeight },
-			pixelSize
-		}
-	}
-
-	function drawPixelOnCanvas(x: number, y: number, color: string, pixelSize: number): void {
+	function drawPixelOnCanvas(pixelObj: PixelObj, pixelSize: number): void {
+		const { x, y, color } = pixelObj
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-		ctx.fillStyle = `rgba(${color})`
+		ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`
 		ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize)
 	}
 
 	function logPosition(event: MouseEvent) {
-		// calculate the actual position in the origional canvas by dividing the offset by the scalar
-		x = Math.floor(event.offsetX / pScalar)
-		y = Math.floor(event.offsetY / pScalar)
+		// calculate the actual position in the original canvas by dividing the offset by the scalar
+		xMouse = Math.floor(event.offsetX / pScalar)
+		yMouse = Math.floor(event.offsetY / pScalar)
 	}
 </script>
 
-<section>
-	<canvas bind:this={canvas} width={canvasWidth * pScalar} height={canvasHeight * pScalar} on:mousemove={logPosition} id="canvas" />
+<section bind:clientWidth={sectionWidth}>
+	<canvas bind:this={canvas} width={0} height={0} on:mousemove={logPosition} id="canvas" />
 	<p class="mt-5">
-		{x}, {y}
+		{xMouse}, {yMouse}
 	</p>
 </section>
 

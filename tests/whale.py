@@ -4,7 +4,7 @@ import time
 import random
 import copy
 
-url = "http://api.pixels.codam.nl/"
+url = "http://localhost:5173/api/single"
 headers = {'Content-Type': 'application/json'}
 
 def create_whale(object, x, y):
@@ -15,10 +15,10 @@ def create_whale(object, x, y):
   return nobject
 
 class pxl:
-  def __init__(self, x, y, data):
+  def __init__(self, x, y, color):
     self.x = x
     self.y = y
-    self.data = data
+    self.color = color
 
 blue = [45, 85, 255, 255]
 lblue = [137, 196, 244, 255]
@@ -38,9 +38,10 @@ while True:
   whale_dict = []
   for wh in random_whale:
     whale_dict.append(wh.__dict__)
-  response = requests.post(url + 'canvas/multiple', headers=headers, data=json.dumps(whale_dict))
-  if response.status_code == 200 | 201:
-    print("Successfully sent data")
-  else:
-    print("Failed to send data", response.status_code)
-  time.sleep(whale.__len__())
+  for pxl in whale_dict:
+    time.sleep(0.02)
+    response = requests.post(url, headers=headers, data=json.dumps(pxl))
+    if response.status_code == 200:
+      print("Successfully sent data")
+    else:
+      print("Failed to send data", response.content)
