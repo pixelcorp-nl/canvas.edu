@@ -19,7 +19,7 @@ WORKDIR /app
 HEALTHCHECK --interval=5s --timeout=5s --start-period=10s --retries=3 CMD wget -q -O - http://localhost:5173/health
 
 COPY --from=builder-main /app/package.json ./package.json
-COPY --from=builder-main /app/node_modules ./node_modules
+# COPY --from=builder-main /app/node_modules ./node_modules
 COPY --from=builder-main /app/build ./build
 
 CMD [ "build/index.js" ]
