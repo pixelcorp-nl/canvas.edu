@@ -1,17 +1,23 @@
 import type { Server } from '$lib/sharedTypes'
-
+import { StatsD } from './util/statsd'
+import type { AuthRequest } from 'lucia'
 // See https://kit.svelte.dev/docs/types#app
-// for information about these interfaces
+
 declare global {
 	namespace App {
-		// interface Error {}
 		interface Locals {
 			io: Server
-			statsd: import('./util/statsd').StatsD
+			statsd: StatsD
+			auth: AuthRequest
 		}
-		// interface PageData {}
-		// interface Platform {}
 	}
 }
 
+/// <reference types="lucia" />
+declare global {
+	namespace Lucia {
+		type Auth = import('$lib/server/auth').Auth
+		type UserAttributes = object
+	}
+}
 export {}
