@@ -20,11 +20,14 @@ async function putPixel(pixel: Pixel): Promise<Record<string, unknown>> {
 }
 
 async function getPixel(page: Page, x: number, y: number): Promise<Pixel> {
-	const data = await page.evaluate(() => {
-		const canvas = document.querySelector('canvas')
-		const ctx = canvas?.getContext('2d')
-		return ctx?.getImageData(2, 2, 1, 1)
-	})
+	const data = await page.evaluate(
+		({ x, y }: { x: number; y: number }) => {
+			const canvas = document.querySelector('canvas')
+			const ctx = canvas?.getContext('2d')
+			return ctx?.getImageData(x, y, 1, 1)
+		},
+		{ x, y }
+	)
 
 	const pixel: Pixel = {
 		x,
