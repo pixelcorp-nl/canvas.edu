@@ -1,10 +1,10 @@
-import type { Server } from '$lib/sharedTypes'
-import { redirect, type Handle } from '@sveltejs/kit'
-import { StatsD } from './util/statsd'
 import { getPixelMap } from '$api/_redis'
-import { publicEnv } from './publicEnv'
+import { auth } from '$lib/server/auth'
+import type { Server } from '$lib/sharedTypes'
 import type { HandleWs } from '@carlosv2/adapter-node-ws'
-import { auth, shouldBeAuthenticated } from '$lib/server/auth'
+import type { Handle } from '@sveltejs/kit'
+import { publicEnv } from './publicEnv'
+import { StatsD } from './util/statsd'
 
 let listenerCount = 0
 let globalIo: Server | undefined = undefined
@@ -31,18 +31,10 @@ export const handleWs: HandleWs = (io: Server) => {
 }
 
 // Injecting global variables into the event object
-export const handle: Handle = async ({ event, resolve }) => {
+export const handle: Handle = ({ event, resolve }) => {
 	event.locals.io = globalIo as Server
 	event.locals.statsd = statsd
 	event.locals.auth = auth.handleRequest(event)
-	if (!shouldBeAuthenticated(event)) {
-		return resolve(event)
-	}
-
-	const { user } = await event.locals.auth.validateUser()
-	if (!user) {
-		throw redirect(302, '/auth/sign-in')
-	}
 
 	return resolve(event)
 }

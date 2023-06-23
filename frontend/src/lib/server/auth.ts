@@ -3,7 +3,6 @@ import { sveltekit } from 'lucia-auth/middleware'
 import { dev } from '$app/environment'
 import { pg } from '@lucia-auth/adapter-postgresql'
 import postgres from 'pg'
-import type { RequestEvent } from '@sveltejs/kit/types/internal'
 
 const pool = new postgres.Pool({
 	connectionString: 'postgres://postgres:postgres@localhost:5432/postgres'
@@ -16,11 +15,3 @@ export const auth = lucia({
 })
 
 export type Auth = typeof auth
-
-export function shouldBeAuthenticated(event: RequestEvent) {
-	const id = event.route.id ?? ''
-	if (id.startsWith('/auth')) {
-		return false
-	}
-	return true
-}
