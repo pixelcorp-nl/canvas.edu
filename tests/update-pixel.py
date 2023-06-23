@@ -12,7 +12,8 @@ headers = {'Content-Type': 'application/json',
 data = {
 	"x": 10,
 	"y": 10,
-	"color": [255, 0, 0, 255]
+	"color": [255, 0, 0, 255],
+	"key": "joppe"
 }
 response = requests.post(url, headers=headers, data=json.dumps(data))
 

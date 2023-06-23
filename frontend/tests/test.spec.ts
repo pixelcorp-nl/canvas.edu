@@ -4,6 +4,7 @@ type Pixel = {
 	x: number
 	y: number
 	color: [number, number, number, number]
+	key: 'joppe'
 }
 
 async function putPixel(pixel: Pixel): Promise<Record<string, unknown>> {
@@ -32,7 +33,8 @@ async function getPixel(page: Page, x: number, y: number): Promise<Pixel> {
 	const pixel: Pixel = {
 		x,
 		y,
-		color: [data?.data[0], data?.data[1], data?.data[2], data?.data[3]] as [number, number, number, number]
+		color: [data?.data[0], data?.data[1], data?.data[2], data?.data[3]] as [number, number, number, number],
+		key: 'joppe'
 	}
 	if (pixel.color.some(c => c === undefined)) {
 		throw new Error('Pixel color is undefined')
@@ -54,7 +56,7 @@ test('Check page is rendered', async ({ page }) => {
 })
 
 test('Can put pixel', async () => {
-	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42, 255] }
+	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42, 255], key: 'joppe' }
 	expect(await putPixel(pixel)).toStrictEqual({ success: true, ...pixel })
 })
 
@@ -62,7 +64,7 @@ test('Check pixel can be put and then changed', async ({ page }) => {
 	await page.goto('http://localhost:5173')
 	await page.waitForTimeout(1000) // Wait for canvas to draw
 
-	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50, 255] }
+	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50, 255], key: 'joppe' }
 	await putPixel(pixel)
 	await page.waitForTimeout(1000)
 	await assertPixel(page, pixel)
