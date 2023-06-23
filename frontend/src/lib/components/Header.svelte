@@ -7,7 +7,7 @@
 <nav aria-label="Site Nav" class=" flex w-full items-center justify-between p-4">
 	<a href="/" class="inline-flex h-10 w-10 items-center justify-center">
 		<!-- <span class="sr-only">Logo</span> -->
-		<img src="pixels.svg" class="m-1 p-1 w-full h-full hover:scale-95 transition-all" alt="" srcset="" />
+		<img src="/pixels.svg" class="m-1 p-1 w-full h-full hover:scale-95 transition-all" alt="" srcset="" />
 	</a>
 
 	<ul class="flex items-center gap-2 text-sm font-medium text-gray-500">
