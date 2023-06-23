@@ -7,6 +7,7 @@
 	import atomOneDark from 'svelte-highlight/styles/atom-one-dark'
 	import Button from '$lib/components/Button.svelte'
 	import { page } from '$app/stores'
+	import { enhance } from '$app/forms'
 
 	const jsonExample = `{
 	"x": 42,
@@ -43,6 +44,10 @@ else:
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html atomOneDark}
 </svelte:head>
+
+<form use:enhance method="post">
+	<input type="submit" class="button" value="Sign out" />
+</form>
 
 <!-- HTML -->
 <article class="text-column prose lg:prose-lg mx-auto mb-5">
