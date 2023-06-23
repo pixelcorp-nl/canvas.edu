@@ -3,6 +3,15 @@ import { fail, redirect, type Actions } from '@sveltejs/kit'
 import { LuciaError } from 'lucia-auth'
 import type { PageServerLoad } from './$types'
 
+function randomString(length: number): string {
+	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	let result = ''
+	for (let i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * characters.length))
+	}
+	return result
+}
+
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const form = await request.formData()
@@ -21,10 +30,11 @@ export const actions: Actions = {
 					password
 				},
 				attributes: {
-					username
+					username,
+					apikey: randomString(8)
 				}
 			})
-			const session = await auth.createSession(user.userId)
+			const session = await auth.createSession(user.id)
 			locals.auth.setSession(session)
 		} catch (error) {
 			if (error instanceof LuciaError && error.message === 'AUTH_DUPLICATE_KEY_ID') {

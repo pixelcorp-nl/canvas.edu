@@ -11,7 +11,8 @@ const pool = new postgres.Pool({
 export const auth = lucia({
 	adapter: pg(pool),
 	env: dev ? 'DEV' : 'PROD',
-	middleware: sveltekit()
+	middleware: sveltekit(),
+	transformDatabaseUser: u => u
 })
 
 export type Auth = typeof auth

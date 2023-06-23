@@ -8,6 +8,8 @@
 	import Button from '$lib/components/Button.svelte'
 	import { page } from '$app/stores'
 	import { enhance } from '$app/forms'
+	import type { PageData } from './$types'
+	export let data: PageData
 
 	const jsonExample = `{
 	"x": 42,
@@ -48,6 +50,9 @@ else:
 <form use:enhance method="post">
 	<input type="submit" class="button" value="Sign out" />
 </form>
+<pre class="code">
+	{JSON.stringify(data.user, null, 2)}
+</pre>
 
 <!-- HTML -->
 <article class="text-column prose lg:prose-lg mx-auto mb-5">

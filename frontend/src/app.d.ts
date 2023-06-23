@@ -7,7 +7,7 @@ declare global {
 		type Auth = import('$lib/server/auth').Auth
 		type UserAttributes = {
 			username: string
-			password: string
+			apikey: string
 		}
 	}
 
