@@ -13,14 +13,18 @@
 		show_popout = !show_popout
 	}
 
-
-
+	// invalidate the session on the server
+	function logout() {
+		localStorage.removeItem('token')
+		window.location.href = '/'
+	}
 </script>
 
 <nav aria-label="Site Nav" class=" flex w-full items-center justify-between p-4">
-	<a href="/" class="inline-flex h-10 w-10 items-center justify-center">
+	<a href="/" class="inline-flex h-10 items-center justify-center">
 		<!-- <span class="sr-only">Logo</span> -->
 		<img src="/pixels.svg" class="m-1 p-1 w-full h-full hover:scale-95 transition-all" alt="" srcset="" />
+		<p class="font-mono text-center">PixelCorp</p>
 	</a>
 
 	<ul class="flex items-center gap-2 text-sm font-medium text-gray-500">
@@ -28,39 +32,27 @@
       <a class="rounded-lg px-3 py-2" href="/"> Home </a>
     </li> -->
 
-		<li><a class="rounded-lg px-3 py-2" class:bg-gray-100={$page.route.id === '/canvas'} href="/canvas"> {$_('header.canvas')} </a></li>
+		{#if $user.username != ''}
+			<li><a class="rounded-lg px-3 py-2" class:bg-gray-100={$page.route.id === '/canvas'} href="/canvas"> {$_('header.canvas')} </a></li>
 
-		<li>
-			<a class="rounded-lg inline-flex items-center gap-2 px-3 py-2" class:bg-gray-100={$page.route.id === '/info'} href="/info">
-				{$_('header.info')}
-			</a>
-		</li>
-		<!-- <li>
-			<a href="https://github.com/pixelcorp-nl/canvas.edu"><img src="/images/github.svg" alt="github" class="m-1 w-8 h-8 hover:scale-95 transition-all" /></a>
-		</li> -->
-		<!-- <li>
-			<Locale />
-		</li> -->
-		<!-- make me a nice line seperator -->
-		{#if $user.username}
+			<li>
+				<a class="rounded-lg inline-flex items-center gap-2 px-3 py-2" class:bg-gray-100={$page.route.id === '/info'} href="/info">
+					{$_('header.info')}
+				</a>
+			</li>
 			<li>
 				<div class="h-8 w-0.5 bg-gray-300/50 mr-2" />
 			</li>
 			<li class="flex p-1 rounded-lg group" on:mouseenter={toggle_logout} on:mouseleave={toggle_logout}>
 				<!-- make the div show the logout button on hover -->
 				<div class="flex h-8 gap-1">
-					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono">
-						{$user.username ? $user.username : 'Guest'}
-					</button>
+					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono"> {$user.username} </button>
 					<!-- make a logout button -->
 					{#if show_popout}
-						<div transition:slide={{ duration: 300, delay: 0, axis: 'x', easing: cubicOut}}>
+						<div transition:slide={{ duration: 300, delay: 0, axis: 'x', easing: cubicOut }}>
 							<Locale />
 
-							<button
-								class="rounded-lg px-2 py-2 bg-red-400/50 hover:bg-red-400 transition-all items-center"
-								class:bg-gray-100={$page.route.id === '/logout'}
-								on:click={() => fetch('/logout')}>
+							<button class="rounded-lg px-2 py-2 bg-red-400/50 hover:bg-red-400 transition-all items-center" on:click={logout}>
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-white">
 									<path
 										stroke-linecap="round"
@@ -74,7 +66,15 @@
 			</li>
 		{:else}
 			<li>
-				<a class="rounded-lg px-2 py-2 bg-gray-200/50 hover:bg-gray-200 transition-all items-center" class:bg-gray-100={$page.route.id === '/login'} href="/login"> Login </a>
+				<a class="rounded-lg px-3 py-2 bg-gray-200/50 hover:bg-gray-200 transition-all items-center" class:bg-gray-100={$page.route.id === '/login'} href="/login"> Login </a>
+			</li>
+			<li>
+				<a class="rounded-lg px-3 py-2 bg-[#f2ac93] hover:bg-[#a45949] text-white transition-all items-center" class:bg-gray-100={$page.route.id === '/signup'} href="/signup">
+					Sign up
+				</a>
+			</li>
+			<li>
+				<Locale />
 			</li>
 		{/if}
 	</ul>

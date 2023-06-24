@@ -7,7 +7,6 @@
 	import atomOneDark from 'svelte-highlight/styles/atom-one-dark'
 	import Button from '$lib/components/Button.svelte'
 	import { page } from '$app/stores'
-	import { enhance } from '$app/forms'
 	import type { PageData } from './$types'
 	export let data: PageData
 
@@ -15,6 +14,7 @@
 	"x": 42,
 	"y": 42,
 	"color": [255, 0, 0, 255], // rgba
+	"key": ${JSON.stringify($page.data.user.apikey)}
 }`
 
 	const code = `import requests
@@ -52,7 +52,7 @@ else:
 </pre> -->
 
 <!-- HTML -->
-<article class="text-column prose lg:prose-lg mx-auto mb-5">
+<article class="text-column prose lg:prose-lg mx-auto mb-5 mt-10">
 	<div>
 		<h1 class="font-bold text-3xl">{$_('info.title')}</h1>
 		<blockquote class="text-sm font-light">

@@ -1,22 +1,26 @@
 <script lang="ts">
+	import { user } from '$stores/user'
 	import '../app.postcss'
 	import Header from '$lib/components/Header.svelte'
 	import '$lib/i18n'
-	import { _, isLoading, locale } from 'svelte-i18n'
+	import { _, isLoading, locale, waitLocale } from 'svelte-i18n'
 	import Loader from '$lib/components/Loader.svelte'
 	import { onMount } from 'svelte'
+	import type { LayoutData } from './$types'
 
-	const load = async (lang: string) => {
-		const res = await fetch(`/locales/${lang}.json`)
-		return res.json()
-	}
+	export let data: LayoutData
 
-	onMount(() => {
+	onMount(async () => {
+		// refesh the entire page when the user logs in
+		if (data.user != null) {
+			$user = data.user as any
+		}
 		if (localStorage.getItem('locale') !== null) {
 			// extract the locale from the localStorage by parsing the JSON string
 			const lang = JSON.parse(localStorage.getItem('locale') || '')
 			locale.set(lang.locale || 'en')
 		}
+		await waitLocale()
 	})
 </script>
 

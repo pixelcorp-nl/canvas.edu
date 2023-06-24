@@ -1,10 +1,5 @@
 <script>
-    import { _ } from 'svelte-i18n'
-    import { user } from '$stores/user'
-    export let data
-
-    $user = data.user
-
+	import { _ } from 'svelte-i18n'
 </script>
 
 <slot />

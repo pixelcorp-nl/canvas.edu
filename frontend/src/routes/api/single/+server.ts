@@ -64,7 +64,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	const { success, timeToWait } = await ratelimit(apiKey, {
 		timePeriodSeconds: 1,
-		maxRequests: 10,
+		maxRequests: 2,
 		route: 'post-pixel'
 	})
 	if (!success) {

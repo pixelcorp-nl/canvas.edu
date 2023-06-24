@@ -47,7 +47,7 @@
 	}
 </script>
 
-<section bind:clientWidth={sectionWidth} bind:clientHeight={sectionHeight}>
+<section class="mt-20" bind:clientWidth={sectionWidth} bind:clientHeight={sectionHeight}>
 	<canvas bind:this={canvas} width={0} height={0} on:mousemove={logPosition} on:mouseleave={logPosition} id="canvas" />
 	<p class="mt-5">
 		{xMouse}, {yMouse}
