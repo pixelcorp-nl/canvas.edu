@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
+		"preview": "vite preview",
 		"test": "npx playwright test",
 		"test:dev": "npx playwright test --watch",
 		"test:view": "npx playwright test --headed",

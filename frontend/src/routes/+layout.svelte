@@ -5,6 +5,12 @@
 	import { _, isLoading, locale } from 'svelte-i18n'
 	import Loader from '$lib/components/Loader.svelte'
 	import { onMount } from 'svelte'
+
+	const load = async (lang: string) => {
+		const res = await fetch(`/locales/${lang}.json`)
+		return res.json()
+	}
+
 	onMount(() => {
 		if (localStorage.getItem('locale') !== null) {
 			// extract the locale from the localStorage by parsing the JSON string
@@ -22,12 +28,15 @@
 		<main>
 			<slot />
 		</main>
-		<footer id="footer">
+
+		<a class="mx-auto" href="https://github.com/pixelcorp-nl/canvas.edu"><img src="/images/github.svg" alt="github" class="m-1 w-8 h-8 hover:scale-95 transition-all" /></a>
+
+		<!-- <footer id="footer">
 			<p>
 				{$_('footer')} <a href="https://github.com/Obult">Oswin</a>,
 				<a href="https://github.com/LithiumOx">Mees</a> & <a href="https://github.com/SirMorfield">Joppe</a>
 			</p>
-		</footer>
+		</footer> -->
 	</div>
 {/if}
 
@@ -49,7 +58,7 @@
 		box-sizing: border-box;
 	}
 
-	footer {
+	/* footer {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -65,5 +74,5 @@
 		footer {
 			padding: 12px 0;
 		}
-	}
+	} */
 </style>
