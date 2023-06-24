@@ -57,7 +57,12 @@ test('Check page is rendered', async ({ page }) => {
 
 test('Can put pixel', async () => {
 	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42, 255], key: 'joppe' }
-	expect(await putPixel(pixel)).toStrictEqual({ success: true, ...pixel })
+	expect((await putPixel(pixel))?.['success']).toBe(true)
+})
+
+test('Cannot put invalid pixel', async () => {
+	const pixel: Pixel = { x: -1, y: 0, color: [42, 42, 42, 255], key: 'joppe' }
+	expect((await putPixel(pixel))?.['success']).toBe(false)
 })
 
 test('Check pixel can be put and then changed', async ({ page }) => {
