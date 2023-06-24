@@ -25,7 +25,7 @@ url = "http://${$page.url.hostname}/api/single"
 headers = {'Content-Type': 'application/json'}
 
 # Define the pixel data as a Python dictionary
-pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255, 255]}
+pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255, 255], 'key': ${JSON.stringify($page.data.user.apikey)}}
 
 # Send a POST request to the API endpoint with the pixel data as JSON
 response = requests.post(url, headers=headers, data=json.dumps(pixel))
@@ -47,12 +47,9 @@ else:
 	{@html atomOneDark}
 </svelte:head>
 
-<form use:enhance method="post">
-	<input type="submit" class="button" value="Sign out" />
-</form>
-<pre class="code">
+<!-- <pre class="code">
 	{JSON.stringify(data.user, null, 2)}
-</pre>
+</pre> -->
 
 <!-- HTML -->
 <article class="text-column prose lg:prose-lg mx-auto mb-5">
@@ -92,8 +89,4 @@ else:
 		</div>
 		<Highlight class="bg-[#282c34] !m-0 transition-all duration-1000" language={python} {code} />
 	</div>
-	<h2 class="text-xl font-semibold">{$_('info.header3')}</h2>
-	<p>
-		{$_('info.content3')}
-	</p>
 </article>
