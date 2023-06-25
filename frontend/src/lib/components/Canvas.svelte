@@ -16,9 +16,10 @@
 	const socket: Socket = io()
 	onMount(() => {
 		const size = Math.min(sectionWidth, sectionHeight)
-		pScalar = size / publicEnv.canvasWidth
-		canvas.width = size
-		canvas.height = size
+		pScalar = Math.floor(size / publicEnv.canvasWidth)
+		const canvasSize = publicEnv.canvasWidth * pScalar
+		canvas.width = canvasSize
+		canvas.height = canvasSize
 
 		socket.on('pixelMap', pixelMap => forEachPixel(pixelMap, drawPixelOnCanvas))
 	})
