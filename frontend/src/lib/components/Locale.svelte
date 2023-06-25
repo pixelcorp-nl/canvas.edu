@@ -12,7 +12,7 @@
 	}
 </script>
 
-<button class="text-xl px-1 py-1 bg-gray-200/50 rounded-md hover:bg-gray-200 transition-all" on:click={handleLanguageChange}>
+<button class="text-xl px-1 bg-gray-200/50 rounded-md hover:bg-gray-200 transition-all" on:click={handleLanguageChange}>
 	{#if $lang.locale === 'en'}
 		🇬🇧
 	{:else if $lang.locale === 'nl'}
