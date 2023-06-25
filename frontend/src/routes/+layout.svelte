@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { user } from '$lib/Stores/User'
-	import '../app.postcss'
 	import Header from '$lib/components/Header.svelte'
-	import '$lib/i18n'
-	import { isLoading, locale, waitLocale } from 'svelte-i18n'
 	import Loader from '$lib/components/Loader.svelte'
+	import '$lib/i18n'
 	import { onMount } from 'svelte'
+	import { _, isLoading, locale, waitLocale } from 'svelte-i18n'
+	import '../app.postcss'
 	import type { LayoutData } from './$types'
 
 	export let data: LayoutData
@@ -35,14 +35,15 @@
 			<slot />
 		</main>
 
-		<a class="mx-auto" href="https://github.com/pixelcorp-nl/canvas.edu"><img src="/images/github.svg" alt="github" class="m-1 w-8 h-8 hover:scale-95 transition-all" /></a>
-
-		<!-- <footer id="footer">
-			<p>
-				{$_('footer')} <a href="https://github.com/Obult">Oswin</a>,
-				<a href="https://github.com/LithiumOx">Mees</a> & <a href="https://github.com/SirMorfield">Joppe</a>
-			</p>
-		</footer> -->
+		<a class="mx-auto" href="https://github.com/pixelcorp-nl/canvas.edu">
+			<footer id="footer">
+				<img src="/images/github.svg" class="m-1 w-8 h-8 hover:scale-95" alt="github" />
+				<blockquote>
+					{$_('footer')} <a class="person" href="https://github.com/Obult">Oswin</a>, <a class="person" href="https://github.com/LithiumOx">Mees</a> &
+					<a class="person" href="https://github.com/SirMorfield">Joppe</a>
+				</blockquote>
+			</footer>
+		</a>
 	</div>
 {/if}
 
@@ -64,7 +65,11 @@
 		box-sizing: border-box;
 	}
 
-	/* footer {
+	.person:hover {
+		text-decoration: underline;
+	}
+
+	footer {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -80,5 +85,5 @@
 		footer {
 			padding: 12px 0;
 		}
-	} */
+	}
 </style>

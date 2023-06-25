@@ -28,8 +28,3 @@
 	</div>
 </section>
 <!-- <img src="/images/example.gif" alt="example" class="mx-auto w-full max-w-screen-sm mb-20 rounded-lg" /> -->
-<article class="prose-xl">
-	<!-- <blockquote class="text-lg">
-		PixelCorp is a project by <a href="https://github.com/Obult">Oswin</a>, <a href="https://github.com/LithiumOx">Mees</a> & <a href="https://github.com/SirMorfield">Joppe</a>.
-	</blockquote> -->
-</article>
