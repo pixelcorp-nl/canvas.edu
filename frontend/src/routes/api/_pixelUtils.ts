@@ -5,12 +5,20 @@ const { canvasHeight, canvasWidth } = publicEnv
 
 const rgbValue = z.number().min(0).max(255)
 
-export const PixelObj = z.object({
+const pixelObj = {
 	x: z.number().min(0).max(canvasWidth),
 	y: z.number().min(0).max(canvasHeight),
 	color: z.array(rgbValue).length(4)
-})
+}
+
+export const PixelObj = z.object(pixelObj)
 export type PixelObj = z.infer<typeof PixelObj>
+
+export const PixelRequest = z.object({
+	...pixelObj,
+	key: z.string()
+})
+export type PixelRequest = z.infer<typeof PixelRequest>
 
 export type PixelKV = [Coordinate, RGBA]
 export function pixelObjToPixelKV(pixelObj: PixelObj): PixelKV {

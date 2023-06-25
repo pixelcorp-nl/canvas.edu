@@ -1,16 +1,26 @@
 <script lang="ts">
-	import '../app.postcss'
+	import { user } from '$lib/Stores/User'
 	import Header from '$lib/components/Header.svelte'
-	import '$lib/i18n'
-	import { _, isLoading, locale } from 'svelte-i18n'
 	import Loader from '$lib/components/Loader.svelte'
+	import '$lib/i18n'
 	import { onMount } from 'svelte'
-	onMount(() => {
+	import { _, isLoading, locale, waitLocale } from 'svelte-i18n'
+	import '../app.postcss'
+	import type { LayoutData } from './$types'
+
+	export let data: LayoutData
+
+	onMount(async () => {
+		// refesh the entire page when the user logs in
+		if (data.user) {
+			$user = data.user
+		}
 		if (localStorage.getItem('locale') !== null) {
 			// extract the locale from the localStorage by parsing the JSON string
 			const lang = JSON.parse(localStorage.getItem('locale') || '')
 			locale.set(lang.locale || 'en')
 		}
+		await waitLocale()
 	})
 </script>
 
@@ -18,16 +28,22 @@
 	<Loader />
 {:else}
 	<div class="app">
-		<Header />
+		{#key data.user}
+			<Header userData={data.user} />
+		{/key}
 		<main>
 			<slot />
 		</main>
-		<footer id="footer">
-			<p>
-				{$_('footer')} <a href="https://github.com/Obult">Oswin</a>,
-				<a href="https://github.com/LithiumOx">Mees</a> & <a href="https://github.com/SirMorfield">Joppe</a>
-			</p>
-		</footer>
+
+		<a class="mx-auto" href="https://github.com/pixelcorp-nl/canvas.edu">
+			<footer id="footer">
+				<img src="/images/github.svg" class="m-1 w-8 h-8 hover:scale-95" alt="github" />
+				<blockquote>
+					{$_('footer')} <a class="person" href="https://github.com/Obult">Oswin</a>, <a class="person" href="https://github.com/LithiumOx">Mees</a> &
+					<a class="person" href="https://github.com/SirMorfield">Joppe</a>
+				</blockquote>
+			</footer>
+		</a>
 	</div>
 {/if}
 
@@ -47,6 +63,10 @@
 		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;
+	}
+
+	.person:hover {
+		text-decoration: underline;
 	}
 
 	footer {

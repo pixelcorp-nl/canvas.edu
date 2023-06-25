@@ -1,9 +1,10 @@
-import { error, json, type RequestHandler } from '@sveltejs/kit'
+import { json, type RequestHandler } from '@sveltejs/kit'
 import { setPixelMap } from '$api/_redis'
 import { publicEnv } from '../../../publicEnv'
-import { PixelObj, pixelObjToPixelKV } from '$api/_pixelUtils'
+import { pixelObjToPixelKV, PixelRequest } from '$api/_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$api/_ratelimit'
+import { pool } from '$lib/server/auth'
 
 // Adjust this value to control how often data is sent to Redis (in milliseconds)
 const BATCH_INTERVAL = 100
@@ -37,29 +38,42 @@ async function processBatch(io: Server) {
 	await setPixelMap(publicEnv.canvasId, queueObj)
 }
 
-export const POST: RequestHandler = async ({ request, locals, getClientAddress }) => {
-	try {
-		const { success, timeToWait } = await ratelimit(getClientAddress(), {
-			timePeriodSeconds: 1,
-			maxRequests: 10,
-			route: 'post-pixel'
-		})
-		if (!success) {
-			return json({ success, timeToWait }, { status: 429 })
-		}
-
-		const parsed = await PixelObj.safeParseAsync(await request.json())
-		if (!parsed.success) {
-			throw error(400, 'This request is not valid please make sure you have x, y, and color like this: {x: 0, y: 0, color: [0, 0, 0, 1]}')
-		}
-		const [coordinate, rgba] = pixelObjToPixelKV(parsed.data)
-		queue.set(coordinate, rgba)
-		void processBatch(locals.io)
-
-		locals.statsd.increment('pixel')
-		return json({ success: true, x: parsed.data.x, y: parsed.data.y, color: parsed.data.color })
-	} catch (error) {
-		console.error(error)
-		return json({ success: false, error }, { status: 500 })
+function apiKeyExists(key: string): Promise<boolean> {
+	// temporary for testing
+	if (key === 'joppe') {
+		return Promise.resolve(true)
 	}
+
+	return new Promise(resolve => {
+		pool.query(`SELECT * FROM auth_user WHERE apikey = $1`, [key], (err, result) => resolve(!err && result.rowCount > 0))
+	})
+}
+
+export const POST: RequestHandler = async ({ request, locals }) => {
+	const parsed = await PixelRequest.safeParseAsync(await request.json())
+	if (!parsed.success) {
+		const pixel: PixelRequest = { x: 10, y: 10, color: [255, 0, 0, 255], key: 'your-api-key' }
+		const resp = { success: false, error: `The request is not valid, your request should look like this ${JSON.stringify(pixel)}` }
+		return json(resp, { status: 400 })
+	}
+	const apiKey = parsed.data.key
+	if (!(await apiKeyExists(apiKey))) {
+		const resp = { success: false, error: `The API key you provided (${apiKey}) is not valid` }
+		return json(resp, { status: 401 })
+	}
+
+	const { success, timeToWait } = await ratelimit(apiKey, {
+		timePeriodSeconds: 1,
+		maxRequests: 2,
+		route: 'post-pixel'
+	})
+	if (!success) {
+		return json({ success: false, timeToWait }, { status: 429 })
+	}
+	const [coordinate, rgba] = pixelObjToPixelKV(parsed.data)
+	queue.set(coordinate, rgba)
+	void processBatch(locals.io)
+
+	locals.statsd.increment('pixel')
+	return json({ success: true, x: parsed.data.x, y: parsed.data.y, color: parsed.data.color })
 }

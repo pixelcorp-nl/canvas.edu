@@ -27,5 +27,7 @@
 			"comment5": "If the request was successful, print a success message",
 			"comment6": "If the request was unsuccessful, print an error message that includes the HTTP status code"
 		}
-	}
+	},
+	"landing.title": "Learn code together.",
+	"landing.subtitle": "Improve together."
 }

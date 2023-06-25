@@ -16,7 +16,7 @@
 	const socket: Socket = io()
 	onMount(() => {
 		const size = Math.min(sectionWidth, sectionHeight)
-		pScalar = Math.floor(size / publicEnv.canvasWidth)
+		pScalar = Math.floor(size / publicEnv.canvasWidth) || 1
 		const canvasSize = publicEnv.canvasWidth * pScalar
 		canvas.width = canvasSize
 		canvas.height = canvasSize
@@ -48,7 +48,7 @@
 	}
 </script>
 
-<section bind:clientWidth={sectionWidth} bind:clientHeight={sectionHeight}>
+<section class="mt-20" bind:clientWidth={sectionWidth} bind:clientHeight={sectionHeight}>
 	<canvas bind:this={canvas} width={0} height={0} on:mousemove={logPosition} on:mouseleave={logPosition} id="canvas" />
 	<p class="mt-5">
 		{xMouse}, {yMouse}

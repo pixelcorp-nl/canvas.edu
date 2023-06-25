@@ -8,21 +8,24 @@
 	import Button from '$lib/components/Button.svelte'
 	import { page } from '$app/stores'
 
+	const apikey = $page.data['user'].apikey
+	const root = `${$page.url.protocol}//${$page.url.host}`
 	const jsonExample = `{
 	"x": 42,
 	"y": 42,
 	"color": [255, 0, 0, 255], // rgba
+	"key": "${apikey}"
 }`
 
 	const code = `import requests
 import json
 
 # Define the URL of the API endpoint and the request headers
-url = "http://${$page.url.hostname}/api/single"
+url = '${root}/api/single'
 headers = {'Content-Type': 'application/json'}
 
 # Define the pixel data as a Python dictionary
-pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255, 255]}
+pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255, 255], 'key': '${apikey}' }
 
 # Send a POST request to the API endpoint with the pixel data as JSON
 response = requests.post(url, headers=headers, data=json.dumps(pixel))
@@ -44,8 +47,12 @@ else:
 	{@html atomOneDark}
 </svelte:head>
 
+<!-- <pre class="code">
+	{JSON.stringify(data.user, null, 2)}
+</pre> -->
+
 <!-- HTML -->
-<article class="text-column prose lg:prose-lg mx-auto mb-5">
+<article class="text-column prose lg:prose-lg mx-auto mb-5 mt-10">
 	<div>
 		<h1 class="font-bold text-3xl">{$_('info.title')}</h1>
 		<blockquote class="text-sm font-light">
@@ -82,8 +89,4 @@ else:
 		</div>
 		<Highlight class="bg-[#282c34] !m-0 transition-all duration-1000" language={python} {code} />
 	</div>
-	<h2 class="text-xl font-semibold">{$_('info.header3')}</h2>
-	<p>
-		{$_('info.content3')}
-	</p>
 </article>
