@@ -16,7 +16,7 @@
 	const socket: Socket = io()
 	onMount(() => {
 		const size = Math.min(sectionWidth, sectionHeight)
-		pScalar = Math.floor(size / publicEnv.canvasWidth)
+		pScalar = Math.floor(size / publicEnv.canvasWidth) || 1
 		const canvasSize = publicEnv.canvasWidth * pScalar
 		canvas.width = canvasSize
 		canvas.height = canvasSize
