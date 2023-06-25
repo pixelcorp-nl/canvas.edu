@@ -35,15 +35,7 @@
 			<slot />
 		</main>
 
-		<a class="mx-auto" href="https://github.com/pixelcorp-nl/canvas.edu">
-			<footer id="footer">
-				<img src="/images/github.svg" class="m-1 w-8 h-8 hover:scale-95" alt="github" />
-				<blockquote>
-					{$_('footer')} <a class="person" href="https://github.com/Obult">Oswin</a>, <a class="person" href="https://github.com/LithiumOx">Mees</a> &
-					<a class="person" href="https://github.com/SirMorfield">Joppe</a>
-				</blockquote>
-			</footer>
-		</a>
+		<a class="mx-auto" href="https://github.com/pixelcorp-nl/canvas.edu"><img src="/images/github.svg" class="m-1 w-8 h-8 hover:scale-95" alt="github" /></a>
 	</div>
 {/if}
 
@@ -63,27 +55,5 @@
 		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;
-	}
-
-	.person:hover {
-		text-decoration: underline;
-	}
-
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 12px;
-	}
-
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
 	}
 </style>
