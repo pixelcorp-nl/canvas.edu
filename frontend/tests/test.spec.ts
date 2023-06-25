@@ -7,9 +7,10 @@ type Pixel = {
 	key: 'joppe'
 }
 
+const root = 'http://localhost:5173'
 async function putPixel(pixel: Pixel): Promise<Record<string, unknown>> {
 	try {
-		const resp = await fetch('http://localhost:5173/api/single', {
+		const resp = await fetch(`${root}/api/single`, {
 			method: 'POST',
 			body: JSON.stringify(pixel)
 		})
@@ -50,7 +51,7 @@ async function assertPixel(page: Page, pixel: Pixel) {
 }
 
 test('Check page is rendered', async ({ page }) => {
-	await page.goto('http://localhost:5173')
+	await page.goto(root)
 	const html = await page.locator('#footer').innerHTML()
 	expect(html).toContain('Oswin')
 })
@@ -70,8 +71,21 @@ test('Cannot put invalid pixel', async () => {
 	expect((await putPixel(pixel))?.['success']).toBe(false)
 })
 
-test('Check pixel can be put and then changed', async ({ page }) => {
-	await page.goto('http://localhost:5173')
+test('Can create account', async ({ page }) => {
+	await page.goto(`${root}/signup`)
+
+	const userName = `joppe${Date.now()}`
+	await page.evaluate(userName => {
+		;(document.querySelector('input[name="username"]') as HTMLInputElement).value = userName
+		;(document.querySelector('#password') as HTMLInputElement).value = userName
+		;(document.querySelector('#password-confirm') as HTMLInputElement).value = userName
+		;(document.querySelector('button[type="submit"]') as HTMLButtonElement).click()
+	}, userName)
+	await expect(page.locator('#header-username')).toHaveText(userName)
+
+	// TODO make separate test for this and share cookies between them
+	// })
+	// test('Check pixel can be put and then changed', async ({ page }) => {
 	await page.waitForTimeout(1000) // Wait for canvas to draw
 
 	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50, 255], key: 'joppe' }
