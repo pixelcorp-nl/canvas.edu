@@ -5,11 +5,11 @@
 	<div class="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:items-center">
 		<div class="mx-auto max-w-xl text-center">
 			<h1 class="text-3xl font-extrabold sm:text-5xl">
-				Learn coding together.
+				Learn programming together.
 				<strong class="font-extrabold text-[#f2ac93] sm:block"> Improve together. </strong>
 			</h1>
 
-			<p class="mt-4 sm:text-xl/relaxed">We make coding exciting...</p>
+			<p class="mt-4 sm:text-xl/relaxed">We make programming exciting...</p>
 
 			<div class="mt-8 flex flex-wrap justify-center gap-4">
 				<!-- <a
@@ -27,7 +27,7 @@
 		</div>
 	</div>
 </section>
-<img src="/images/example.gif" alt="example" class="mx-auto w-full max-w-screen-sm mb-20 rounded-lg" />
+<!-- <img src="/images/example.gif" alt="example" class="mx-auto w-full max-w-screen-sm mb-20 rounded-lg" /> -->
 <article class="prose-xl">
 	<!-- <blockquote class="text-lg">
 		PixelCorp is a project by <a href="https://github.com/Obult">Oswin</a>, <a href="https://github.com/LithiumOx">Mees</a> & <a href="https://github.com/SirMorfield">Joppe</a>.
