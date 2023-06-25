@@ -4,15 +4,6 @@
 	export let form: { message?: string }
 </script>
 
-<!-- <h2>Sign in</h2>
-<p class="center">or</p>
-<form method="post" use:enhance>
-	<label for="username">username</label><br />
-	<input id="username" name="username" /><br />
-	<label for="password">password</label><br />
-	<input type="password" id="password" name="password" /><br />
-	<input type="submit" value="Continue" class="button" />
-</form> -->
 <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
 	<div class="mx-auto max-w-lg text-center">
 		<img src="/pixels.svg" alt="PixelCorp" class="mx-auto h-12 w-auto mb-5" />

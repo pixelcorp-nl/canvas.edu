@@ -4,24 +4,31 @@
 	import { page } from '$app/stores'
 	import { slide } from 'svelte/transition'
 	import { cubicOut } from 'svelte/easing'
-	import { onMount } from 'svelte'
+	import { goto } from '$app/navigation'
 	import { user } from '$stores/user'
+	import { onMount } from 'svelte'
 
 	let show_popout = false
+
+	onMount(async () => {})
 
 	function toggle_logout() {
 		show_popout = !show_popout
 	}
 
-	// invalidate the session on the server
-	function logout() {
-		localStorage.removeItem('token')
-		window.location.href = '/'
+	async function logout() {
+		await fetch('/logout', { method: 'POST' })
+		$user = {
+			username: '',
+			apiKey: '',
+			id: ''
+		}
+		goto('/')
 	}
 </script>
 
 <nav aria-label="Site Nav" class=" flex w-full items-center justify-between p-4">
-	<a href="/" class="inline-flex h-10 items-center justify-center">
+	<a href="/" class="flex h-10 items-center">
 		<!-- <span class="sr-only">Logo</span> -->
 		<img src="/pixels.svg" class="m-1 p-1 w-full h-full hover:scale-95 transition-all" alt="" srcset="" />
 		<p class="font-mono text-center">PixelCorp</p>
@@ -44,14 +51,11 @@
 				<div class="h-8 w-0.5 bg-gray-300/50 mr-2" />
 			</li>
 			<li class="flex p-1 rounded-lg group" on:mouseenter={toggle_logout} on:mouseleave={toggle_logout}>
-				<!-- make the div show the logout button on hover -->
 				<div class="flex h-8 gap-1">
 					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono"> {$user.username} </button>
-					<!-- make a logout button -->
 					{#if show_popout}
 						<div transition:slide={{ duration: 300, delay: 0, axis: 'x', easing: cubicOut }}>
 							<Locale />
-
 							<button class="rounded-lg px-2 py-2 bg-red-400/50 hover:bg-red-400 transition-all items-center" on:click={logout}>
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-white">
 									<path
