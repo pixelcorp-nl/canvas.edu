@@ -4,7 +4,7 @@
 	import Loader from '$lib/components/Loader.svelte'
 	import '$lib/i18n'
 	import { onMount } from 'svelte'
-	import { _, isLoading, locale, waitLocale } from 'svelte-i18n'
+	import { isLoading, locale, waitLocale } from 'svelte-i18n'
 	import '../app.postcss'
 	import type { LayoutData } from './$types'
 

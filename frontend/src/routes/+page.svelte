@@ -1,5 +1,5 @@
 <script lang="ts">
-	let contributors = [
+	const contributors = [
 		{
 			name: 'Obult',
 			avatar: 'https://avatars.githubusercontent.com/u/69460150?v=4',
