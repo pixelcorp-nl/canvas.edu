@@ -8,22 +8,24 @@
 	import Button from '$lib/components/Button.svelte'
 	import { page } from '$app/stores'
 
+	const apikey = $page.data['user'].apikey
+	const root = `${$page.url.protocol}//${$page.url.host}`
 	const jsonExample = `{
 	"x": 42,
 	"y": 42,
 	"color": [255, 0, 0, 255], // rgba
-	"key": ${JSON.stringify($page.data['user'].apikey)}
+	"key": "${apikey}"
 }`
 
 	const code = `import requests
 import json
 
 # Define the URL of the API endpoint and the request headers
-url = "http://${$page.url.hostname}/api/single"
+url = '${root}/api/single'
 headers = {'Content-Type': 'application/json'}
 
 # Define the pixel data as a Python dictionary
-pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255, 255], 'key': ${JSON.stringify($page.data['user'].apikey)}}
+pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255, 255], 'key': '${apikey}' }
 
 # Send a POST request to the API endpoint with the pixel data as JSON
 response = requests.post(url, headers=headers, data=json.dumps(pixel))
