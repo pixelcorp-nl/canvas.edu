@@ -60,6 +60,11 @@ test('Can put pixel', async () => {
 	expect((await putPixel(pixel))?.['success']).toBe(true)
 })
 
+test('Cannot put unauthenticated pixel', async () => {
+	const pixel: Pixel = { x: -1, y: 0, color: [42, 42, 42, 255], key: 'not joppe' as 'joppe' }
+	expect((await putPixel(pixel))?.['success']).toBe(false)
+})
+
 test('Cannot put invalid pixel', async () => {
 	const pixel: Pixel = { x: -1, y: 0, color: [42, 42, 42, 255], key: 'joppe' }
 	expect((await putPixel(pixel))?.['success']).toBe(false)
