@@ -1,28 +1,46 @@
-<script>
-	import { _ } from 'svelte-i18n'
+<script lang="ts">
+	import { _, locale } from 'svelte-i18n'
 	import Locale from './Locale.svelte'
 	import { page } from '$app/stores'
 	import { slide } from 'svelte/transition'
 	import { cubicOut } from 'svelte/easing'
 	import { goto } from '$app/navigation'
 	import { user } from '$stores/user'
-	import { onMount } from 'svelte'
+	// import { onMount } from 'svelte'
 
-	let show_popout = false
+	export let userData: any
 
-	onMount(async () => {})
+	let showPopout = false
+
+	// onMount(() => {
+	// 	if (JSON.stringify($user) === '{}' && $page.url.pathname == '/canvas') {
+	// 		console.log($user)
+	// 		window.location.reload()
+	// 	}
+	// })
+
+	// onMount(async () => {
+	// 	console.log(JSON.stringify($user))
+	// 	if ($user.username !== '' && $page.url.pathname != '/canvas') {
+	// 		window.location.reload()
+	// 	}
+	// 	// loggedIn = $page.url.searchParams.get('loggedIn') === 'true'
+	// 	// console.log(loggedIn)
+	// 	// if (loggedIn) {
+	// 	// 	$page.url.searchParams.delete('loggedIn')
+	// 	// 	console.log($page.url.searchParams.get('loggedIn'))
+	// 	// 	window.location.reload()
+	// 	// } else {
+	// 	// 	console.log('not logged in')
+	// 	// }
+	// })
 
 	function toggle_logout() {
-		show_popout = !show_popout
+		showPopout = !showPopout
 	}
 
 	async function logout() {
 		await fetch('/logout', { method: 'POST' })
-		$user = {
-			username: '',
-			apiKey: '',
-			id: ''
-		}
 		goto('/')
 	}
 </script>
@@ -39,7 +57,7 @@
       <a class="rounded-lg px-3 py-2" href="/"> Home </a>
     </li> -->
 
-		{#if $user.username != ''}
+		{#if userData?.username != '' && userData?.username != null}
 			<li><a class="rounded-lg px-3 py-2" class:bg-gray-100={$page.route.id === '/canvas'} href="/canvas"> {$_('header.canvas')} </a></li>
 
 			<li>
@@ -52,8 +70,8 @@
 			</li>
 			<li class="flex p-1 rounded-lg group" on:mouseenter={toggle_logout} on:mouseleave={toggle_logout}>
 				<div class="flex h-8 gap-1">
-					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono"> {$user.username} </button>
-					{#if show_popout}
+					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono"> {userData.username} </button>
+					{#if showPopout}
 						<div transition:slide={{ duration: 300, delay: 0, axis: 'x', easing: cubicOut }}>
 							<Locale />
 							<button class="rounded-lg px-2 py-2 bg-red-400/50 hover:bg-red-400 transition-all items-center" on:click={logout}>

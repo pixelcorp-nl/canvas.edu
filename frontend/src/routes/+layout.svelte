@@ -22,13 +22,17 @@
 		}
 		await waitLocale()
 	})
+
+	$: console.log($user)
 </script>
 
 {#if $isLoading}
 	<Loader />
 {:else}
 	<div class="app">
-		<Header />
+		{#key data.user}
+			<Header userData={data.user} />
+		{/key}
 		<main>
 			<slot />
 		</main>

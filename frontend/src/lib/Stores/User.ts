@@ -1,7 +1,7 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store'
 
 export const user = writable({
-    username: "",
-    id: "",
-    apiKey: "",
-});
+	username: '',
+	id: '',
+	apikey: ''
+})
