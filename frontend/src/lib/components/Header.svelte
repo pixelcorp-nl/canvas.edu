@@ -4,7 +4,6 @@
 	import { page } from '$app/stores'
 	import { slide } from 'svelte/transition'
 	import { cubicOut } from 'svelte/easing'
-	import { goto } from '$app/navigation'
 
 	export let userData: any
 	let showPopout = false
@@ -15,7 +14,7 @@
 
 	async function logout() {
 		await fetch('/logout', { method: 'POST' })
-		goto('/')
+		window.location.reload()
 	}
 </script>
 

@@ -1,22 +1,14 @@
-// import { type Actions, fail } from "@sveltejs/kit";
-import { auth } from '$lib/server/auth'
-import { json, redirect } from '@sveltejs/kit'
+import { json } from '@sveltejs/kit'
 
-// export const actions: Actions = {
-//     default: async ({ locals }) => {
-//         const { session } = await locals.auth.validateUser();
-//         if (!session) return fail(401);
-//         await auth.invalidateSession(session.sessionId); // invalidate session
-//         locals.auth.setSession(null); // remove cookie
-//     }
-// };
-
-export const POST = async ({ locals }) => {
-	const { session } = await locals.auth.validateUser()
-	if (!session) {
-		throw redirect(307, '/')
-	}
-	await auth.invalidateSession(session.sessionId) // invalidate session
-	locals.auth.setSession(null) // remove cookie
-	throw redirect(307, '/')
+export const POST = ({ cookies }) => {
+	/**
+	 * !TODO: invalidate session properly
+	 */
+	// const { session } = await locals.auth.validateUser()
+	// console.log('session', session)
+	// if (session) {
+	// 	await auth.invalidateSession(session.sessionId)
+	// }
+	cookies.delete('auth_session')
+	return json({ success: true })
 }
