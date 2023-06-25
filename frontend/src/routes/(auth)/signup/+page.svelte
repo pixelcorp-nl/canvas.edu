@@ -8,7 +8,7 @@
 
 	let passwordMatch = false
 
-	$: if (password == passwordConfirmation) {
+	$: if (password === passwordConfirmation) {
 		passwordMatch = true
 	} else {
 		passwordMatch = false

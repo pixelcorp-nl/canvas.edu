@@ -4,11 +4,12 @@
 	import { page } from '$app/stores'
 	import { slide } from 'svelte/transition'
 	import { cubicOut } from 'svelte/easing'
+	import type { User } from 'lucia-auth'
 
-	export let userData: any
+	export let userData: User | undefined
 	let showPopout = false
 
-	function toggle_logout() {
+	function toggleLogout() {
 		showPopout = !showPopout
 	}
 
@@ -36,7 +37,7 @@
 			<li>
 				<div class="h-8 w-0.5 bg-gray-300/50 mr-2" />
 			</li>
-			<li class="flex p-1 rounded-lg group" on:mouseenter={toggle_logout} on:mouseleave={toggle_logout}>
+			<li class="flex p-1 rounded-lg group" on:mouseenter={toggleLogout} on:mouseleave={toggleLogout}>
 				<div class="flex h-8 gap-1">
 					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono"> {userData.username} </button>
 					{#if showPopout}

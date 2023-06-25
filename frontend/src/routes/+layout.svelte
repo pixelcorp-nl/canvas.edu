@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { user } from '$stores/user'
+	import { user } from '$lib/Stores/User'
 	import '../app.postcss'
 	import Header from '$lib/components/Header.svelte'
 	import '$lib/i18n'
-	import { _, isLoading, locale, waitLocale } from 'svelte-i18n'
+	import { isLoading, locale, waitLocale } from 'svelte-i18n'
 	import Loader from '$lib/components/Loader.svelte'
 	import { onMount } from 'svelte'
 	import type { LayoutData } from './$types'
@@ -12,8 +12,8 @@
 
 	onMount(async () => {
 		// refesh the entire page when the user logs in
-		if (data.user != null) {
-			$user = data.user as any
+		if (data.user) {
+			$user = data.user
 		}
 		if (localStorage.getItem('locale') !== null) {
 			// extract the locale from the localStorage by parsing the JSON string
@@ -22,8 +22,6 @@
 		}
 		await waitLocale()
 	})
-
-	$: console.log($user)
 </script>
 
 {#if $isLoading}
