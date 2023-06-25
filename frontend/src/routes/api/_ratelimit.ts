@@ -11,7 +11,6 @@ interface RateLimitOptions {
 
 export async function ratelimit(identifier: string | undefined | null, options: RateLimitOptions): Promise<{ success: boolean; timeToWait?: number }> {
 	try {
-		identifier = identifier?.replace(/:/g, '_') // temporary until we stop using ipv4/6 addresses as identifiers : is used for defining sub keys in redis
 		const now = Date.now()
 		const cutoff = now - options.timePeriodSeconds * 1000
 		const requests = await r.zrangebyscore(`ratelimit:${options.route}:(${identifier})`, cutoff, now)
