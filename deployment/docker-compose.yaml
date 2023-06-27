@@ -6,7 +6,6 @@ services:
     restart: unless-stopped
     ports:
       - 80:5173
-      - 5174:5174
     env_file:
       - .env
 
@@ -30,6 +29,23 @@ services:
       - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
     ports:
       - 8125:8125/udp
+
+  postgres:
+    container_name: postgres
+    restart: unless-stopped
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres-db:/var/lib/postgresql/data
+
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token <token>
 
   watchtower:
     container_name: watchtower
