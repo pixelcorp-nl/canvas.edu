@@ -1,4 +1,4 @@
-import { r } from './_redis'
+import { r } from './redis'
 
 interface RateLimitOptions {
 	// Name of the route being called.

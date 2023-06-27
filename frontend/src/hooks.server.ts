@@ -1,4 +1,4 @@
-import { getPixelMap } from '$api/_redis'
+import { getPixelMap } from '$lib/server/redis'
 import { auth, pool } from '$lib/server/auth'
 import type { Server } from '$lib/sharedTypes'
 import type { HandleWs } from '@carlosv2/adapter-node-ws'

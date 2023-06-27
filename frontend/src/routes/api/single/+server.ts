@@ -1,9 +1,9 @@
 import { json, type RequestHandler } from '@sveltejs/kit'
-import { setPixelMap } from '$api/_redis'
+import { setPixelMap } from '$lib/server/redis'
 import { publicEnv } from '../../../publicEnv'
-import { pixelObjToPixelKV, PixelRequest } from '$api/_pixelUtils'
+import { pixelObjToPixelKV, PixelRequest } from '../_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
-import { ratelimit } from '$api/_ratelimit'
+import { ratelimit } from '$lib/server/ratelimit'
 import { pool } from '$lib/server/auth'
 
 // Adjust this value to control how often data is sent to Redis (in milliseconds)
