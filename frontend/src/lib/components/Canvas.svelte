@@ -31,7 +31,7 @@
 	function drawPixelOnCanvas(pixelObj: PixelObj): void {
 		const { x, y, color } = pixelObj
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-		ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`
+		ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`
 
 		const pixelSize = Math.round(pScalar)
 		ctx.fillRect(Math.round(x * pScalar), Math.round(y * pScalar), pixelSize, pixelSize)
