@@ -48,9 +48,9 @@
 	}
 </script>
 
-<section class="mt-20" bind:clientWidth={sectionWidth} bind:clientHeight={sectionHeight}>
+<section bind:clientWidth={sectionWidth} bind:clientHeight={sectionHeight}>
 	<canvas bind:this={canvas} width={0} height={0} on:mousemove={logPosition} on:mouseleave={logPosition} id="canvas" />
-	<p class="mt-5">
+	<p>
 		{xMouse}, {yMouse}
 	</p>
 </section>
@@ -59,9 +59,15 @@
 	section {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
 		flex: 1;
+
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100vw;
+		min-height: 100vh;
 	}
 
 	canvas {
