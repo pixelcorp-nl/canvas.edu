@@ -10,7 +10,7 @@
 <form method="post" use:enhance>
 	{#each data.settings as setting}
 		<label for={setting.key}>{setting.key}</label>
-		<input name={setting.key} type={setting.type} value={setting.value} />
+		<input name={setting.key} type={setting.type} value={setting.value} step="any" />
 	{/each}
 	<br />
 	<button type="submit">Update</button>

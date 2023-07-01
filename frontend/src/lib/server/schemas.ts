@@ -47,6 +47,6 @@ export const settings = pgTable('settings', {
 	settings: text('settings').notNull()
 })
 export const Settings = z.object({
-	timeout: z.number().min(0)
+	maxRequestsPerSecond: z.number().min(0)
 })
 export type Settings = z.infer<typeof Settings>

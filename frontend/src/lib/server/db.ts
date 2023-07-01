@@ -9,7 +9,7 @@ export const pool = new postgres.Pool({
 export const db = drizzle(pool)
 
 const defaultSettings: Settings = {
-	timeout: 0
+	maxRequestsPerSecond: 10
 } as const
 export const DB = {
 	settings: {
