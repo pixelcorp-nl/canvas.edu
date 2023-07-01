@@ -67,6 +67,7 @@ test('Cannot put invalid pixel', async () => {
 
 test('Can create account', async ({ page }) => {
 	await page.goto(`${root}/signup`)
+	await page.waitForSelector('button[type="submit"]')
 
 	const userName = `joppe${Date.now()}`
 	await page.evaluate(userName => {
