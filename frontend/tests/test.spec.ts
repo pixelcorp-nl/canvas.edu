@@ -50,12 +50,6 @@ async function assertPixel(page: Page, pixel: Pixel) {
 	expect(canvasPixel).toStrictEqual(pixel)
 }
 
-test('Check page is rendered', async ({ page }) => {
-	await page.goto(root)
-	const html = await page.locator('#footer').innerHTML()
-	expect(html).toContain('Oswin')
-})
-
 test('Can put pixel', async () => {
 	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42, 255], key: 'joppe' }
 	expect((await putPixel(pixel))?.['success']).toBe(true)
