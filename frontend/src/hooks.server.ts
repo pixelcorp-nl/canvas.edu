@@ -16,6 +16,7 @@ async function setupDBSingleton() {
 	if (dbIsSetup) {
 		return
 	}
+	dbIsSetup = true
 	const schema = `
 CREATE TABLE IF NOT EXISTS auth_user (id TEXT PRIMARY KEY, username TEXT, apikey TEXT);
 CREATE TABLE IF NOT EXISTS auth_key (id TEXT PRIMARY KEY, user_id TEXT REFERENCES auth_user(id) NOT NULL, primary_key BOOLEAN NOT NULL, hashed_password TEXT, expires BIGINT);
@@ -30,7 +31,6 @@ CREATE TABLE IF NOT EXISTS settings (settings text NOT NULL);
 			resolve()
 		})
 	})
-	dbIsSetup = true
 }
 
 // This file is rather weird because of a hack in adapter-node-ws
