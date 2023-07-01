@@ -66,8 +66,8 @@
 		position: relative;
 		left: 50%;
 		transform: translateX(-50%);
-		width: 100vw;
-		min-height: 100vh;
+		width: 95vw;
+		min-height: 98vh;
 	}
 
 	canvas {
