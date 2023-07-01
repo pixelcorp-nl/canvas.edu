@@ -8,6 +8,10 @@ services:
       - 80:5173
     env_file:
       - .env
+    depends_on:
+      - redis
+      - postgres
+      - datadog-agent
 
   redis:
     container_name: redis
