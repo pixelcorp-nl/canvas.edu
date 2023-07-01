@@ -4,7 +4,7 @@ import { publicEnv } from '../../../publicEnv'
 import { pixelObjToPixelKV, PixelRequest } from '$api/_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$api/_ratelimit'
-import { pool } from '$lib/server/auth'
+import { pool } from '$lib/server/db'
 
 // Adjust this value to control how often data is sent to Redis (in milliseconds)
 const BATCH_INTERVAL = 100

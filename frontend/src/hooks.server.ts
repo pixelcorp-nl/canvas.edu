@@ -1,10 +1,11 @@
 import { getPixelMap } from '$api/_redis'
-import { auth, pool } from '$lib/server/auth'
+import { auth } from './lib/server/auth'
 import type { Server } from '$lib/sharedTypes'
 import type { HandleWs } from '@carlosv2/adapter-node-ws'
 import type { Handle } from '@sveltejs/kit'
 import { publicEnv } from './publicEnv'
 import { StatsD } from './util/statsd'
+import { pool } from '$lib/server/db'
 
 let listenerCount = 0
 let globalIo: Server | undefined = undefined
