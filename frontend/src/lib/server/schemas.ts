@@ -1,6 +1,7 @@
 import type { InferModel } from 'drizzle-orm'
 import { bigint, boolean, pgTable, text, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
+import { z } from 'zod'
 
 // README
 // If you wish to change the schema do the following:
@@ -41,3 +42,11 @@ export const User = createInsertSchema(user)
 export type User = InferModel<typeof user>
 export type UserAttributes = Omit<User, 'id'>
 export type NewUser = InferModel<typeof user, 'insert'>
+
+export const settings = pgTable('settings', {
+	settings: text('settings').notNull()
+})
+export const Settings = z.object({
+	timeout: z.number().min(0)
+})
+export type Settings = z.infer<typeof Settings>

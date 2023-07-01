@@ -4,7 +4,7 @@ import { publicEnv } from '../../../publicEnv'
 import { pixelObjToPixelKV, PixelRequest } from '$api/_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$api/_ratelimit'
-import { pool } from '$lib/server/db'
+import { DB, pool } from '$lib/server/db'
 
 // Adjust this value to control how often data is sent to Redis (in milliseconds)
 const BATCH_INTERVAL = 100
@@ -64,7 +64,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	const { success, timeToWait } = await ratelimit(apiKey, {
 		timePeriodSeconds: 1,
-		maxRequests: 2,
+		maxRequests: (await DB.settings.get()).timeout,
 		route: 'post-pixel'
 	})
 	if (!success) {
