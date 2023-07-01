@@ -5,7 +5,7 @@ const url = "http://pixelcorp.nl/api/single";
 const headers = { 'Content-Type': 'application/json' };
 
 // Define the pixel data as a JavaScript object
-const pixel = { x: 42, y: 42, color: [255, 25, 0, 255] };
+const pixel = { x: 42, y: 42, color: [255, 25, 0] };
 
 // Send a POST request to the API endpoint with the pixel data as JSON
 fetch(url, {
