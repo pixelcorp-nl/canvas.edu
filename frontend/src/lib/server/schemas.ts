@@ -1,5 +1,5 @@
 import type { InferModel } from 'drizzle-orm'
-import { bigint, boolean, pgTable, text, varchar } from 'drizzle-orm/pg-core'
+import { bigint, boolean, pgTable, text, varchar, json } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
@@ -44,7 +44,7 @@ export type UserAttributes = Omit<User, 'id'>
 export type NewUser = InferModel<typeof user, 'insert'>
 
 export const settings = pgTable('settings', {
-	settings: text('settings').notNull()
+	settings: json('settings').$type<Settings>().notNull()
 })
 export const Settings = z.object({
 	maxRequestsPerSecond: z.number().min(0)

@@ -18,7 +18,7 @@ export const DB = {
 			if (!setting) {
 				return defaultSettings
 			}
-			return JSON.parse(setting) as Settings
+			return setting
 		},
 		set: async (setting: Partial<Settings>) => {
 			const existing = await DB.settings.get()
@@ -28,10 +28,7 @@ export const DB = {
 			}
 			const parse = await Settings.safeParseAsync(setting)
 			if (parse.success) {
-				await db
-					.insert(settings)
-					.values({ settings: JSON.stringify(newSettings) })
-					.execute()
+				await db.insert(settings).values({ settings: newSettings }).execute()
 				return
 			}
 			return parse.error
