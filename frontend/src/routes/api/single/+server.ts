@@ -1,9 +1,9 @@
 import { json, type RequestHandler } from '@sveltejs/kit'
-import { setPixelMap } from '$api/_redis'
+import { setPixelMap } from '$lib/server/redis'
 import { publicEnv } from '../../../publicEnv'
-import { pixelObjToPixelKV, PixelRequest } from '$api/_pixelUtils'
+import { pixelObjToPixelKV, PixelRequest } from '../_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
-import { ratelimit } from '$api/_ratelimit'
+import { ratelimit } from '$lib/server/ratelimit'
 import { pool } from '$lib/server/auth'
 
 // Adjust this value to control how often data is sent to Redis (in milliseconds)
@@ -52,7 +52,7 @@ function apiKeyExists(key: string): Promise<boolean> {
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const parsed = await PixelRequest.safeParseAsync(await request.json())
 	if (!parsed.success) {
-		const pixel: PixelRequest = { x: 10, y: 10, color: [255, 0, 0, 255], key: 'your-api-key' }
+		const pixel: PixelRequest = { x: 10, y: 10, color: [255, 0, 0], key: 'your-api-key' }
 		const resp = { success: false, error: `The request is not valid, your request should look like this ${JSON.stringify(pixel)}` }
 		return json(resp, { status: 400 })
 	}
