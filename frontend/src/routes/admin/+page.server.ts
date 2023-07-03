@@ -4,6 +4,9 @@ import type { PageServerLoad } from './$types'
 import { ZodError } from 'zod'
 
 function tryCastToNumber(value: string): string | number {
+	if (!value) {
+		return value
+	}
 	const parsed = Number(value)
 	return isNaN(parsed) ? value : parsed
 }
@@ -19,7 +22,7 @@ export const actions: Actions = {
 				return fail(400, { ok: false, error: `key ${key} with value ${value} is invalid ${parse.message}` })
 			}
 		}
-		return { ok: true }
+		return { ok: true, value: JSON.stringify(Array.from(form)) }
 	}
 }
 

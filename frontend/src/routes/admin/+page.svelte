@@ -3,22 +3,35 @@
 	import type { PageData } from './$types'
 
 	export let data: PageData
-	export let form: { ok: false; error?: string } | { ok: true }
+	export let form: { ok: false; error?: string } | { ok: true; value: string } | null
+	let valueChanged = false
 </script>
 
-<!-- TODO: update when value changes -->
-<form method="post" use:enhance>
+<form
+	method="post"
+	use:enhance={() =>
+		({ update }) =>
+			update({ reset: false })}>
 	{#each data.settings as setting}
 		<label for={setting.key}>{setting.key}</label>
-		<input name={setting.key} type={setting.type} value={setting.value} step="any" />
+		<input name={setting.key} type={setting.type} value={setting.value} step="any" on:input={() => (valueChanged = true)} />
 	{/each}
 	<br />
-	<button type="submit">Update</button>
-	{#if form}
-		{#if !form.ok}
-			<p class="text-red-700">{form.error || ''}</p>
-		{:else}
-			<p class="text-green-700">Settings updated!</p>
-		{/if}
+	<button type="submit" disabled={!valueChanged}>Update</button>
+	{#if !form}
+		<!-- -->
+	{:else if !form.ok}
+		<p class="text-red-700">{form.error || ''}</p>
+	{:else}
+		<p class="text-green-700">Settings updated!</p>
 	{/if}
 </form>
+
+<style>
+	form::placeholder {
+		color: #ccc;
+	}
+	button:disabled {
+		opacity: 0.5;
+	}
+</style>
