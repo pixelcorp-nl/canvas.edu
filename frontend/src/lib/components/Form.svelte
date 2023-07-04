@@ -18,6 +18,12 @@
 		}
 		return ''
 	}
+	function typeToButton(type: Field['type']) {
+		if (type === 'int' || type === 'float') {
+			return 'number'
+		}
+		return type
+	}
 </script>
 
 <form
@@ -25,9 +31,15 @@
 	use:enhance={() =>
 		({ update }) =>
 			update({ reset: false })}>
-	{#each fields as field}
-		<label for={field.label}>{field.label}</label>
-		<input name={field.label} type={field.type} value={field.value} step={typeToStep(field.type)} on:input={() => (valueChanged = true)} />
+	{#each fields as { label, type, value }}
+		<label for={label}>{label}</label>
+		<input
+			class="rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+			name={label}
+			type={typeToButton(type)}
+			{value}
+			step={typeToStep(type)}
+			on:input={() => (valueChanged = true)} />
 	{/each}
 	<br />
 	<button type="submit" disabled={!valueChanged}>Update</button>
