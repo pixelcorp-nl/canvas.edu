@@ -13,7 +13,7 @@
 	const jsonExample = `{
 	"x": 42,
 	"y": 42,
-	"color": [255, 0, 0, 255], // rgba
+	"color": [255, 0, 0], // rgb
 	"key": "${apikey}"
 }`
 
@@ -25,7 +25,7 @@ url = '${root}/api/single'
 headers = {'Content-Type': 'application/json'}
 
 # Define the pixel data as a Python dictionary
-pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255, 255], 'key': '${apikey}' }
+pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255], 'key': '${apikey}' }
 
 # Send a POST request to the API endpoint with the pixel data as JSON
 response = requests.post(url, headers=headers, data=json.dumps(pixel))

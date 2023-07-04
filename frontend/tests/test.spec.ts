@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 type Pixel = {
 	x: number
 	y: number
-	color: [number, number, number, number]
+	color: [number, number, number]
 	key: 'joppe'
 }
 
@@ -34,7 +34,7 @@ async function getPixel(page: Page, x: number, y: number): Promise<Pixel> {
 	const pixel: Pixel = {
 		x,
 		y,
-		color: [data?.data[0], data?.data[1], data?.data[2], data?.data[3]] as [number, number, number, number],
+		color: [data?.data[0], data?.data[1], data?.data[2]] as [number, number, number],
 		key: 'joppe'
 	}
 	if (pixel.color.some(c => c === undefined)) {
@@ -51,17 +51,17 @@ async function assertPixel(page: Page, pixel: Pixel) {
 }
 
 test('Can put pixel', async () => {
-	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42, 255], key: 'joppe' }
+	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42], key: 'joppe' }
 	expect((await putPixel(pixel))?.['success']).toBe(true)
 })
 
 test('Cannot put unauthenticated pixel', async () => {
-	const pixel: Pixel = { x: -1, y: 0, color: [42, 42, 42, 255], key: 'not joppe' as 'joppe' }
+	const pixel: Pixel = { x: -1, y: 0, color: [42, 42, 42], key: 'not joppe' as 'joppe' }
 	expect((await putPixel(pixel))?.['success']).toBe(false)
 })
 
 test('Cannot put invalid pixel', async () => {
-	const pixel: Pixel = { x: -1, y: 0, color: [42, 42, 42, 255], key: 'joppe' }
+	const pixel: Pixel = { x: -1, y: 0, color: [42, 42, 42], key: 'joppe' }
 	expect((await putPixel(pixel))?.['success']).toBe(false)
 })
 
@@ -83,12 +83,12 @@ test('Can create account', async ({ page }) => {
 	// test('Check pixel can be put and then changed', async ({ page }) => {
 	await page.waitForTimeout(1000) // Wait for canvas to draw
 
-	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50, 255], key: 'joppe' }
+	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50], key: 'joppe' }
 	await putPixel(pixel)
 	await page.waitForTimeout(1000)
 	await assertPixel(page, pixel)
 
-	const newPixel: Pixel = { ...pixel, color: [100, 100, 100, 255] }
+	const newPixel: Pixel = { ...pixel, color: [100, 100, 100] }
 	await putPixel(newPixel)
 	await page.waitForTimeout(1000)
 	await assertPixel(page, newPixel)

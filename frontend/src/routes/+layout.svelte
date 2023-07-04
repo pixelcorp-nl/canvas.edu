@@ -50,7 +50,7 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
+		justify-content: flex-start;
 		width: 100%;
 		max-width: 64rem;
 		margin: 0 auto;

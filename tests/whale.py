@@ -20,8 +20,8 @@ class pxl:
     self.y = y
     self.color = color
 
-blue = [45, 85, 255, 255]
-lblue = [137, 196, 244, 255]
+blue = [45, 85, 255]
+lblue = [137, 196, 244]
 
 whale = [pxl(0, 2, blue), pxl(0, 3, lblue),
           pxl(1, 2, blue), pxl(1, 3, lblue),

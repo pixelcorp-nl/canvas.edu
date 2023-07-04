@@ -1,7 +1,7 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
-import { getPixelMap } from '$api/_redis'
+import { getPixelMap } from '$lib/server/redis'
 import { publicEnv } from '../../../publicEnv'
-import { ratelimit } from '$api/_ratelimit'
+import { ratelimit } from '$lib/server/ratelimit'
 
 export const GET: RequestHandler = async ({ getClientAddress }) => {
 	try {
