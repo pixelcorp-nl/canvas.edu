@@ -2,6 +2,7 @@ import { auth } from '$lib/server/auth'
 import { fail, redirect, type Actions } from '@sveltejs/kit'
 import { LuciaError } from 'lucia-auth'
 import type { PageServerLoad } from './$types'
+import { getFormData } from '$lib/server/util'
 
 function randomString(length: number): string {
 	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -11,17 +12,20 @@ function randomString(length: number): string {
 	}
 	return result
 }
-
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
-		const form = await request.formData()
-		const username = form.get('username')
-		const password = form.get('password')
-		if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
+		const keys = getFormData(await request.formData(), ['username', 'password', 'passwordConfirm'])
+		if (!keys) {
+			return fail(400, { message: 'Missing required fields' })
+		}
+		const { username, password, passwordConfirm } = keys
+
+		if (password !== passwordConfirm) {
 			return fail(400, {
-				message: 'Invalid input'
+				message: 'Passwords do not match'
 			})
 		}
+
 		try {
 			const user = await auth.createUser({
 				primaryKey: {

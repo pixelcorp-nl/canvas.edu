@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
+	import Button from '$components/Button.svelte'
 
 	export let form: { message?: string }
 </script>
@@ -12,7 +13,7 @@
 		<p class="mt-4 text-gray-500">Get ready to place some pixels!</p>
 	</div>
 
-	<form method="post" use:enhance class="mx-auto mb-0 mt-8 max-w-md space-y-4">
+	<form method="post" use:enhance class="mx-auto mb-0 mt-8 min-w-[11vw] max-w-md space-y-4">
 		<div>
 			<label for="username" class="sr-only">Username</label>
 
@@ -55,9 +56,7 @@
 				<a class="underline" href="/signup">Sign up</a>
 			</p>
 
-			<button type="submit" class="inline-block rounded-lg bg-[#f2ac93] hover:bg-[#a45949] transition-all px-5 py-3 text-sm font-medium text-[#f9d7c9] hover:text-white">
-				Sign in
-			</button>
+			<Button type="submit">Sign in</Button>
 		</div>
 	</form>
 	{#if form?.message}

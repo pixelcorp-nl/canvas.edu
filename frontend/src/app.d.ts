@@ -4,11 +4,8 @@ import { StatsD } from './util/statsd'
 
 declare global {
 	declare namespace Lucia {
-		type Auth = import('$lib/server/auth').Auth
-		type UserAttributes = {
-			username: string
-			apikey: string
-		}
+		type Auth = import('./lib/server/auth').Auth
+		type UserAttributes = import('./lib/server/schemas').UserAttributes
 	}
 
 	declare namespace App {

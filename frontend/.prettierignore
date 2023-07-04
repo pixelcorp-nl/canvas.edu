@@ -14,3 +14,4 @@
 /.svelte-kit
 /build
 /dist
+/db-migrations
