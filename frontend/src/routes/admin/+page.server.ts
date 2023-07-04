@@ -2,6 +2,7 @@ import { DB } from '$lib/server/db'
 import { fail, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { ZodError } from 'zod'
+import type { Field } from '$components/Form.svelte'
 
 function tryCastToNumber(value: string): string | number {
 	if (!value) {
@@ -26,12 +27,10 @@ export const actions: Actions = {
 	}
 }
 
-function getFormType(type: unknown) {
+function getFormType(type: unknown): Field['type'] {
 	switch (typeof type) {
-		case 'string':
-			return 'text'
 		case 'number':
-			return 'number'
+			return 'float'
 		case 'boolean':
 			return 'checkbox'
 		default:
@@ -41,7 +40,9 @@ function getFormType(type: unknown) {
 
 export const load: PageServerLoad = async () => {
 	const settings = Object.entries(await DB.settings.get()) /**/
-		.map(([key, value]) => ({ key, value: JSON.stringify(value), type: getFormType(value) }))
+		.map(([label, value]) => {
+			return { label, value: JSON.stringify(value), type: getFormType(value) }
+		})
 
 	return { settings }
 }

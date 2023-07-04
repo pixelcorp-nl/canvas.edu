@@ -1,0 +1,43 @@
+<script context="module" lang="ts">
+	export type Field = {
+		label: string
+		type: 'int' | 'float' | 'checkbox' | 'text'
+		value: string
+	}
+</script>
+
+<script lang="ts">
+	import { enhance } from '$app/forms'
+
+	export let fields: Field[]
+	let valueChanged = false
+
+	function typeToStep(type: Field['type']) {
+		if (type === 'float') {
+			return 'any'
+		}
+		return ''
+	}
+</script>
+
+<form
+	method="post"
+	use:enhance={() =>
+		({ update }) =>
+			update({ reset: false })}>
+	{#each fields as field}
+		<label for={field.label}>{field.label}</label>
+		<input name={field.label} type={field.type} value={field.value} step={typeToStep(field.type)} on:input={() => (valueChanged = true)} />
+	{/each}
+	<br />
+	<button type="submit" disabled={!valueChanged}>Update</button>
+</form>
+
+<style>
+	form::placeholder {
+		color: #ccc;
+	}
+	button:disabled {
+		opacity: 0.5;
+	}
+</style>
