@@ -31,8 +31,9 @@
 	{#each fields as { label, type, value }}
 		<label for={label}>{label}</label>
 		<input
-			class="rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+			id={label}
 			name={label}
+			class="rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
 			type={typeToButton(type)}
 			{value}
 			step={type === 'float' ? 'any' : ''}
