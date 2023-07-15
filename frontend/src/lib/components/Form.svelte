@@ -13,12 +13,6 @@
 	export let fields: Field[]
 	let valueChanged = false
 
-	function typeToStep(type: Field['type']) {
-		if (type === 'float') {
-			return 'any'
-		}
-		return ''
-	}
 	function typeToButton(type: Field['type']) {
 		if (type === 'int' || type === 'float') {
 			return 'number'
@@ -41,7 +35,7 @@
 			name={label}
 			type={typeToButton(type)}
 			{value}
-			step={typeToStep(type)}
+			step={type === 'float' ? 'any' : ''}
 			on:input={() => (valueChanged = true)} />
 	{/each}
 	<br />
