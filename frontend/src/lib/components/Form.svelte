@@ -30,8 +30,10 @@
 <form
 	method="post"
 	use:enhance={() =>
-		({ update }) =>
-			update({ reset: false })}>
+		({ update }) => {
+			update({ reset: false })
+			valueChanged = false
+		}}>
 	{#each fields as { label, type, value }}
 		<label for={label}>{label}</label>
 		<input
