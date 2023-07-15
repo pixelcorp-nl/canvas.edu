@@ -8,6 +8,7 @@
 
 <script lang="ts">
 	import { enhance } from '$app/forms'
+	import Button from './Button.svelte'
 
 	export let fields: Field[]
 	let valueChanged = false
@@ -42,14 +43,11 @@
 			on:input={() => (valueChanged = true)} />
 	{/each}
 	<br />
-	<button type="submit" disabled={!valueChanged}>Update</button>
+	<Button type="submit" enabled={valueChanged}>Update</Button>
 </form>
 
 <style>
 	form::placeholder {
 		color: #ccc;
-	}
-	button:disabled {
-		opacity: 0.5;
 	}
 </style>
