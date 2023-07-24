@@ -36,7 +36,7 @@ if response.ok:
     print("Pixel successfully changed!")
 else:
     # If the request was unsuccessful, print an error message that includes the HTTP status code
-    print("Failed to change pixel:", response.status_code)
+    print("Failed to change pixel:", response.content)
 `
 </script>
 
