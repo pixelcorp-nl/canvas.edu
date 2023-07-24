@@ -43,6 +43,10 @@
 	<Button type="submit" enabled={valueChanged}>Update</Button>
 </form>
 
+{#if !valueChanged}
+	<slot />
+{/if}
+
 <style>
 	form::placeholder {
 		color: #ccc;
