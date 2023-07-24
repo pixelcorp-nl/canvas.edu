@@ -1,7 +1,8 @@
 import postgres from 'pg'
 import { privateEnv } from '../../privateEnv'
-import { Settings, settings } from './schemas'
+import { Settings, User, settings, user } from './schemas'
 import { drizzle } from 'drizzle-orm/node-postgres'
+import { eq } from 'drizzle-orm'
 
 export const pool = new postgres.Pool({
 	connectionString: privateEnv.postgresUrl
@@ -32,6 +33,11 @@ export const DB = {
 				return
 			}
 			return parse.error
+		}
+	},
+	user: {
+		getBy: async <T extends keyof User>(key: T, value: User[T]): Promise<User | undefined> => {
+			return (await db.select().from(user).where(eq(user[key], value)).limit(1)).at(0)
 		}
 	}
 } as const
