@@ -5,6 +5,7 @@ import { pixelObjToPixelKV, PixelRequest } from '../_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$lib/server/ratelimit'
 import { DB } from '$lib/server/db'
+import memoizee from 'memoizee'
 
 // Adjust this value to control how often data is sent to Redis (in milliseconds)
 const BATCH_INTERVAL = 100
@@ -38,14 +39,19 @@ async function processBatch(io: Server) {
 	await setPixelMap(publicEnv.canvasId, queueObj)
 }
 
-async function apiKeyExists(key: string): Promise<boolean> {
-	// temporary for testing
-	if (key === 'joppe') {
-		return Promise.resolve(true)
-	}
+const apiKeyExists = memoizee(
+	async (key: string) => {
+		// temporary for testing
+		if (key === 'joppe') {
+			return Promise.resolve(true)
+		}
 
-	return !!(await DB.user.getBy('apikey', key))
-}
+		return !!(await DB.user.getBy('apikey', key))
+	},
+	{ promise: true, maxAge: 10 * 1000 }
+)
+
+const maxRequests = memoizee(async () => (await DB.settings.get()).maxRequestsPerSecond, { promise: true, maxAge: 10 * 1000 })
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const parsed = await PixelRequest.safeParseAsync(await request.json())
@@ -62,7 +68,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	const { success, timeToWait } = await ratelimit(apiKey, {
 		timePeriodSeconds: 1,
-		maxRequests: (await DB.settings.get()).maxRequestsPerSecond,
+		maxRequests: await maxRequests(),
 		route: 'post-pixel'
 	})
 	if (!success) {

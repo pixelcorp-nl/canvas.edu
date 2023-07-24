@@ -29,6 +29,9 @@ devDependencies:
   '@types/cookie':
     specifier: ^0.5.1
     version: 0.5.1
+  '@types/memoizee':
+    specifier: ^0.4.8
+    version: 0.4.8
   '@types/node':
     specifier: ^18.15.11
     version: 18.15.11
@@ -74,6 +77,9 @@ devDependencies:
   lucia-auth:
     specifier: ^1.8.0
     version: 1.8.0
+  memoizee:
+    specifier: ^0.4.15
+    version: 0.4.15
   pg:
     specifier: ^8.11.0
     version: 8.11.0
@@ -896,6 +902,10 @@ packages:
 
   /@types/json-schema@7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
+    dev: true
+
+  /@types/memoizee@0.4.8:
+    resolution: {integrity: sha512-qDpXKGgwKywnQt/64fH1O0LiPA++QGIYeykEUiZ51HymKVRLnUSGcRuF60IfpPeeXiuRwiR/W4y7S5VzbrgLCA==}
     dev: true
 
   /@types/node@18.15.11:
