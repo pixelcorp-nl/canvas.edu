@@ -9,7 +9,7 @@ function tryCastToNumber(value: string): string | number {
 		return value
 	}
 	const parsed = Number(value)
-	return isNaN(parsed) ? value : parsed
+	return Number.isFinite(parsed) ? parsed : value
 }
 
 export const actions: Actions = {
