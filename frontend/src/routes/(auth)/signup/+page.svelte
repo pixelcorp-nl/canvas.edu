@@ -50,7 +50,7 @@
 			<label for="password" class="sr-only">Password</label>
 
 			<div class="relative">
-				<input type="password" name="passwordConfirm" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Re-enter password" />
+				<input type="password" id="password-confirm" name="passwordConfirm" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Re-enter password" />
 
 				<span class="absolute inset-y-0 end-0 grid place-content-center px-4">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
