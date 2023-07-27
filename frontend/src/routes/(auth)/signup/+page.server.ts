@@ -30,11 +30,11 @@ export const actions: Actions = {
 			const user = await auth.createUser({
 				primaryKey: {
 					providerId: 'username',
-					providerUserId: username,
-					password
+					providerUserId: username ?? '',
+					password: password ?? ''
 				},
 				attributes: {
-					username,
+					username: username ?? '',
 					apikey: randomString(8)
 				}
 			})

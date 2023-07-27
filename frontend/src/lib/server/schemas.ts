@@ -1,5 +1,5 @@
 import type { InferModel } from 'drizzle-orm'
-import { bigint, boolean, pgTable, text, varchar, json, int, integer } from 'drizzle-orm/pg-core'
+import { bigint, boolean, pgTable, text, varchar, json, integer } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
