@@ -2,7 +2,7 @@ import postgres from 'pg'
 import { privateEnv } from '../../privateEnv'
 import { Settings, User, settings, user } from './schemas'
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 
 export const pool = new postgres.Pool({
 	connectionString: privateEnv.postgresUrl
@@ -28,11 +28,16 @@ export const DB = {
 				...setting
 			}
 			const parse = await Settings.safeParseAsync(setting)
-			if (parse.success) {
+			if (!parse.success) {
+				return parse.error
+			}
+			// Make sure that we only ever have one row
+			const count = await db.select({ count: sql<number>`count(*)` }).from(settings)
+			if (count.at(0)?.count === 0) {
 				await db.insert(settings).values({ settings: newSettings }).execute()
 				return
 			}
-			return parse.error
+			await db.update(settings).set({ settings: newSettings }).where(eq(settings.id, 1))
 		}
 	},
 	user: {
