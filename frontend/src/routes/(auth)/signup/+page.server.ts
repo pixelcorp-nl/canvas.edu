@@ -2,16 +2,8 @@ import { auth } from '$lib/server/auth'
 import { fail, redirect, type Actions } from '@sveltejs/kit'
 import { LuciaError } from 'lucia-auth'
 import type { PageServerLoad } from './$types'
-import { getFormData } from '$lib/server/util'
+import { getFormData, randomString } from '$lib/server/util'
 
-function randomString(length: number): string {
-	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-	let result = ''
-	for (let i = 0; i < length; i++) {
-		result += characters.charAt(Math.floor(Math.random() * characters.length))
-	}
-	return result
-}
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const keys = getFormData(await request.formData(), ['username', 'password', 'passwordConfirm'])
