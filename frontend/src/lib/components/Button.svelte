@@ -1,20 +1,39 @@
 <script lang="ts">
-	import { _ } from 'svelte-i18n'
-	export let code: string
-	let active = false
-	function handleCopy(code: string) {
-		navigator.clipboard.writeText(code)
-		active = true
-		setTimeout(function () {
-			active = false
-		}, 2000)
-	}
+	export let type: 'submit' | 'reset' | undefined
+	export let enabled = true
 </script>
 
-{#if active}
-	<button class="bg-white hover:scale-95 transition-all py-0.5 border border-black rounded-md mr-2.5 px-2" on:click={() => handleCopy(code)}
-		><span aria-hidden="true" role="img" class="text-sm mr-1.5">📋</span><span class="text-xs font-medium">{$_('copy.success')}</span></button>
-{:else}
-	<button class="bg-white hover:scale-95 transition-all py-0.5 border border-black rounded-md mr-2.5 px-2" on:click={() => handleCopy(code)}
-		><span aria-hidden="true" role="img" class="text-sm mr-1.5">📋</span><span class="text-xs font-medium">{$_('copy')}</span></button>
-{/if}
+<button disabled={!enabled} {type}>
+	<slot />
+</button>
+
+<style>
+	button {
+		border-radius: 0.5rem;
+		background-color: #f2ac93;
+		border-width: 1px;
+		transition-property: all;
+		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+		transition-duration: 120ms;
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+		padding-top: 0.75rem;
+		padding-bottom: 0.75rem;
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+	}
+	button:hover {
+		background-color: #a45949;
+	}
+	button:disabled {
+		border-color: rgb(107, 114, 128);
+		background-color: white;
+	}
+	button:disabled:hover {
+		text-decoration: line-through;
+	}
+	button:focus {
+		background-color: #f2ac93;
+		scale: 0.97;
+	}
+</style>

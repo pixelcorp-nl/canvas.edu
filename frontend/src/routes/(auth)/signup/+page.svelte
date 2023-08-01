@@ -1,18 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
+	import Button from '$components/Button.svelte'
 
 	export let form: { message?: string }
-
-	let password = ''
-	let passwordConfirmation = ''
-
-	let passwordMatch = false
-
-	$: if (password === passwordConfirmation) {
-		passwordMatch = true
-	} else {
-		passwordMatch = false
-	}
 </script>
 
 <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -20,7 +10,7 @@
 		<h1 class="text-2xl font-bold sm:text-3xl">Create an account</h1>
 	</div>
 
-	<form method="post" use:enhance class="mx-auto mb-0 mt-8 min-w-[40vw] space-y-4">
+	<form method="post" use:enhance class="mx-auto mb-0 mt-8 min-w-[11vw] space-y-4">
 		<div>
 			<label for="username" class="sr-only">Username</label>
 
@@ -42,13 +32,7 @@
 			<label for="password" class="sr-only">Password</label>
 
 			<div class="relative">
-				<input
-					bind:value={password}
-					type="password"
-					id="password"
-					name="password"
-					class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-					placeholder="Enter password" />
+				<input type="password" id="password" name="password" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Enter password" />
 
 				<span class="absolute inset-y-0 end-0 grid place-content-center px-4">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,12 +50,7 @@
 			<label for="password" class="sr-only">Password</label>
 
 			<div class="relative">
-				<input
-					bind:value={passwordConfirmation}
-					type="password"
-					id="password-confirm"
-					class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-					placeholder="Enter password" />
+				<input type="password" id="password-confirm" name="passwordConfirm" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Re-enter password" />
 
 				<span class="absolute inset-y-0 end-0 grid place-content-center px-4">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,13 +70,7 @@
 				Already have an account?
 				<a class="underline" href="/login">Login</a>
 			</p>
-
-			<button
-				disabled={!passwordMatch}
-				type="submit"
-				class="inline-block rounded-lg bg-[#f2ac93] hover:bg-[#a45949] transition-all px-5 py-3 text-sm font-medium text-white hover:text-white disabled:bg-gray-200 disabled:text-gray-600">
-				Sign up
-			</button>
+			<Button type="submit">Sign Up</Button>
 		</div>
 	</form>
 	{#if form?.message}

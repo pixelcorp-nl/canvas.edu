@@ -5,7 +5,7 @@
 	import json from 'svelte-highlight/languages/json'
 	import { _ } from 'svelte-i18n'
 	import atomOneDark from 'svelte-highlight/styles/atom-one-dark'
-	import Button from '$lib/components/Button.svelte'
+	import CopyButton from '$components/CopyButton.svelte'
 	import { page } from '$app/stores'
 
 	const apikey = $page.data['user'].apikey
@@ -36,7 +36,7 @@ if response.ok:
     print("Pixel successfully changed!")
 else:
     # If the request was unsuccessful, print an error message that includes the HTTP status code
-    print("Failed to change pixel:", response.status_code)
+    print("Failed to change pixel:", response.content)
 `
 </script>
 
@@ -74,7 +74,7 @@ else:
 	<div class="flex flex-col mt-2">
 		<div class="flex justify-between h-16 -my-1 items-center bg-slate-100 rounded-t-xl">
 			<span class="font-semibold ml-2.5">{$_('code.json.title')}</span>
-			<Button code={jsonExample} />
+			<CopyButton code={jsonExample} />
 		</div>
 		<Highlight class="bg-[#282c34] !m-0 transition-all duration-1000" language={json} code={jsonExample} />
 	</div>
@@ -85,7 +85,7 @@ else:
 	<div class="flex flex-col">
 		<div class="flex justify-between h-16 -my-1 items-center bg-slate-100 rounded-t-xl">
 			<span class="font-semibold ml-2.5">{$_('code.python.title')}</span>
-			<Button {code} />
+			<CopyButton {code} />
 		</div>
 		<Highlight class="bg-[#282c34] !m-0 transition-all duration-1000" language={python} {code} />
 	</div>
