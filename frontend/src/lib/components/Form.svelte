@@ -9,6 +9,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import Button from './Button.svelte'
+	// @ts-ignore
+	import { Tooltip } from '@svelte-plugins/tooltips'
 
 	export let fields: Field[]
 	let valueChanged = false
@@ -40,7 +42,14 @@
 			on:input={() => (valueChanged = true)} />
 	{/each}
 	<br />
-	<Button type="submit" enabled={valueChanged}>Update</Button>
+
+	{#if valueChanged}
+		<Button type="submit" enabled={valueChanged}>Update</Button>
+	{:else}
+		<Tooltip theme="tooltips" content="No changes to submit">
+			<Button type="submit" enabled={valueChanged}>Update</Button>
+		</Tooltip>
+	{/if}
 </form>
 
 {#if !valueChanged}
