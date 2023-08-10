@@ -43,6 +43,35 @@ export type User = InferModel<typeof user>
 export type UserAttributes = Omit<User, 'id'>
 export type NewUser = InferModel<typeof user, 'insert'>
 
+export const userRoles = pgTable('user_roles', {
+	userId: varchar('user_id', { length: 15 })
+		.notNull()
+		.references(() => user.id),
+	// we could use a enum for the role, but we will enforce the role at the application level
+	role: text('role').notNull()
+})
+export const roles = ['viewAdminPage'] as const
+export type Role = (typeof roles)[number]
+export type UserRole = InferModel<typeof userRoles>
+export type NewUserRole = InferModel<typeof userRoles, 'insert'>
+
+export const classes = pgTable('classes', {
+	id: text('id').primaryKey(),
+	key: text('key').notNull().unique(),
+	name: text('name').notNull()
+})
+export type Class = InferModel<typeof classes>
+export type NewClass = InferModel<typeof classes, 'insert'>
+
+export const classUser = pgTable('class_users', {
+	klasId: text('klas_id')
+		.references(() => classes.id)
+		.notNull(),
+	userId: varchar('user_id', { length: 15 })
+		.notNull()
+		.references(() => user.id)
+})
+
 export const settings = pgTable('settings', {
 	id: integer('id').primaryKey().default(1),
 	settings: json('settings').$type<Settings>().notNull()
