@@ -64,7 +64,7 @@ export type Class = InferModel<typeof classes>
 export type NewClass = InferModel<typeof classes, 'insert'>
 
 export const classUser = pgTable('class_users', {
-	klasId: text('klas_id')
+	classId: text('class_id')
 		.references(() => classes.id)
 		.notNull(),
 	userId: varchar('user_id', { length: 15 })
