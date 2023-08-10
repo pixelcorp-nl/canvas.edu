@@ -8,6 +8,7 @@ export const schema = `
 		"id" text PRIMARY KEY NOT NULL,
 		"key" text NOT NULL,
 		"name" text NOT NULL,
+		"max_users" integer NOT NULL,
 		CONSTRAINT "classes_key_unique" UNIQUE("key")
 	);
 	--> statement-breakpoint

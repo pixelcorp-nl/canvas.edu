@@ -58,7 +58,8 @@ export type NewUserRole = InferModel<typeof userRoles, 'insert'>
 export const classes = pgTable('classes', {
 	id: text('id').primaryKey(),
 	key: text('key').notNull().unique(),
-	name: text('name').notNull()
+	name: text('name').notNull(),
+	maxUsers: integer('max_users').notNull()
 })
 export type Class = InferModel<typeof classes>
 export type NewClass = InferModel<typeof classes, 'insert'>
