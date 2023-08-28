@@ -37,7 +37,7 @@ export const DB = {
 				await db.insert(settings).values({ settings: newSettings }).execute()
 				return
 			}
-			await db.update(settings).set({ settings: newSettings }).where(eq(settings.id, 1))
+			return db.update(settings).set({ settings: newSettings }).where(eq(settings.id, 1)).execute()
 		}
 	},
 	user: {
