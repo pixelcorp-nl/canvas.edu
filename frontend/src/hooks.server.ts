@@ -21,6 +21,7 @@ async function setupDBSingleton() {
 	await new Promise<void>(resolve => {
 		pool.query(schema, err => {
 			if (err) {
+				console.error('Unrecoverable error while setting up DB:')
 				throw err
 			}
 			resolve()
