@@ -13,6 +13,8 @@
 	import { Tooltip } from '@svelte-plugins/tooltips'
 
 	export let fields: Field[]
+	export let action = '?/default'
+
 	let valueChanged = false
 
 	function typeToButton(type: Field['type']) {
@@ -29,7 +31,8 @@
 		({ update }) => {
 			update({ reset: false })
 			valueChanged = false
-		}}>
+		}}
+	{action}>
 	{#each fields as { label, type, value }}
 		<label for={label}>{label}</label>
 		<input
