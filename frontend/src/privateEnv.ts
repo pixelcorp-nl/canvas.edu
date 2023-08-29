@@ -2,7 +2,7 @@ import { dev } from '$app/environment'
 import { PRIVATE_POSTGRES_URL, PRIVATE_REDIS_URL, PRIVATE_STATSD_HOST, PRIVATE_STATSD_PORT } from '$env/static/private'
 import { z } from 'zod'
 
-const PrivateEnv = z.object({
+const PrivateEnv = z.strictObject({
 	redisUrl: z.string().url(),
 	postgresUrl: z.string().url().endsWith('/postgres'),
 	statsdHost: z.string().min(1),
