@@ -1,3 +1,5 @@
+import type { Field } from '$components/Form.svelte'
+
 /**
  * Get multiple values from a FormData object
  * @example
@@ -22,6 +24,28 @@ export function getFormData<Keys extends string[]>(form: FormData, keys: Readonl
 	return result
 }
 
+export function getFormType(type: unknown): Field['type'] {
+	switch (typeof type) {
+		case 'number':
+			return 'float'
+		case 'boolean':
+			return 'checkbox'
+		default:
+			return 'text'
+	}
+}
+
+export function objectToForm(obj: Record<string, unknown>) {
+	return Object.entries(obj) /**/
+		.map(([label, raw]) => {
+			let value = JSON.stringify(raw)
+			if (value === '""') {
+				value = ''
+			}
+			return { label, value, type: getFormType(raw) }
+		})
+}
+
 export function randomString(length: number): string {
 	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 	let result = ''
@@ -30,3 +54,13 @@ export function randomString(length: number): string {
 	}
 	return result
 }
+
+export type Result<Ok, Err = Error> =
+	| {
+			ok: true
+			data: Ok
+	  }
+	| {
+			ok: false
+			error: Err
+	  }

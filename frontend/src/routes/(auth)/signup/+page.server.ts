@@ -3,14 +3,21 @@ import { fail, redirect, type Actions } from '@sveltejs/kit'
 import { LuciaError } from 'lucia-auth'
 import type { PageServerLoad } from './$types'
 import { getFormData, randomString } from '$lib/server/util'
+import { DB } from '$lib/server/db'
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
-		const keys = getFormData(await request.formData(), ['username', 'password', 'passwordConfirm'])
+		const keys = getFormData(await request.formData(), ['username', 'password', 'passwordConfirm', 'class_'])
 		if (!keys) {
 			return fail(400, { message: 'Missing required fields' })
 		}
-		const { username, password, passwordConfirm } = keys
+		const { username, password, passwordConfirm, class_ } = keys
+
+		// if (!(await DB.class.get(class_))) {
+		// 	return fail(400, {
+		// 		message: `Class "${class_}" does not exist, please contact your teacher`
+		// 	})
+		// }
 
 		if (password !== passwordConfirm) {
 			return fail(400, {
@@ -32,6 +39,13 @@ export const actions: Actions = {
 			})
 			const session = await auth.createSession(user.id)
 			locals.auth.setSession(session)
+			// const error = await DB.class.addUser(class_, user.id)
+			// if (error instanceof Error) {
+			// 	console.error(error)
+			// 	return fail(500, {
+			// 		message: 'Could not add user to class'
+			// 	})
+			// }
 		} catch (error) {
 			if (error instanceof LuciaError && error.message === 'AUTH_DUPLICATE_KEY_ID') {
 				return fail(400, {

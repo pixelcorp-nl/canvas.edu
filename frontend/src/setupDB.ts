@@ -8,8 +8,7 @@ export const schema = `
 		"id" text PRIMARY KEY NOT NULL,
 		"key" text NOT NULL,
 		"name" text NOT NULL,
-		"max_users" integer NOT NULL,
-		CONSTRAINT "classes_key_unique" UNIQUE("key")
+		"max_users" integer NOT NULL
 	);
 	--> statement-breakpoint
 	CREATE TABLE IF NOT EXISTS "auth_key" (
@@ -44,32 +43,32 @@ export const schema = `
 	);
 	--> statement-breakpoint
 	DO $$ BEGIN
-	 ALTER TABLE "class_users" ADD CONSTRAINT "class_users_class_id_classes_id_fk" FOREIGN KEY ("class_id") REFERENCES "classes"("id") ON DELETE no action ON UPDATE no action;
+	ALTER TABLE "class_users" ADD CONSTRAINT "class_users_class_id_classes_id_fk" FOREIGN KEY ("class_id") REFERENCES "classes"("id") ON DELETE no action ON UPDATE no action;
 	EXCEPTION
-	 WHEN duplicate_object THEN null;
+	WHEN duplicate_object THEN null;
 	END $$;
 	--> statement-breakpoint
 	DO $$ BEGIN
-	 ALTER TABLE "class_users" ADD CONSTRAINT "class_users_user_id_auth_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE no action ON UPDATE no action;
+	ALTER TABLE "class_users" ADD CONSTRAINT "class_users_user_id_auth_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE no action ON UPDATE no action;
 	EXCEPTION
-	 WHEN duplicate_object THEN null;
+	WHEN duplicate_object THEN null;
 	END $$;
 	--> statement-breakpoint
 	DO $$ BEGIN
-	 ALTER TABLE "auth_key" ADD CONSTRAINT "auth_key_user_id_auth_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE no action ON UPDATE no action;
+	ALTER TABLE "auth_key" ADD CONSTRAINT "auth_key_user_id_auth_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE no action ON UPDATE no action;
 	EXCEPTION
-	 WHEN duplicate_object THEN null;
+	WHEN duplicate_object THEN null;
 	END $$;
 	--> statement-breakpoint
 	DO $$ BEGIN
-	 ALTER TABLE "auth_session" ADD CONSTRAINT "auth_session_user_id_auth_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE no action ON UPDATE no action;
+	ALTER TABLE "auth_session" ADD CONSTRAINT "auth_session_user_id_auth_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE no action ON UPDATE no action;
 	EXCEPTION
-	 WHEN duplicate_object THEN null;
+	WHEN duplicate_object THEN null;
 	END $$;
 	--> statement-breakpoint
 	DO $$ BEGIN
-	 ALTER TABLE "user_roles" ADD CONSTRAINT "user_roles_user_id_auth_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE no action ON UPDATE no action;
+	ALTER TABLE "user_roles" ADD CONSTRAINT "user_roles_user_id_auth_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE no action ON UPDATE no action;
 	EXCEPTION
-	 WHEN duplicate_object THEN null;
+	WHEN duplicate_object THEN null;
 	END $$;
 ` as const

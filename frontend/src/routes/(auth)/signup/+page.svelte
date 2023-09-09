@@ -29,6 +29,15 @@
 		</div>
 
 		<div>
+			<label for="class" class="sr-only">Class</label>
+
+			<div class="relative">
+				<!-- TODO: remove value="default" -->
+				<input id="class_" name="class_" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Class" value="default" />
+			</div>
+		</div>
+
+		<div>
 			<label for="password" class="sr-only">Password</label>
 
 			<div class="relative">
