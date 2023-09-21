@@ -14,6 +14,7 @@
 
 	export let fields: Field[]
 	export let action = '?/default'
+	export let buttonText = 'Update'
 
 	let valueChanged = false
 
@@ -47,10 +48,10 @@
 	<br />
 
 	{#if valueChanged}
-		<Button type="submit" enabled={valueChanged}>Update</Button>
+		<Button type="submit" enabled={valueChanged}>{buttonText}</Button>
 	{:else}
 		<Tooltip theme="tooltips" content="No changes to submit">
-			<Button type="submit" enabled={valueChanged}>Update</Button>
+			<Button type="submit" enabled={valueChanged}>{buttonText}</Button>
 		</Tooltip>
 	{/if}
 </form>
