@@ -67,7 +67,7 @@ export const NewClass = z.strictObject({
 	maxUsers: z.number().int().min(0)
 })
 
-export const classUser = pgTable('class_users', {
+export const classToUser = pgTable('class_to_user', {
 	classId: text('class_id')
 		.references(() => classes.id)
 		.notNull(),
