@@ -61,7 +61,7 @@ export const classes = pgTable('classes', {
 	maxUsers: integer('max_users').notNull()
 })
 export type Class = InferModel<typeof classes>
-export type NewClass = Omit<InferModel<typeof classes, 'insert'>, 'id' | 'key'>
+export type NewClass = Omit<InferModel<typeof classes, 'insert'>, 'id'>
 export const NewClass = z.strictObject({
 	name: z.string().min(1).max(128),
 	maxUsers: z.number().int().min(0)
@@ -80,7 +80,7 @@ export const settings = pgTable('settings', {
 	id: integer('id').primaryKey().default(1),
 	settings: json('settings').$type<Settings>().notNull()
 })
-export const Settings = z.object({
+export const Settings = z.strictObject({
 	maxRequestsPerSecond: z.number().min(0)
 })
 export type Settings = z.infer<typeof Settings>

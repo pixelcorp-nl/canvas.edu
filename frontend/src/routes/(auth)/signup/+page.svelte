@@ -29,6 +29,13 @@
 		</div>
 
 		<div>
+			<label for="class" class="sr-only">Class</label>
+			<div class="relative">
+				<input id="classId" name="classId" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Class ID" />
+			</div>
+		</div>
+
+		<div>
 			<label for="password" class="sr-only">Password</label>
 
 			<div class="relative">
