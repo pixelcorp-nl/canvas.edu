@@ -2,7 +2,7 @@ import { auth } from '$lib/server/auth'
 import { fail, redirect, type Actions } from '@sveltejs/kit'
 import { LuciaError } from 'lucia-auth'
 import type { PageServerLoad } from './$types'
-import { getFormData, randomString } from '$lib/server/util'
+import { getFormData, randomString } from '$lib/public/util'
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
