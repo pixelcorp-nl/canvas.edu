@@ -2,47 +2,65 @@ import { DB } from '$lib/server/db'
 import { fail, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { ZodError } from 'zod'
-import type { Field } from '$components/Form.svelte'
+import { getFormData, getFormType, objectToForm, type Entries, type Result, toNumber, type Optional, hasRole } from '$lib/public/util'
+import type { NewClass } from '$lib/server/schemas'
 
-function tryCastToNumber(value: string): string | number {
-	if (!value) {
-		return value
-	}
-	const parsed = Number(value)
-	return Number.isFinite(parsed) ? parsed : value
-}
+type ActionReturn<Name extends string, Ok, Err = Error> = { name: Name } & Result<Ok, Err>
 
 export const actions: Actions = {
-	default: async ({ request }) => {
-		const form = await request.formData()
-		const settings = Object.fromEntries(form.entries())
-		for (const [key, value] of Object.entries(settings)) {
-			const setting = tryCastToNumber(value.toString())
-			const parse = await DB.settings.set({ [key]: setting })
+	setSettings: async ({ request, locals }): Promise<ActionReturn<'setSettings', string, string>> => {
+		const settings = getFormData(await request.formData(), ['maxRequestsPerSecond'])
+		if (!settings) {
+			return { name: 'setSettings', ok: false, error: 'Invalid submission' }
+		}
+		const { user } = await locals.auth.validateUser()
+		if (!(await DB.user.hasRole(user?.id, 'canvasSettings'))) {
+			return { name: 'setSettings', ok: false, error: 'No roles' }
+		}
+
+		for (const [key, value] of Object.entries(settings) as Entries<typeof settings>) {
+			const parse = await DB.settings.set({ [key]: Number(value) })
 			if (parse instanceof ZodError) {
-				return fail(400, { ok: false, error: `key ${key} with value ${value} is invalid ${parse.message}` })
+				return { name: 'setSettings', ok: false, error: `key ${key} with value ${value} is invalid ${parse.message}` }
 			}
 		}
-		return { ok: true, value: JSON.stringify(Array.from(form)) }
+		return { name: 'setSettings', ok: true, data: 'Success' }
+	},
+
+	createClass: async ({ request, locals }): Promise<ActionReturn<'createClass', string, string>> => {
+		const { user } = await locals.auth.validateUser()
+		if (!(await DB.user.hasRole(user?.id, 'classes:manage'))) {
+			return { name: 'createClass', ok: false, error: 'You do not have the roles to do that' }
+		}
+
+		const form = await request.formData()
+		const newClass: Optional<NewClass> = {
+			name: form.get('name')?.toString(),
+			maxUsers: toNumber(form.get('maxUsers')?.toString() ?? '')
+		}
+
+		const result = await DB.class.create(newClass as unknown as NewClass)
+		if (result instanceof ZodError) {
+			return { name: 'createClass', ok: false, error: `Invalid input ${result.message}` }
+		}
+
+		return { name: 'createClass', ok: true, data: 'success' }
 	}
 }
 
-function getFormType(type: unknown): Field['type'] {
-	switch (typeof type) {
-		case 'number':
-			return 'float'
-		case 'boolean':
-			return 'checkbox'
-		default:
-			return 'text'
+export const load: PageServerLoad = async ({ locals }) => {
+	const settings = Object.entries(await DB.settings.get()).map(([label, value]) => {
+		return { label, value: JSON.stringify(value), type: getFormType(value) }
+	})
+	const { user } = await locals.auth.validateUser()
+	if (!user) {
+		throw fail(401)
 	}
-}
-
-export const load: PageServerLoad = async () => {
-	const settings = Object.entries(await DB.settings.get()) /**/
-		.map(([label, value]) => {
-			return { label, value: JSON.stringify(value), type: getFormType(value) }
-		})
-
-	return { settings }
+	const roles = await DB.user.getRoles(user.id)
+	const classes = hasRole(roles, 'classes:manage') ? await DB.class.getAll() : undefined
+	const newClass: NewClass = {
+		name: '',
+		maxUsers: 0
+	}
+	return { roles, settings, classes, newClass: objectToForm(newClass) }
 }

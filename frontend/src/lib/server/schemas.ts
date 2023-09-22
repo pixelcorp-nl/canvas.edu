@@ -50,19 +50,22 @@ export const userRoles = pgTable('user_roles', {
 	// we could use a enum for the role, but we will enforce the role at the application level
 	role: text('role').notNull()
 })
-export const roles = ['viewAdminPage'] as const
+export const roles = ['canvasSettings', 'classes:manage', 'admin'] as const
 export type Role = (typeof roles)[number]
 export type UserRole = InferModel<typeof userRoles>
 export type NewUserRole = InferModel<typeof userRoles, 'insert'>
 
 export const classes = pgTable('classes', {
 	id: text('id').primaryKey(),
-	key: text('key').notNull().unique(),
 	name: text('name').notNull(),
 	maxUsers: integer('max_users').notNull()
 })
 export type Class = InferModel<typeof classes>
-export type NewClass = InferModel<typeof classes, 'insert'>
+export type NewClass = Omit<InferModel<typeof classes, 'insert'>, 'id' | 'key'>
+export const NewClass = z.strictObject({
+	name: z.string().min(1).max(128),
+	maxUsers: z.number().int().min(0)
+})
 
 export const classUser = pgTable('class_users', {
 	classId: text('class_id')
