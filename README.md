@@ -1,11 +1,9 @@
-
 <h1> <img height="25" src="./frontend/static/icons/android-chrome-192x192.png" alt="Pixels Logo"> Pixels - Learn Programming through Pixel Art </h1>
 <p align="center">
   <img width="400" src="./frontend/static/images/example.gif" alt="sample gif">
 </p>
 
 Pixels is an interactive learning platform that aims to teach highschool students programming by allowing them to create pixel art on a canvas using any programming language.
-
 
 ## Introduction
 
@@ -33,12 +31,14 @@ cd pixels
 ```
 
 2. Set up environment variables
+
 ```shell
 cp frontend/.env.example frontend/.env
 # fill in the variables in .env
 ```
 
 3. Start dependencies (database, etc.)
+
 ```sh
 make start-deps
 ```
@@ -53,5 +53,10 @@ pnpm run dev
 
 5. Pixels is ready at http://localhost:5173
 
+## Admin panel
+
+The admin page is available at `/admin` and can be used to manage users, classes and settings.
+You can create only one admin user by naming a user `admin` on the sign-up page. The class id field will be ignored.
+The admin will be added to the class with id `0000000`.
 
 Pixels is released under the [MIT License](LICENSE)
