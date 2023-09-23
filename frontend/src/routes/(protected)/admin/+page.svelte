@@ -9,7 +9,7 @@
 
 <article class="text-column prose lg:prose-lg mx-auto mb-5 mt-10">
 	{#if hasRole(data.roles, 'canvasSettings')}
-		<h1 class="text-xl">Global settings</h1>
+		<h2 class="text-l">Global settings</h2>
 		<p>
 			<Form action={'?/setSettings'} fields={data.settings}>
 				{#if !form || form.name !== 'setSettings'}
@@ -24,7 +24,7 @@
 	{/if}
 
 	{#if hasRole(data.roles, 'classes:manage')}
-		<h1 class="text-xl">Create class</h1>
+		<h2 class="text-l">Create class</h2>
 		<p>
 			<Form action={'?/createClass'} fields={data.newClass} buttonText="Create">
 				{#if !form || form.name !== 'createClass'}
@@ -39,7 +39,7 @@
 	{/if}
 
 	{#if data.classes}
-		<h1 class="text-xl">Existing classes</h1>
+		<h2 class="text-l">Existing classes</h2>
 		<p />
 		<table>
 			<tr>
