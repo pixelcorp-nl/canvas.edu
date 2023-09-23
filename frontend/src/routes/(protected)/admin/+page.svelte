@@ -46,20 +46,20 @@
 				<th>Name</th>
 				<th>ID</th>
 				<th>Max users</th>
-				<!-- <th>Current users</th>
-				<th>Users</th> -->
+				<th>n.o. Users</th>
+				<th>Users</th>
 			</tr>
 			{#each data.classes as _class}
 				<tr>
 					<td>{_class.name}</td>
 					<td>{_class.id}</td>
 					<td>{_class.maxUsers}</td>
-					<!-- <td>{_class.users.length}</td>
+					<td>{_class.users.length}</td>
 					<td>
 						{#each _class.users as user}
-							{user.username} {' '}
+							{user.username} {','}
 						{/each}
-					</td> -->
+					</td>
 				</tr>
 			{/each}
 		</table>

@@ -7,6 +7,8 @@ import { publicEnv } from './publicEnv'
 import { StatsD } from './util/statsd'
 import { pool } from '$lib/server/db'
 import { schema } from './setupDB'
+import util from 'util'
+util.inspect.defaultOptions.depth = 10
 
 let listenerCount = 0
 let globalIo: Server | undefined = undefined

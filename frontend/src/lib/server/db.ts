@@ -74,8 +74,28 @@ export const DB = {
 		}
 	},
 	class: {
-		getAll: () => {
-			return db.select().from(classes)
+		getAll: async () => {
+			const rows = await db /**/
+				.select()
+				.from(classes)
+				.leftJoin(classToUser, eq(classes.id, classToUser.classId))
+				.leftJoin(user, eq(classToUser.userId, user.id))
+
+			const result = rows.reduce<(Class & { users: User[] })[]>((acc, row) => {
+				const existing = acc.find(({ id }) => id === row.classes.id)
+				if (!existing) {
+					acc.push({
+						...row.classes,
+						users: row.auth_user ? [row.auth_user] : []
+					})
+					return acc
+				}
+				if (row.auth_user) {
+					existing.users.push(row.auth_user)
+				}
+				return acc
+			}, [])
+			return result
 		},
 		getBy: async <T extends keyof Class>(key: T, value: Class[T]): Promise<Class | undefined> => {
 			return (await db.select().from(classes).where(eq(classes[key], value)).limit(1)).at(0)
