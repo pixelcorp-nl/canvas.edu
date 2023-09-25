@@ -48,7 +48,7 @@
 	<br />
 
 	{#if valueChanged}
-		<Button type="submit" enabled={valueChanged}>{buttonText}</Button>
+		<Button type="submit" id={buttonText} enabled={valueChanged}>{buttonText}</Button>
 	{:else}
 		<Tooltip theme="tooltips" content="No changes to submit">
 			<Button type="submit" id={buttonText} enabled={valueChanged}>{buttonText}</Button>

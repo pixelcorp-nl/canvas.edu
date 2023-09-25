@@ -7,7 +7,7 @@
 	export let form: ActionData
 </script>
 
-<article class="text-column prose lg:prose-lg mx-auto mb-5 mt-10">
+<article class="prose mx-auto">
 	{#if hasRole(data.roles, 'canvasSettings')}
 		<h2 class="text-l">Global settings</h2>
 		<p>
