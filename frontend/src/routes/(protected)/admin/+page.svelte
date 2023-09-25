@@ -39,9 +39,9 @@
 	{/if}
 
 	{#if data.classes}
-		<h2 class="text-l">Existing classes</h2>
+		<h2 class="text-l">Existing classes - {data.classes.length}</h2>
 		<p />
-		<table>
+		<table id="classes">
 			<tr>
 				<th>Name</th>
 				<th>ID</th>
@@ -52,7 +52,7 @@
 			{#each data.classes as _class}
 				<tr>
 					<td>{_class.name}</td>
-					<td>{_class.id}</td>
+					<td id={`${_class.name}-id`}>{_class.id}</td>
 					<td>{_class.maxUsers}</td>
 					<td>{_class.users.length}</td>
 					<td>
@@ -60,6 +60,25 @@
 							{user.username} {','}
 						{/each}
 					</td>
+				</tr>
+			{/each}
+		</table>
+	{/if}
+
+	{#if data.users}
+		<h2 class="text-l">Existing users - {data.users.length}</h2>
+		<p />
+		<table id="users">
+			<tr>
+				<th>Id</th>
+				<th>Username</th>
+				<th>ApiKey</th>
+			</tr>
+			{#each data.users as user}
+				<tr>
+					<td>{user.id}</td>
+					<td>{user.username}</td>
+					<td>{user.apikey}</td>
 				</tr>
 			{/each}
 		</table>

@@ -44,6 +44,9 @@ export const DB = {
 		getBy: async <T extends keyof User>(key: T, value: User[T]): Promise<User | undefined> => {
 			return (await db.select().from(user).where(eq(user[key], value)).limit(1)).at(0)
 		},
+		getAll: (): Promise<User[]> => {
+			return db.select().from(user).execute()
+		},
 		getRoles: async (userId: User['id']): Promise<Role[]> => {
 			const rows = await db.select({ role: userRoles.role }).from(userRoles).where(eq(userRoles.userId, userId))
 			return rows.map(row => row.role) as Role[]
@@ -109,7 +112,7 @@ export const DB = {
 				id: id ?? randomString(7, '123456789'),
 				..._classParse.data
 			}
-			return db.insert(classes).values(completeClass).returning()
+			return (await db.insert(classes).values(completeClass).returning()).at(0) as Class
 		},
 		addRole: async (userId: User['id'], role: Role): Promise<void> => {
 			const roles = await DB.user.getRoles(userId)

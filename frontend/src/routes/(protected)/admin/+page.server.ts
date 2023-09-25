@@ -62,5 +62,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 		name: '',
 		maxUsers: 0
 	}
-	return { roles, settings, classes, newClass: objectToForm(newClass) }
+	const users = hasRole(roles, 'users:manage') ? await DB.user.getAll() : undefined
+	return { roles, settings, classes, newClass: objectToForm(newClass), users }
 }
