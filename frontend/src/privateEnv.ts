@@ -1,5 +1,5 @@
 import { dev } from '$app/environment'
-import { PRIVATE_POSTGRES_URL, PRIVATE_REDIS_URL, PRIVATE_STATSD_HOST, PRIVATE_STATSD_PORT } from '$env/static/private'
+import { PRIVATE_ENV_ADMINKEY, PRIVATE_POSTGRES_URL, PRIVATE_REDIS_URL, PRIVATE_STATSD_HOST, PRIVATE_STATSD_PORT } from '$env/static/private'
 import { z } from 'zod'
 
 const PrivateEnv = z.strictObject({
@@ -16,7 +16,10 @@ export const privateEnv = {
 	postgresUrl: dev ? 'postgres://postgres:postgres@localhost:5432/postgres' : PRIVATE_POSTGRES_URL,
 	statsdHost: PRIVATE_STATSD_HOST,
 	statsdPort: Number(PRIVATE_STATSD_PORT),
-	adminKey: 'joppe'
+	adminKey: PRIVATE_ENV_ADMINKEY || 'joppe'
 } as const satisfies PrivateEnv
 
 PrivateEnv.parse(privateEnv)
+if (privateEnv.adminKey === 'joppe') {
+	console.warn('ADMIN KEY IS DEFAULT, PLEASE CHANGE IT')
+}
