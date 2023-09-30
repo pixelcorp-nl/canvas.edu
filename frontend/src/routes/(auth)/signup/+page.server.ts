@@ -3,10 +3,27 @@ import { fail, redirect, type Actions } from '@sveltejs/kit'
 import { LuciaError } from 'lucia-auth'
 import type { PageServerLoad } from './$types'
 import { getFormData, randomString } from '$lib/server/util'
+import { privateEnv } from '$lib/../privateEnv'
+
+function getForm(form: FormData) {
+	if (privateEnv.userPasswords) {
+		return getFormData(form, ['username', 'password', 'passwordConfirm'])
+	} else {
+		const keys = getFormData(form, ['username'])
+		if (!keys) {
+			return undefined
+		}
+		return {
+			username: keys['username'],
+			password: '',
+			passwordConfirm: ''
+		}
+	}
+}
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
-		const keys = getFormData(await request.formData(), ['username', 'password', 'passwordConfirm'])
+		const keys = getForm(await request.formData())
 		if (!keys) {
 			return fail(400, { message: 'Missing required fields' })
 		}
@@ -51,5 +68,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (session) {
 		throw redirect(302, '/canvas')
 	}
-	return {}
+	return {
+		password: privateEnv.userPasswords
+	}
 }
