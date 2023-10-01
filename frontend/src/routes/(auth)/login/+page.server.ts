@@ -43,7 +43,7 @@ export const actions: Actions = {
 		} catch (error) {
 			if (error instanceof LuciaError && (error.message === 'AUTH_INVALID_KEY_ID' || error.message === 'AUTH_INVALID_PASSWORD')) {
 				return fail(400, {
-					message: 'Incorrect username or password.'
+					message: `Incorrect username${privateEnv.userPasswords ? ' or password' : ''}`
 				})
 			}
 			// database connection error
