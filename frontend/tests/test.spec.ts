@@ -9,13 +9,13 @@ type Pixel = {
 }
 
 const root = 'http://localhost:5173'
-async function putPixel(pixel: Pixel): Promise<Record<string, unknown>> {
+async function putPixel(pixel: Pixel): Promise<string | undefined> {
 	try {
 		const resp = await fetch(`${root}/api/single`, {
 			method: 'POST',
 			body: JSON.stringify(pixel)
 		})
-		return resp?.json()
+		return resp?.text()
 	} catch (err) {
 		console.error(err)
 		throw new Error('Failed to put pixel')
@@ -53,17 +53,17 @@ async function assertPixel(page: Page, pixel: Pixel) {
 
 test('Can put pixel', async () => {
 	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42], key: 'joppe' }
-	expect((await putPixel(pixel))?.['success']).toBe(true)
+	expect(await putPixel(pixel)).toMatch('Success!')
 })
 
 test('Cannot put unauthenticated pixel', async () => {
 	const pixel: Pixel = { x: -1, y: 0, color: [42, 42, 42], key: 'not joppe' as 'joppe' }
-	expect((await putPixel(pixel))?.['success']).toBe(false)
+	expect(await putPixel(pixel)).toMatch('Error!')
 })
 
 test('Cannot put invalid pixel', async () => {
 	const pixel: Pixel = { x: -1, y: 0, color: [42, 42, 42], key: 'joppe' }
-	expect((await putPixel(pixel))?.['success']).toBe(false)
+	expect(await putPixel(pixel)).toMatch('Error!')
 })
 
 test('Can create account', async ({ page }) => {

@@ -1,4 +1,4 @@
-import { json, type RequestHandler } from '@sveltejs/kit'
+import { json, text, type RequestHandler } from '@sveltejs/kit'
 import { setPixelMap } from '$lib/server/redis'
 import { publicEnv } from '../../../publicEnv'
 import { pixelObjToPixelKV, PixelRequest } from '../_pixelUtils'
@@ -57,13 +57,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const parsed = await PixelRequest.safeParseAsync(await request.json())
 	if (!parsed.success) {
 		const pixel: PixelRequest = { x: 10, y: 10, color: [255, 0, 0], key: 'your-api-key' }
-		const resp = { success: false, error: `The request is not valid, your request should look like this ${JSON.stringify(pixel)}` }
-		return json(resp, { status: 400 })
+		return text(`Error! The request is not valid, your request should look like this ${JSON.stringify(pixel)}`, { status: 400 })
 	}
 	const apiKey = parsed.data.key
 	if (!(await apiKeyExists(apiKey))) {
-		const resp = { success: false, error: `The API key you provided (${apiKey}) is not valid` }
-		return json(resp, { status: 401 })
+		return text(`Error! Your API key you provided (${apiKey}) is not valid`, { status: 401 })
 	}
 
 	const { success, timeToWait } = await ratelimit(apiKey, {
@@ -79,5 +77,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	void processBatch(locals.io)
 
 	locals.statsd.increment('pixel')
-	return json({ success: true, x: parsed.data.x, y: parsed.data.y, color: parsed.data.color })
+	const { x, y, color } = parsed.data
+	return text(`Success! Pixel with color ${color} placed at x=${x}, y=${y}`, { status: 200 })
 }
