@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { randomBytes } from 'crypto'
 
 type Pixel = {
 	x: number
@@ -69,11 +70,15 @@ test('Can create account', async ({ page }) => {
 	await page.goto(`${root}/signup`)
 	await page.waitForSelector('button[type="submit"]')
 
-	const userName = `joppe${Date.now()}`
+	const userName = `joppe${randomBytes(10).toString('hex')}`
 	await page.evaluate(userName => {
 		;(document.querySelector('input[name="username"]') as HTMLInputElement).value = userName
-		;(document.querySelector('#password') as HTMLInputElement).value = userName
-		;(document.querySelector('#password-confirm') as HTMLInputElement).value = userName
+		try {
+			;(document.querySelector('#password') as HTMLInputElement).value = userName
+			;(document.querySelector('#password-confirm') as HTMLInputElement).value = userName
+		} catch (e) {
+			/**/
+		}
 		;(document.querySelector('button[type="submit"]') as HTMLButtonElement).click()
 	}, userName)
 	await expect(page.locator('#header-username')).toHaveText(userName)
