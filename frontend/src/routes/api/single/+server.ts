@@ -56,8 +56,7 @@ const maxRequests = memoizee(async () => (await DB.settings.get()).maxRequestsPe
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const parsed = await PixelRequest.safeParseAsync(await request.json())
 	if (!parsed.success) {
-		const pixel: PixelRequest = { x: 10, y: 10, color: [255, 0, 0], key: 'your-api-key' }
-		return text(`Error! The request is not valid, your request should look like this ${JSON.stringify(pixel)}`, { status: 400 })
+		return text(`Error! The request is not valid, ${parsed.error.errors.at(0)?.message}`, { status: 400 })
 	}
 	const apiKey = parsed.data.key
 	if (!(await apiKeyExists(apiKey))) {
