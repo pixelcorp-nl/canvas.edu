@@ -10,7 +10,8 @@ De berichten worden opgesteld in JSON, dit is een manier om data te weergeven op
 ###
 De opdrachten gaan er vannuit dat er geen voorkennis over programmeren is.
 
-er is bij elke opdracht een voorbeeld wat gekopieerd mag worden.
+Alle voorbeelden mogen gekopieerd worden!
+De code kan worden gerunt op deze website (https://trinket.io/embed/python3).
 
 ```python
 # De # aan het begin van deze regel geeft aan dat dit een comment is.
