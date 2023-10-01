@@ -30,3 +30,13 @@ export function randomString(length: number): string {
 	}
 	return result
 }
+
+export type Result<Ok, Err = Error> =
+	| {
+			ok: true
+			data: Ok
+	  }
+	| {
+			ok: false
+			error: Err
+	  }

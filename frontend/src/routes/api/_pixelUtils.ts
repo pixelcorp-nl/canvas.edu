@@ -6,9 +6,26 @@ const { canvasHeight, canvasWidth } = publicEnv
 const rgbValue = z.number().min(0).max(255)
 
 const pixelObj = {
-	x: z.number().min(0).max(canvasWidth),
-	y: z.number().min(0).max(canvasHeight),
-	color: z.array(rgbValue).length(3)
+	x: z
+		.number({
+			invalid_type_error: 'x must be a number',
+			required_error: 'x is required'
+		})
+		.min(0, 'x must be greater than or equal to 0')
+		.max(canvasWidth, `x must be less than or equal to ${canvasWidth}`),
+	y: z
+		.number({
+			invalid_type_error: 'y must be a number',
+			required_error: 'y is required'
+		})
+		.min(0, 'y must be greater than or equal to 0')
+		.max(canvasHeight, `y must be less than or equal to ${canvasHeight}`),
+	color: z
+		.array(rgbValue, {
+			invalid_type_error: 'color must be an array of numbers',
+			required_error: 'color is required'
+		})
+		.length(3)
 }
 
 export const PixelObj = z.object(pixelObj)

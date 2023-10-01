@@ -9,10 +9,11 @@
 	import { page } from '$app/stores'
 
 	const apikey = $page.data['user'].apikey
+	const { x, y } = $page.data['infoPixel']
 	const root = `${$page.url.protocol}//${$page.url.host}`
 	const jsonExample = `{
-	"x": 42,
-	"y": 42,
+	"x": ${x},
+	"y": ${y},
 	"color": [255, 0, 0], // rgb
 	"key": "${apikey}"
 }`
@@ -25,7 +26,7 @@ url = '${root}/api/single'
 headers = {'Content-Type': 'application/json'}
 
 # Define the pixel data as a Python dictionary
-pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255], 'key': '${apikey}' }
+pixel = {'x': ${x}, 'y': ${y}, 'color': [0, 25, 255], 'key': '${apikey}' }
 
 # Send a POST request to the API endpoint with the pixel data as JSON
 response = requests.post(url, headers=headers, data=json.dumps(pixel))
@@ -33,10 +34,10 @@ response = requests.post(url, headers=headers, data=json.dumps(pixel))
 # Check if the request was successful
 if response.ok:
     # If the request was successful, print a success message
-    print("Pixel successfully changed!")
+    print("Success!", response.content)
 else:
-    # If the request was unsuccessful, print an error message that includes the HTTP status code
-    print("Failed to change pixel:", response.content)
+    # If the request was unsuccessful, print an error message
+    print("Error!", response.content)
 `
 </script>
 
