@@ -8,6 +8,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"generate-schema": "drizzle-kit generate:pg --out db-migrations --schema src/lib/server/schemas.ts",
+		"migrate-last": "PGPASSWORD='postgres' /opt/homebrew/opt/postgresql@15/bin/psql -h localhost -U postgres -d postgres -a -f ./db-migrations/$(ls -A ./db-migrations | sort -r | tail -n 1)",
+		"nuke-db": "cd .. && docker compose down && rm -rf postgres-db && make start-deps",
 		"test": "npx playwright test",
 		"test:view": "npx playwright test --headed",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
