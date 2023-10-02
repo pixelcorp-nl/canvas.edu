@@ -7,6 +7,7 @@
 	import { isLoading, locale, waitLocale } from 'svelte-i18n'
 	import '../app.postcss'
 	import type { LayoutData } from './$types'
+	import { page } from '$app/stores'
 
 	export let data: LayoutData
 
@@ -32,6 +33,9 @@
 			<Header userData={data.user} />
 		{/key}
 		<main>
+			<pre>
+				{JSON.stringify($page.data.session, null, 2)}
+			</pre>
 			<slot />
 		</main>
 

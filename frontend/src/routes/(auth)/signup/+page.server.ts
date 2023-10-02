@@ -1,9 +1,8 @@
-import { auth } from '$lib/server/auth'
-import { fail, redirect, type Actions } from '@sveltejs/kit'
-import { LuciaError } from 'lucia-auth'
+import { fail, redirect, json, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { getFormData, randomString } from '$lib/server/util'
 import { privateEnv } from '$lib/../privateEnv'
+import { DB } from '$lib/server/db'
 
 function getForm(form: FormData) {
 	if (privateEnv.userPasswords) {
@@ -29,46 +28,39 @@ export const actions: Actions = {
 		}
 		const { username, password, passwordConfirm } = keys
 
+		if (!username) {
+			return fail(400, {
+				message: 'Username cannot be empty'
+			})
+		}
 		if (password !== passwordConfirm) {
 			return fail(400, {
 				message: 'Passwords do not match'
 			})
 		}
-
-		try {
-			const user = await auth.createUser({
-				primaryKey: {
-					providerId: 'username',
-					providerUserId: username ?? '',
-					password: password ?? ''
-				},
-				attributes: {
-					username: username ?? '',
-					apikey: randomString(8)
-				}
-			})
-			const session = await auth.createSession(user.id)
-			locals.auth.setSession(session)
-		} catch (error) {
-			if (error instanceof LuciaError && error.message === 'AUTH_DUPLICATE_KEY_ID') {
-				return fail(400, {
-					message: 'Username already in use'
-				})
-			}
-			console.log(error)
-			return fail(500, {
-				message: 'Unknown error occurred'
+		if (privateEnv.userPasswords && !password) {
+			return fail(400, {
+				message: 'Password cannot be empty'
 			})
 		}
+		const user = await DB.user.getBy('name', username)
+		if (user) {
+			return fail(400, {
+				message: 'Username already in use'
+			})
+		}
+		return { ok: true, username, key: randomString(8) }
 	}
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const session = await locals.auth.validate()
+	const session = await locals.getSession()
+	console.log({ session })
 	if (session) {
 		throw redirect(302, '/canvas')
 	}
 	return {
+		// TODO: Rename to usePassword
 		password: privateEnv.userPasswords
 	}
 }

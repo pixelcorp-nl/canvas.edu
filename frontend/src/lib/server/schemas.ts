@@ -1,5 +1,7 @@
+import type { AdapterAccount } from '@auth/core/adapters'
 import type { InferModel } from 'drizzle-orm'
-import { bigint, boolean, pgTable, text, varchar, json, integer } from 'drizzle-orm/pg-core'
+import { drizzle } from 'drizzle-orm/node-postgres'
+import { integer, json, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
@@ -11,33 +13,56 @@ import { z } from 'zod'
 // 3. Paste these queries in the hooks.server.ts file that runs these queries on startup,
 //    ensuring all the tables are created
 
-// https://lucia-auth.com/adapters/drizzle?
-export const session = pgTable('auth_session', {
-	id: varchar('id', { length: 128 }).primaryKey(),
-	userId: varchar('user_id', { length: 15 })
-		.notNull()
-		.references(() => user.id),
-	activeExpires: bigint('active_expires', { mode: 'number' }).notNull(),
-	idleExpires: bigint('idle_expires', { mode: 'number' }).notNull()
+export const user = pgTable('user', {
+	id: text('id').notNull().primaryKey(),
+	name: text('name'),
+	email: text('email').notNull(),
+	emailVerified: timestamp('emailVerified', { mode: 'date' }),
+	image: text('image')
 })
 
-// https://lucia-auth.com/adapters/drizzle?
-export const key = pgTable('auth_key', {
-	id: varchar('id', { length: 255 }).primaryKey(),
-	userId: varchar('user_id', { length: 15 })
+export const accounts = pgTable(
+	'account',
+	{
+		userId: text('userId')
+			.notNull()
+			.references(() => user.id, { onDelete: 'cascade' }),
+		type: text('type').$type<AdapterAccount['type']>().notNull(),
+		provider: text('provider').notNull(),
+		providerAccountId: text('providerAccountId').notNull(),
+		refresh_token: text('refresh_token'),
+		access_token: text('access_token'),
+		expires_at: integer('expires_at'),
+		token_type: text('token_type'),
+		scope: text('scope'),
+		id_token: text('id_token'),
+		session_state: text('session_state')
+	},
+	account => ({
+		compoundKey: primaryKey(account.provider, account.providerAccountId)
+	})
+)
+
+export const sessions = pgTable('session', {
+	sessionToken: text('sessionToken').notNull().primaryKey(),
+	userId: text('userId')
 		.notNull()
-		.references(() => user.id),
-	primaryKey: boolean('primary_key').notNull(),
-	hashedPassword: varchar('hashed_password', { length: 255 }),
-	expires: bigint('expires', { mode: 'number' })
+		.references(() => user.id, { onDelete: 'cascade' }),
+	expires: timestamp('expires', { mode: 'date' }).notNull()
 })
 
-// https://lucia-auth.com/adapters/drizzle?
-export const user = pgTable('auth_user', {
-	id: varchar('id', { length: 15 }).primaryKey(), // default value from lucia, do not change
-	username: text('username').notNull(),
-	apikey: text('apikey').notNull()
-})
+export const verificationTokens = pgTable(
+	'verificationToken',
+	{
+		identifier: text('identifier').notNull(),
+		token: text('token').notNull(),
+		expires: timestamp('expires', { mode: 'date' }).notNull()
+	},
+	vt => ({
+		compoundKey: primaryKey(vt.identifier, vt.token)
+	})
+)
+
 export const User = createInsertSchema(user)
 export type User = InferModel<typeof user>
 export type UserAttributes = Omit<User, 'id'>

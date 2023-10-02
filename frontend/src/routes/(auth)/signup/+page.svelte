@@ -1,10 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import Button from '$components/Button.svelte'
+	import { signIn } from '@auth/sveltekit/client'
 	import type { PageData } from './$types'
 
 	export let form: { message?: string }
 	export let data: PageData
+
+	$: if (form?.ok) {
+		signIn('credentials', {
+			username: form.username,
+			key: form.key
+		})
+	}
 </script>
 
 <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
