@@ -10,8 +10,7 @@ De berichten worden opgesteld in JSON, dit is een manier om data te weergeven op
 ###
 De opdrachten gaan er vannuit dat er geen voorkennis over programmeren is.
 
-Alle voorbeelden mogen gekopieerd worden!
-De code kan worden gerunt op deze website (https://trinket.io/embed/python3).
+Alle voorbeelden mogen gekopieerd worden! De code kan worden gerunt op deze website (https://trinket.io/embed/python3).
 
 ```python
 # De # aan het begin van deze regel geeft aan dat dit een comment is.
@@ -21,7 +20,7 @@ De code kan worden gerunt op deze website (https://trinket.io/embed/python3).
 
 Als eerste gaan we het allerkleinste script maken wat er bestaat.
 
-[] Opdracht:
+[ ] Opdracht:
     Kopier dit stukje code en run het in de browser.
     Kijk nu waar de tekst die we willen printen op het scherm verschijnt.
 ```python
@@ -37,7 +36,7 @@ print(x)
 ```
 
 Variabelen zijn erg handig omdat je er ook mee kan rekenen.
-[] Opdracht:
+[ ] Opdracht:
     Voeg de volgende regel toe aan het bovenstaande script zodat er 43 in de console wordt geprint.
 ```python
 x = x + 1
@@ -53,6 +52,8 @@ url = 'https://pixels.joppekoers.nl/api/single'
 headers = {'Content-Type': 'application/json'}
 
 # Pixel informatie in JSON formaat.
+# De "key" bevat een geheime code die voor iedereen uniek is.
+# Zo weet de server wie welke pixel gestuurd heeft.
 pixel = {'x': 42, 'y': 42, 'color': [0, 25, 255], 'key': 'KRVKIWWW' }
 
 # Hier wordt de pixelinformatie naar de server verstuurd.
@@ -68,10 +69,10 @@ else:
     print("Failed to change pixel:", response.content)
 ```
 
-[] Opdracht:
+[ ] Opdracht:
     Kopier de code en controleer of we een pixel op het canvas hebben geplaatst nadat je het uitgevoerd hebt.
 
-[] Opdracht:
+[ ] Opdracht:
     Plaats een pixel op deze coordinaten (x:y)
 
 **Tip** Als je er niet uikomt kijk hoe anderen het voor elkaar krijgen.
@@ -87,11 +88,11 @@ een waarde van 0 betekend dat de kleur bijna niet voorkomt en de hoogste waarde 
 pixel = {'x': 42, 'y': 42, 'color': [255, 0, 0], 'key': 'KRVKIWWW' }
 ```
 
-[] Opdrachten:
+[ ] Opdrachten:
     - Plaats een blauwe pixel op het canvas.
     - Plaats een roze, oranje, paarse en lichtgroene pixel op het canvas.
 
-[] Opdracht (optioneel):
+[ ] Opdracht (optioneel):
     Plaats 2 pixels op het canvas door 1x het script te runnen.
 
 Tot nog toe hebben we om meer pixels te plaatsen het script aangepast of de code gekopieerd en onder elkaar geplakt.
@@ -110,7 +111,7 @@ for i in range(0, 10):
 print("buiten de for loop")
 ```
 
-[] Opdracht:
+[ ] Opdracht:
     - Wat gebeurt er wanneer de print("buiten de for loop") ook evenveel indentatie heeft als de instructies in de for loop?
     - Gebruik een for loop om een lijn van 10 pixels te plaatsen.
 
@@ -119,7 +120,7 @@ Tot nu toe hebben we alleen functies gebruikt die door andere mensen gemaakt zij
 ```python
 # Het keyword def geeft aan dat we een eigen functie maken
 # tussen de haakjes staat world, dit is een variabel die we mee kunnen geven die in de functie gebruikt kan worden.
-def hallo_wereld(world):
+def hello_world(world):
     print("hello world:", world, "!")
 
 hallo_wereld("aarde")
@@ -127,7 +128,7 @@ hallo_wereld("aarde")
 
 In ons script is het handig om een paar hulp functies te maken zodat het script overzichtelijk blijft.
 
-[] Opdracht:
+[ ] Opdracht:
     Maak de functies met de volgende prototypen:
 ```python
 # key is de key die we ook in het eerdere voorbeel hebben gebruikt.
@@ -137,7 +138,7 @@ def put_pixel(x, y, color, key)
 def create_horizontal_line(x, y, color, len, key)
 ```
 
-[] Opdracht:
+[ ] Opdracht:
     - Maak een vierkant op het canvas
     - Maak een functie die een vierkant kan tekenen 
 
