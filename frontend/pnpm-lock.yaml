@@ -5,15 +5,21 @@ settings:
   excludeLinksFromLockfile: false
 
 devDependencies:
+  '@auth/core':
+    specifier: ^0.16.0
+    version: 0.16.0
+  '@auth/drizzle-adapter':
+    specifier: ^0.3.2
+    version: 0.3.2
+  '@auth/sveltekit':
+    specifier: ^0.3.7
+    version: 0.3.7(@sveltejs/kit@1.18.0)(svelte@3.59.1)
   '@carlosv2/adapter-node-ws':
     specifier: github:SirMorfield/adapter-node-ws#933fbd9506ebc2b2144e85e3dc018ada1cb432b5
     version: github.com/SirMorfield/adapter-node-ws/933fbd9506ebc2b2144e85e3dc018ada1cb432b5
   '@fontsource/fira-mono':
     specifier: ^5.0.0
     version: 5.0.0
-  '@lucia-auth/adapter-postgresql':
-    specifier: ^1.0.1
-    version: 1.0.1(lucia-auth@1.8.0)(pg@8.11.0)
   '@neoconfetti/svelte':
     specifier: ^1.0.0
     version: 1.0.0
@@ -77,9 +83,6 @@ devDependencies:
   ioredis:
     specifier: ^5.3.2
     version: 5.3.2
-  lucia-auth:
-    specifier: ^1.8.0
-    version: 1.8.0
   memoizee:
     specifier: ^0.4.15
     version: 0.4.15
@@ -143,6 +146,75 @@ packages:
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
+    dev: true
+
+  /@auth/core@0.12.0:
+    resolution: {integrity: sha512-XYipdAc/nKu014VOgpcPyLlj1ghWlnwyloaB1UjQd9ElZRZQ9YpSizzXGLON23t/a0FyabOBBl0/awD2tW58Rg==}
+    peerDependencies:
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      nodemailer:
+        optional: true
+    dependencies:
+      '@panva/hkdf': 1.1.1
+      cookie: 0.5.0
+      jose: 4.14.6
+      oauth4webapi: 2.3.0
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+    dev: true
+
+  /@auth/core@0.13.0:
+    resolution: {integrity: sha512-StjrzUenaKfMr68kmvhiqfY0xvxRvg8wllmem9JAULpPAAAt3uwRUDXICWOP/PfWB4OZ2wQT7rgfm0n42b+Mjg==}
+    peerDependencies:
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      nodemailer:
+        optional: true
+    dependencies:
+      '@panva/hkdf': 1.1.1
+      cookie: 0.5.0
+      jose: 4.14.6
+      oauth4webapi: 2.3.0
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+    dev: true
+
+  /@auth/core@0.16.0:
+    resolution: {integrity: sha512-g9Aj+N4dzGhZwOtR7qOW0T+OhpH7zbHa29tonLB5V+FxaQoWCsNTrZsjfzBVfvCI8VEkBqPbPHkIIyWSoTw0iA==}
+    peerDependencies:
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      nodemailer:
+        optional: true
+    dependencies:
+      '@panva/hkdf': 1.1.1
+      cookie: 0.5.0
+      jose: 4.14.6
+      oauth4webapi: 2.3.0
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+    dev: true
+
+  /@auth/drizzle-adapter@0.3.2:
+    resolution: {integrity: sha512-fHfzwaTomm/RKgFKBO5AJ8JTfR44rX1KX2ASaKRk+4jvVhDh9FCir5BV1Fv68b5ay7XBo9DtcNSQuZp4hbpLYw==}
+    dependencies:
+      '@auth/core': 0.12.0
+    transitivePeerDependencies:
+      - nodemailer
+    dev: true
+
+  /@auth/sveltekit@0.3.7(@sveltejs/kit@1.18.0)(svelte@3.59.1):
+    resolution: {integrity: sha512-2aIQbACu4F6oBUMgi9c1yCPVzOd3VQmMslk4y7U1Ec5A8CGstJfvMyL1N2J4zc3bemmvzhlrZ9ng0baKc695lg==}
+    peerDependencies:
+      '@sveltejs/kit': ^1.0.0
+      svelte: ^3.54.0 || ^4.0.0
+    dependencies:
+      '@auth/core': 0.13.0
+      '@sveltejs/kit': 1.18.0(svelte@3.59.1)(vite@4.3.8)
+      svelte: 3.59.1
+    transitivePeerDependencies:
+      - nodemailer
     dev: true
 
   /@esbuild-kit/core-utils@3.1.0:
@@ -688,19 +760,6 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@lucia-auth/adapter-postgresql@1.0.1(lucia-auth@1.8.0)(pg@8.11.0):
-    resolution: {integrity: sha512-+5A5Yyl8itjHB2bqNQWIJAxNAMBkQsk/kad+WGBRkXmdDTwj+854fmC4nTYprsO2M0q92KfjNZhdCBh4UD2Sgg==}
-    peerDependencies:
-      lucia-auth: ^1.4.0
-      pg: ^8.0.0
-    peerDependenciesMeta:
-      pg:
-        optional: true
-    dependencies:
-      lucia-auth: 1.8.0
-      pg: 8.11.0
-    dev: true
-
   /@neoconfetti/svelte@1.0.0:
     resolution: {integrity: sha512-SmksyaJAdSlMa9cTidVSIqYo1qti+WTsviNDwgjNVm+KQ3DRP2Df9umDIzC4vCcpEYY+chQe0i2IKnLw03AT8Q==}
     dev: true
@@ -724,6 +783,10 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
+    dev: true
+
+  /@panva/hkdf@1.1.1:
+    resolution: {integrity: sha512-dhPeilub1NuIG0X5Kvhh9lH4iW3ZsHlnzwgwbOlgwQ2wG1IqFzsgHqmKPk3WzsdWAeaxKJxgM0+W433RmN45GA==}
     dev: true
 
   /@playwright/test@1.34.0:
@@ -2187,6 +2250,10 @@ packages:
     hasBin: true
     dev: true
 
+  /jose@4.14.6:
+    resolution: {integrity: sha512-EqJPEUlZD0/CSUMubKtMaYUOtWe91tZXTWMJZoKSbLk+KtdhNdcvppH8lA9XwVu2V4Ailvsj0GBZJ2ZwDjfesQ==}
+    dev: true
+
   /js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
@@ -2279,10 +2346,6 @@ packages:
     resolution: {integrity: sha512-BpdYkt9EvGl8OfWHDQPISVpcl5xZthb+XPsbELj5AQXxIC8IriDZIQYjBJPEm5rS420sjZ0TLEzRcq5KdBhYrQ==}
     dependencies:
       es5-ext: 0.10.62
-    dev: true
-
-  /lucia-auth@1.8.0:
-    resolution: {integrity: sha512-zI8gT2AOpxTPIxYzToEdgoht+GOflrduZiHPsOEmg4/2pThOyCW3o3lXh+Uwh20tJ9QoXwQe9/Omn6PlUG6efw==}
     dev: true
 
   /magic-string@0.27.0:
@@ -2441,6 +2504,10 @@ packages:
   /normalize-range@0.1.2:
     resolution: {integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /oauth4webapi@2.3.0:
+    resolution: {integrity: sha512-JGkb5doGrwzVDuHwgrR4nHJayzN4h59VCed6EW8Tql6iHDfZIabCJvg6wtbn5q6pyB2hZruI3b77Nudvq7NmvA==}
     dev: true
 
   /object-assign@4.1.1:
@@ -2782,6 +2849,19 @@ packages:
     resolution: {integrity: sha512-VdlZoocy5lCP0c/t66xAfclglEapXPCIVhqqJRncYpvbCgImF0w67aPKfbqUMr72tO2k5q0TdTZwCLjPTI6C9g==}
     dev: true
 
+  /preact-render-to-string@5.2.3(preact@10.11.3):
+    resolution: {integrity: sha512-aPDxUn5o3GhWdtJtW0svRC2SS/l8D9MAgo2+AWml+BhDImb27ALf04Q2d+AHqUUOc6RdSXFIBVa2gxzgMKgtZA==}
+    peerDependencies:
+      preact: '>=10'
+    dependencies:
+      preact: 10.11.3
+      pretty-format: 3.8.0
+    dev: true
+
+  /preact@10.11.3:
+    resolution: {integrity: sha512-eY93IVpod/zG3uMF22Unl8h9KkrcKIRs2EGar8hwLZZDU1lkjph303V9HZBwufh2s736U6VXuhD109LYqPoffg==}
+    dev: true
+
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
@@ -2801,6 +2881,10 @@ packages:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
     hasBin: true
+    dev: true
+
+  /pretty-format@3.8.0:
+    resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
     dev: true
 
   /punycode@2.3.0:
