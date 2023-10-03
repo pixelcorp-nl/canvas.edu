@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import Button from '$components/Button.svelte'
+	import type { PageData } from './$types'
 
 	export let form: { message?: string }
+	export let data: PageData
 </script>
 
 <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -28,51 +30,49 @@
 			</div>
 		</div>
 
-		<div>
-			<label for="class" class="sr-only">Class</label>
+		{#if data.password}
+			<div>
+				<label for="password" class="sr-only">Password</label>
 
-			<div class="relative">
-				<!-- TODO: remove value="default" -->
-				<input id="class_" name="class_" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Class" value="default" />
+				<div class="relative">
+					<input type="password" id="password" name="password" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Enter password" />
+
+					<span class="absolute inset-y-0 end-0 grid place-content-center px-4">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+						</svg>
+					</span>
+				</div>
 			</div>
-		</div>
+			<div>
+				<label for="password" class="sr-only">Password</label>
 
-		<div>
-			<label for="password" class="sr-only">Password</label>
+				<div class="relative">
+					<input
+						type="password"
+						id="password-confirm"
+						name="passwordConfirm"
+						class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+						placeholder="Re-enter password" />
 
-			<div class="relative">
-				<input type="password" id="password" name="password" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Enter password" />
-
-				<span class="absolute inset-y-0 end-0 grid place-content-center px-4">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-					</svg>
-				</span>
+					<span class="absolute inset-y-0 end-0 grid place-content-center px-4">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+						</svg>
+					</span>
+				</div>
 			</div>
-		</div>
-		<div>
-			<label for="password" class="sr-only">Password</label>
-
-			<div class="relative">
-				<input type="password" id="password-confirm" name="passwordConfirm" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Re-enter password" />
-
-				<span class="absolute inset-y-0 end-0 grid place-content-center px-4">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-					</svg>
-				</span>
-			</div>
-		</div>
+		{/if}
 
 		<div class="flex items-center justify-between">
 			<p class="text-sm text-gray-500">

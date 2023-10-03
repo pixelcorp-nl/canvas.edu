@@ -12,10 +12,9 @@
 	x = Math.round(Math.max(0, Math.min(x, 199)))
 	let y = Math.random() * 200
 	y = Math.round(Math.max(0, Math.min(y, 199)))
-
-	console.log(data)
-
+	
 	const apikey = $page.data['user'].apikey
+	// const { x, y } = $page.data['infoPixel']
 	const root = `${$page.url.protocol}//${$page.url.host}`
 
 	const code = `import requests
@@ -37,10 +36,10 @@ response = requests.post(url, headers=headers, data=json.dumps(pixel))
 # Hier wordt het resultaat geprint zodat we weten of ons script succesvol is uitgevoerd.
 if response.ok:
     # If the request was successful, print a success message
-    print("Pixel successfully changed!")
+    print("Success!", response.content)
 else:
-    # If the request was unsuccessful, print an error message that includes the HTTP status code
-    print("Failed to change pixel:", response.content)
+    # If the request was unsuccessful, print an error message
+    print("Error!", response.content)
 `
 	const code2 = `# Pixel informatie in JSON formaat.
 # Deze pixel wordt rood, omdat de eerste waarde van "color" helemaal aan staat en de rest helemaal uit staat.
