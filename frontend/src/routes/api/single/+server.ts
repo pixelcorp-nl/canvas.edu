@@ -46,7 +46,7 @@ const apiKeyExists = memoizee(
 			return Promise.resolve(true)
 		}
 
-		return !!(await DB.user.getBy('apikey', key))
+		return !!(await DB.user.getBy('key', key))
 	},
 	{ promise: true, maxAge: 10 * 1000 }
 )

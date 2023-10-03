@@ -1,9 +1,8 @@
 import postgres from 'pg'
 import { privateEnv } from '../../privateEnv'
-import { Settings, UserInsert, settings, users, type UserInsert, type User } from './schemas'
+import { Settings, settings, users, UserInsert, type User } from './schemas'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { eq, sql } from 'drizzle-orm'
-import { uuid } from 'drizzle-orm/pg-core'
 
 export const pool = new postgres.Pool({
 	connectionString: privateEnv.postgresUrl
