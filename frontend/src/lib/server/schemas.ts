@@ -1,7 +1,6 @@
 import type { AdapterAccount } from '@auth/core/adapters'
 import type { InferModel } from 'drizzle-orm'
-import { drizzle } from 'drizzle-orm/node-postgres'
-import { integer, json, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
+import { integer, json, pgTable, primaryKey, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
@@ -13,20 +12,28 @@ import { z } from 'zod'
 // 3. Paste these queries in the hooks.server.ts file that runs these queries on startup,
 //    ensuring all the tables are created
 
-export const user = pgTable('user', {
-	id: text('id').notNull().primaryKey(),
-	name: text('name'),
-	email: text('email').notNull(),
-	emailVerified: timestamp('emailVerified', { mode: 'date' }),
-	image: text('image')
+export const users = pgTable('user', {
+	id: uuid('id').defaultRandom().primaryKey(),
+	name: text('name').notNull(),
+	key: text('key').notNull()
 })
+export type User = InferModel<typeof users>
+// https://orm.drizzle.team/docs/zod
+export const UserInsert = createInsertSchema(users, {
+	name: schema => schema.name.min(1),
+	key: schema => schema.key.min(1)
+}) /*.pick({
+	name: true,
+	key: true
+})*/
+export type UserInsert = z.infer<typeof UserInsert>
 
 export const accounts = pgTable(
 	'account',
 	{
 		userId: text('userId')
 			.notNull()
-			.references(() => user.id, { onDelete: 'cascade' }),
+			.references(() => users.id, { onDelete: 'cascade' }),
 		type: text('type').$type<AdapterAccount['type']>().notNull(),
 		provider: text('provider').notNull(),
 		providerAccountId: text('providerAccountId').notNull(),
@@ -47,7 +54,7 @@ export const sessions = pgTable('session', {
 	sessionToken: text('sessionToken').notNull().primaryKey(),
 	userId: text('userId')
 		.notNull()
-		.references(() => user.id, { onDelete: 'cascade' }),
+		.references(() => users.id, { onDelete: 'cascade' }),
 	expires: timestamp('expires', { mode: 'date' }).notNull()
 })
 
@@ -62,11 +69,6 @@ export const verificationTokens = pgTable(
 		compoundKey: primaryKey(vt.identifier, vt.token)
 	})
 )
-
-export const User = createInsertSchema(user)
-export type User = InferModel<typeof user>
-export type UserAttributes = Omit<User, 'id'>
-export type NewUser = InferModel<typeof user, 'insert'>
 
 export const settings = pgTable('settings', {
 	id: integer('id').primaryKey().default(1),

@@ -1,8 +1,9 @@
 import postgres from 'pg'
 import { privateEnv } from '../../privateEnv'
-import { Settings, User, settings, user } from './schemas'
+import { Settings, UserInsert, settings, users, type UserInsert, type User } from './schemas'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { eq, sql } from 'drizzle-orm'
+import { uuid } from 'drizzle-orm/pg-core'
 
 export const pool = new postgres.Pool({
 	connectionString: privateEnv.postgresUrl
@@ -41,8 +42,15 @@ export const DB = {
 		}
 	},
 	user: {
+		create: async (user: UserInsert) => {
+			const parse = await UserInsert.safeParseAsync(user)
+			if (!parse.success) {
+				return parse.error
+			}
+			return (await db.insert(users).values(parse.data).returning()).at(0) as User
+		},
 		getBy: async <T extends keyof User>(key: T, value: User[T]): Promise<User | undefined> => {
-			return (await db.select().from(user).where(eq(user[key], value)).limit(1)).at(0)
+			return (await db.select().from(users).where(eq(users[key], value)).limit(1)).at(0)
 		}
 	}
 } as const
