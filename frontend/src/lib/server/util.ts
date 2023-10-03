@@ -40,3 +40,9 @@ export type Result<Ok, Err = Error> =
 			ok: false
 			error: Err
 	  }
+export function Ok<T>(data: T): { ok: true; data: T } {
+	return { ok: true, data }
+}
+export function Err<T>(error: T): { ok: false; error: T } {
+	return { ok: false, error }
+}
