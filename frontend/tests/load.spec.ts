@@ -25,24 +25,6 @@ function signupRand(page: Page) {
 	return signup(page, `joppe-loadtest-${randomBytes(10).toString('hex')}`)
 }
 
-// For some reason I can't test this in a for loop
-test('Load 1', ({ page }) => signupRand(page))
-test('Load 2', ({ page }) => signupRand(page))
-test('Load 3', ({ page }) => signupRand(page))
-test('Load 4', ({ page }) => signupRand(page))
-test('Load 5', ({ page }) => signupRand(page))
-test('Load 6', ({ page }) => signupRand(page))
-test('Load 7', ({ page }) => signupRand(page))
-test('Load 8', ({ page }) => signupRand(page))
-test('Load 9', ({ page }) => signupRand(page))
-test('Load 10', ({ page }) => signupRand(page))
-test('Load 11', ({ page }) => signupRand(page))
-test('Load 12', ({ page }) => signupRand(page))
-test('Load 13', ({ page }) => signupRand(page))
-test('Load 14', ({ page }) => signupRand(page))
-test('Load 15', ({ page }) => signupRand(page))
-test('Load 16', ({ page }) => signupRand(page))
-test('Load 17', ({ page }) => signupRand(page))
-test('Load 18', ({ page }) => signupRand(page))
-test('Load 19', ({ page }) => signupRand(page))
-test('Load 20', ({ page }) => signupRand(page))
+for (let i = 0; i < 100; i++) {
+	test(`Load ${i}`, ({ page }) => signupRand(page))
+}

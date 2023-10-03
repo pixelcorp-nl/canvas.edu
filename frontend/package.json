@@ -12,7 +12,7 @@
 		"nuke-db": "cd .. && docker compose down && rm -rf postgres-db && make start-deps",
 		"test": "npx playwright test tests/test.spec.ts",
 		"test:view": "npx playwright test --headed tests/test.spec.ts",
-		"test:load": "npx playwright test --workers 10 --repeat-each 10 tests/load.spec.ts",
+		"test:load": "npx playwright test --workers 10 tests/load.spec.ts",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"lint:check": "prettier --plugin-search-dir . --check . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache .",
 		"lint:fix": "prettier --plugin-search-dir . --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
