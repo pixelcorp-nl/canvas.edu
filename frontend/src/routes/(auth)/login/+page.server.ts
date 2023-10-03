@@ -1,41 +1,40 @@
 import { fail, redirect, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { privateEnv } from '$lib/../privateEnv'
-import { getFormData } from '$lib/server/util'
+import { DB } from '$lib/server/db'
 
 export const load: PageServerLoad = async ({ locals }) => {
-	// const session = await locals.auth.validate()
-	// if (session) {
-	// 	throw redirect(302, '/canvas')
-	// }
+	const session = await locals.getSession()
+	if (session) {
+		throw redirect(302, '/canvas')
+	}
 	return {
+		// TODO: rename to usePassword
 		password: privateEnv.userPasswords
 	}
 }
 
-function getForm(form: FormData) {
-	if (privateEnv.userPasswords) {
-		return getFormData(form, ['username', 'password', 'passwordConfirm'])
-	} else {
-		const keys = getFormData(form, ['username'])
-		if (!keys) {
-			return undefined
-		}
-		return {
-			username: keys['username'] ?? '',
-			password: ''
-		}
-	}
-}
-
 export const actions: Actions = {
-	default: async ({ request, locals }) => {
-		const keys = getForm(await request.formData())
-		if (!keys) {
-			return fail(400, { message: 'Missing required fields' })
+	default: async ({ request }) => {
+		const form = await request.formData()
+		const username = form.get('username')?.toString()
+		if (!username) {
+			return fail(400, { message: 'Username cannot be empty' })
 		}
-		return fail(500, {
-			message: 'Not implemented'
-		})
+		if (privateEnv.userPasswords) {
+			const password = form.get('password')?.toString()
+			const passwordConfirm = form.get('passwordConfirm')?.toString()
+			if (!password) {
+				return fail(400, { message: 'Password cannot be empty' })
+			}
+			if (password !== passwordConfirm) {
+				return fail(400, { message: 'Passwords do not match' })
+			}
+		}
+		const user = await DB.user.getBy('name', username)
+		if (!user) {
+			return fail(400, { message: 'Username not found, register an account' })
+		}
+		return { user }
 	}
 }

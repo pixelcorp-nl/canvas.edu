@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { user } from '$lib/Stores/User'
 	import Header from '$lib/components/Header.svelte'
 	import Loader from '$lib/components/Loader.svelte'
 	import '$lib/i18n'
@@ -7,15 +6,9 @@
 	import { isLoading, locale, waitLocale } from 'svelte-i18n'
 	import '../app.postcss'
 	import type { LayoutData } from './$types'
-	import { page } from '$app/stores'
-
 	export let data: LayoutData
 
 	onMount(async () => {
-		// refesh the entire page when the user logs in
-		if (data.user) {
-			$user = data.user
-		}
 		if (localStorage.getItem('locale') !== null) {
 			// extract the locale from the localStorage by parsing the JSON string
 			const lang = JSON.parse(localStorage.getItem('locale') || '')
@@ -29,15 +22,10 @@
 	<Loader />
 {:else}
 	<div class="app">
-		{#key data.user}
-			<Header userData={data.user} />
+		{#key data.session?.user}
+			<Header user={data.session?.user} />
 		{/key}
-		<main>
-			<pre>
-				{JSON.stringify($page.data.session, null, 2)}
-			</pre>
-			<slot />
-		</main>
+		<main><slot /></main>
 
 		<a class="mx-auto" href="https://github.com/pixelcorp-nl/canvas.edu"><img src="/images/github.svg" class="m-1 w-8 h-8 hover:scale-95" alt="github" /></a>
 	</div>
