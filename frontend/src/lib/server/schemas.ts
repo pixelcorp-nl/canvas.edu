@@ -1,7 +1,7 @@
 import type { AdapterAccount } from '@auth/core/adapters'
 import type { InferModel } from 'drizzle-orm'
 import { integer, json, pgTable, primaryKey, text, timestamp, uuid } from 'drizzle-orm/pg-core'
-import { createInsertSchema } from 'drizzle-zod'
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
 // README
@@ -18,6 +18,10 @@ export const users = pgTable('user', {
 	key: text('key').notNull()
 })
 export type User = InferModel<typeof users>
+export const User = createSelectSchema(users, {
+	name: schema => schema.name.min(1),
+	key: schema => schema.key.min(1)
+})
 // https://orm.drizzle.team/docs/zod
 export const UserInsert = createInsertSchema(users, {
 	name: schema => schema.name.min(1),
