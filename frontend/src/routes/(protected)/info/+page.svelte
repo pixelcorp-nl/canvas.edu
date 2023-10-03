@@ -1,6 +1,5 @@
 <!-- Script -->
 <script lang="ts">
-	import { _ } from 'svelte-i18n'
 	import atomOneDark from 'svelte-highlight/styles/github-dark'
 	import { page } from '$app/stores'
 	import Codeblock from '$components/Codeblock.svelte'
