@@ -2,15 +2,16 @@
 	import { enhance } from '$app/forms'
 	import Button from '$components/Button.svelte'
 	import type { ActionData, PageData } from './$types'
-	import { waitForMount } from '$lib/public/util'
-	import { signIn } from '@auth/sveltekit/client'
+	import { signIn } from '$lib/public/util'
+	import { onMount } from 'svelte'
 
 	export let form: ActionData
 	export let data: PageData
 
-	$: if (form?.user) {
-		// goes to Auth.js
-		waitForMount(form.user).then(d => signIn('credentials', d))
+	let mounted = false
+	onMount(() => (mounted = true))
+	$: if (mounted && form?.user) {
+		signIn(form.user)
 	}
 </script>
 
