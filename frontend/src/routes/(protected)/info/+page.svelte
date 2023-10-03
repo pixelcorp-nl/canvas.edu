@@ -53,7 +53,7 @@ pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0], 'key': '${apikey}' }`
 </pre> -->
 
 <!-- HTML -->
-<article class="text-column prose lg:prose-lg mx-auto mb-5 mt-10">
+<article class="text-column prose-md lg:prose-lg mx-auto mb-5 mt-10">
 	<h2 id="over-dit-project">Over dit project</h2>
 	<p>
 		<em>Op dit digitale canvas is het alleen mogelijk om pixels te plaatsen door middel van code.</em>
