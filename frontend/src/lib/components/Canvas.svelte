@@ -21,7 +21,10 @@
 		canvas.width = canvasSize
 		canvas.height = canvasSize
 
-		socket.on('pixelMap', pixelMap => forEachPixel(pixelMap, drawPixelOnCanvas))
+		socket.on('pixelMap', pixelMap => {
+			forEachPixel(pixelMap, drawPixelOnCanvas)
+			canvas.classList.add('canvas-loaded')
+		})
 	})
 
 	onDestroy(() => {

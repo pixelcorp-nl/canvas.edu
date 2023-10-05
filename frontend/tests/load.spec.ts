@@ -19,6 +19,10 @@ async function signup(page: Page, userName: string) {
 		;(document.querySelector('button[type="submit"]') as HTMLButtonElement).click()
 	}, userName)
 	await expect(page.locator('#header-username')).toHaveText(userName)
+	await page.goto(`${root}/info`)
+	await expect(page.locator('#footer')).toContainText('Oswin, Mees & Joppe')
+	await page.goto(`${root}/canvas`)
+	await page.waitForSelector('.canvas-loaded')
 }
 
 function signupRand(page: Page) {
