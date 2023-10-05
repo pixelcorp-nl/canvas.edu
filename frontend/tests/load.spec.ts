@@ -3,7 +3,8 @@ import { randomBytes } from 'crypto'
 
 test.describe.configure({ mode: 'parallel', timeout: 10_000 })
 
-const root = 'http://localhost:5173'
+const root = 'https://pixelcorp.nl'
+// const root = 'http://localhost:5173'
 async function signup(page: Page, userName: string) {
 	await page.goto(`${root}/signup`)
 	await page.waitForSelector('button[type="submit"]')
@@ -29,6 +30,6 @@ function signupRand(page: Page) {
 	return signup(page, `joppe-loadtest-${randomBytes(10).toString('hex')}`)
 }
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 500; i++) {
 	test(`Load ${i}`, ({ page }) => signupRand(page))
 }
