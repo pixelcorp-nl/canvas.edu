@@ -39,13 +39,13 @@ async function processBatch(io: Server) {
 	await setPixelMap(publicEnv.canvasId, queueObj)
 }
 
+const bypassApiKey = 'joppe'
 const apiKeyExists = memoizee(
 	async (key: string) => {
 		// temporary for testing
-		if (key === 'joppe') {
+		if (key === bypassApiKey) {
 			return Promise.resolve(true)
 		}
-
 		return !!(await DB.user.getBy('key', key))
 	},
 	{ promise: true, maxAge: 10 * 1000 }
@@ -63,13 +63,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return text(`Error! Your API key you provided (${apiKey}) is not valid`, { status: 401 })
 	}
 
-	const { success, timeToWait } = await ratelimit(apiKey, {
-		timePeriodSeconds: 1,
-		maxRequests: await maxRequests(),
-		route: 'post-pixel'
-	})
-	if (!success) {
-		return json({ success: false, timeToWait }, { status: 429 })
+	if (apiKey !== bypassApiKey) {
+		const { success, timeToWait } = await ratelimit(apiKey, {
+			timePeriodSeconds: 1,
+			maxRequests: await maxRequests(),
+			route: 'post-pixel'
+		})
+		if (!success) {
+			return json({ success: false, timeToWait }, { status: 429 })
+		}
 	}
 	const [coordinate, rgba] = pixelObjToPixelKV(parsed.data)
 	queue.set(coordinate, rgba)
