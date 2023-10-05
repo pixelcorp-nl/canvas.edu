@@ -125,7 +125,9 @@ const injectHandle: Handle = async ({ event, resolve }) => {
 }
 
 const logHandle: Handle = ({ event, resolve }) => {
-	console.log(event.url.pathname + event.url.search, '|', event.route.id)
+	if (!event.url.pathname.startsWith('/api')) {
+		console.log(event.url.pathname + event.url.search, '|', event.route.id)
+	}
 	return resolve(event)
 }
 
