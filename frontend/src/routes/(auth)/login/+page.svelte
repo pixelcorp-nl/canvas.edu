@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import Button from '$components/Button.svelte'
+	import { signIn } from '$lib/public/util'
 	import type { ActionData, PageData } from './$types'
-	import { signIn } from '@auth/sveltekit/client'
+
 	import { onMount } from 'svelte'
 
 	export let form: ActionData
@@ -11,7 +12,7 @@
 	let mounted = false
 	onMount(() => (mounted = true))
 	$: if (mounted && form?.user) {
-		signIn('credentials', { ...form.user, callbackUrl: `${window.location.origin}/canvas` })
+		signIn(form.user)
 	}
 </script>
 
