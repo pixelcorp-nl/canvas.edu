@@ -5,7 +5,7 @@ import type { Server } from '$lib/sharedTypes'
 import Credentials from '@auth/core/providers/credentials'
 import { SvelteKitAuth } from '@auth/sveltekit'
 import type { HandleWs } from '@carlosv2/adapter-node-ws'
-import type { Handle } from '@sveltejs/kit'
+import type { Handle, HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 import { publicEnv } from './publicEnv'
 import { StatsD } from './util/statsd'
@@ -130,3 +130,16 @@ const logHandle: Handle = ({ event, resolve }) => {
 }
 
 export const handle: Handle = sequence(logHandle, authHandle, injectHandle)
+
+export const handleError: HandleServerError = a => {
+	if (a.event.route.id) {
+		console.error(a.error)
+		return {
+			status: 500,
+			message: a.error instanceof Error ? a.error.message : String(a.error)
+		}
+	}
+	const message = `404: page ${a.event.url.pathname} not found`
+	console.log(message)
+	return { message }
+}
