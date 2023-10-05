@@ -9,6 +9,7 @@ import type { Handle } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 import { publicEnv } from './publicEnv'
 import { StatsD } from './util/statsd'
+import { setupDBSingleton } from './setupDB'
 
 let listenerCount = 0
 let globalIo: Server | undefined = undefined
@@ -103,24 +104,23 @@ const authHandle = SvelteKitAuth({
 				key: token['key'] as string
 			} satisfies Token
 		}
-	}
+	},
 	// session: {
 	// 	strategy: 'jwt'
 	// }
-	// trustHost: true
+	trustHost: true
 	// adapter: DrizzleAdapter(db)
 })
 
 // TODO protect paths
 
 // Injecting global variables into the event object
-const injectHandle: Handle = ({ event, resolve }) => {
+const injectHandle: Handle = async ({ event, resolve }) => {
 	event.locals.io = globalIo as Server
 	event.locals.statsd = statsd
 
 	// make sure the database is setup
-	// TODO: enable
-	// await setupDBSingleton()
+	await setupDBSingleton()
 	return resolve(event)
 }
 

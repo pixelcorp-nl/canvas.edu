@@ -7,8 +7,8 @@ export async function setupDBSingleton() {
 	}
 	dbIsSetup = true
 	const schema = `
-	CREATE TABLE IF NOT EXISTS "account" (
-		"userId" text NOT NULL,
+	CREATE TABLE IF NOT EXISTS "authjs-account" (
+		"userId" uuid NOT NULL,
 		"type" text NOT NULL,
 		"provider" text NOT NULL,
 		"providerAccountId" text NOT NULL,
@@ -21,11 +21,10 @@ export async function setupDBSingleton() {
 		"session_state" text
 	);
 	--> statement-breakpoint
-	ALTER TABLE "account" ADD CONSTRAINT "account_provider_providerAccountId" PRIMARY KEY("provider","providerAccountId");
 	--> statement-breakpoint
-	CREATE TABLE IF NOT EXISTS "session" (
+	CREATE TABLE IF NOT EXISTS "authjs-session" (
 		"sessionToken" text PRIMARY KEY NOT NULL,
-		"userId" text NOT NULL,
+		"userId" uuid NOT NULL,
 		"expires" timestamp NOT NULL
 	);
 	--> statement-breakpoint
@@ -34,28 +33,22 @@ export async function setupDBSingleton() {
 		"settings" json NOT NULL
 	);
 	--> statement-breakpoint
-	CREATE TABLE IF NOT EXISTS "user" (
+	CREATE TABLE IF NOT EXISTS "authjs-user" (
 		"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 		"name" text NOT NULL,
 		"key" text NOT NULL
 	);
 	--> statement-breakpoint
-	CREATE TABLE IF NOT EXISTS "verificationToken" (
+	CREATE TABLE IF NOT EXISTS "authjs-verificationToken" (
 		"identifier" text NOT NULL,
 		"token" text NOT NULL,
 		"expires" timestamp NOT NULL
 	);
 	--> statement-breakpoint
-	ALTER TABLE "verificationToken" ADD CONSTRAINT "verificationToken_identifier_token" PRIMARY KEY("identifier","token");
+	--> statement-breakpoint
 	--> statement-breakpoint
 	DO $$ BEGIN
-	 ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE cascade ON UPDATE no action;
-	EXCEPTION
-	 WHEN duplicate_object THEN null;
-	END $$;
-	--> statement-breakpoint
-	DO $$ BEGIN
-	 ALTER TABLE "session" ADD CONSTRAINT "session_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE cascade ON UPDATE no action;
+	 ALTER TABLE "authjs-session" ADD CONSTRAINT "authjs-session_userId_authjs-user_id_fk" FOREIGN KEY ("userId") REFERENCES "authjs-user"("id") ON DELETE cascade ON UPDATE no action;
 	EXCEPTION
 	 WHEN duplicate_object THEN null;
 	END $$;
@@ -65,6 +58,7 @@ export async function setupDBSingleton() {
 			if (err) {
 				throw err
 			}
+			console.log('Database setup complete')
 			resolve()
 		})
 	})

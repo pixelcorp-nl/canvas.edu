@@ -12,7 +12,7 @@ import { z } from 'zod'
 // 3. Paste these queries in the hooks.server.ts file that runs these queries on startup,
 //    ensuring all the tables are created
 
-export const users = pgTable('user', {
+export const users = pgTable('authjs-user', {
 	id: uuid('id').defaultRandom().primaryKey(),
 	name: text('name').notNull(),
 	key: text('key').notNull()
@@ -33,9 +33,9 @@ export const UserInsert = createInsertSchema(users, {
 export type UserInsert = z.infer<typeof UserInsert>
 
 export const accounts = pgTable(
-	'account',
+	'authjs-account',
 	{
-		userId: text('userId')
+		userId: uuid('userId')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		type: text('type').$type<AdapterAccount['type']>().notNull(),
@@ -54,16 +54,16 @@ export const accounts = pgTable(
 	})
 )
 
-export const sessions = pgTable('session', {
+export const sessions = pgTable('authjs-session', {
 	sessionToken: text('sessionToken').notNull().primaryKey(),
-	userId: text('userId')
+	userId: uuid('userId')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	expires: timestamp('expires', { mode: 'date' }).notNull()
 })
 
 export const verificationTokens = pgTable(
-	'verificationToken',
+	'authjs-verificationToken',
 	{
 		identifier: text('identifier').notNull(),
 		token: text('token').notNull(),
