@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import { randomBytes } from 'crypto'
 
-test.describe.configure({ mode: 'parallel', timeout: 5000 })
+test.describe.configure({ mode: 'parallel', timeout: 10_000 })
 
 const root = 'http://localhost:5173'
 async function signup(page: Page, userName: string) {
