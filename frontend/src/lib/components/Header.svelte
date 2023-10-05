@@ -23,10 +23,10 @@
 
 	<ul class="flex items-center gap-2 text-sm font-medium text-gray-500">
 		{#if user}
-			<li><a class="rounded-lg px-3 py-2" class:bg-gray-100={$page.route.id === '/canvas'} href="/canvas"> {$_('header.canvas')} </a></li>
+			<li><a class="rounded-lg px-3 py-2" class:bg-gray-100={$page.route?.id === '/canvas'} href="/canvas"> {$_('header.canvas')} </a></li>
 
 			<li>
-				<a class="rounded-lg inline-flex items-center gap-2 px-3 py-2" class:bg-gray-100={$page.route.id === '/info'} href="/info">
+				<a class="rounded-lg inline-flex items-center gap-2 px-3 py-2" class:bg-gray-100={$page.route?.id === '/info'} href="/info">
 					{$_('header.info')}
 				</a>
 			</li>
