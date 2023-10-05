@@ -53,9 +53,9 @@
 
 <section bind:clientWidth={sectionWidth} bind:clientHeight={sectionHeight}>
 	<canvas bind:this={canvas} width={0} height={0} on:mousemove={logPosition} on:mouseleave={logPosition} id="canvas" />
-	<p>
-		{xMouse}, {yMouse}
-	</p>
+	<pre>
+		x = {xMouse.toString().padStart(3)}, y = {yMouse.toString().padStart(3)}
+	</pre>
 </section>
 
 <style>
