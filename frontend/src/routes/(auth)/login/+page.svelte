@@ -1,10 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import Button from '$components/Button.svelte'
-	import type { PageData } from './$types'
+	import type { ActionData, PageData } from './$types'
+	import { signIn } from '$lib/public/util'
+	import { onMount } from 'svelte'
 
-	export let form: { message?: string }
+	export let form: ActionData
 	export let data: PageData
+
+	let mounted = false
+	onMount(() => (mounted = true))
+	$: if (mounted && form?.user) {
+		signIn(form.user)
+	}
 </script>
 
 <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">

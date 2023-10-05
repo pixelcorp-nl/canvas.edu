@@ -1,0 +1,40 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Launch server",
+			"request": "launch",
+			"runtimeArgs": [
+				"run",
+				"dev",
+				"--",
+				"--host",
+			],
+			"runtimeExecutable": "npm",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"type": "node",
+			"console": "integratedTerminal",
+			"cwd": "${workspaceFolder}/frontend/",
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch chrome",
+			"url": "http://localhost:5173",
+			"cwd": "${workspaceFolder}/frontend/",
+			"webRoot": "${workspaceFolder}/frontend/"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Both",
+			"cwd": "${workspaceFolder}/frontend/",
+			"configurations": [
+				"Launch server",
+				"Launch chrome"
+			]
+		}
+	]
+}

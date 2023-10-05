@@ -21,7 +21,10 @@
 		canvas.width = canvasSize
 		canvas.height = canvasSize
 
-		socket.on('pixelMap', pixelMap => forEachPixel(pixelMap, drawPixelOnCanvas))
+		socket.on('pixelMap', pixelMap => {
+			forEachPixel(pixelMap, drawPixelOnCanvas)
+			canvas.classList.add('canvas-loaded')
+		})
 	})
 
 	onDestroy(() => {
@@ -50,9 +53,9 @@
 
 <section bind:clientWidth={sectionWidth} bind:clientHeight={sectionHeight}>
 	<canvas bind:this={canvas} width={0} height={0} on:mousemove={logPosition} on:mouseleave={logPosition} id="canvas" />
-	<p>
-		{xMouse}, {yMouse}
-	</p>
+	<pre>
+		x = {xMouse.toString().padStart(3)}, y = {yMouse.toString().padStart(3)}
+	</pre>
 </section>
 
 <style>

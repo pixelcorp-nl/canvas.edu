@@ -1,9 +1,9 @@
-import { auth } from '$lib/server/auth'
-import { fail, redirect, type Actions } from '@sveltejs/kit'
-import { LuciaError } from 'lucia-auth'
+import { redirect, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import { getFormData, randomString } from '$lib/server/util'
+import { Err, getFormData, Ok, randomString, type Result } from '$lib/server/util'
 import { privateEnv } from '$lib/../privateEnv'
+import { DB } from '$lib/server/db'
+import type { User } from '$lib/server/schemas'
 
 function getForm(form: FormData) {
 	if (privateEnv.userPasswords) {
@@ -22,53 +22,44 @@ function getForm(form: FormData) {
 }
 
 export const actions: Actions = {
-	default: async ({ request, locals }) => {
+	default: async ({ request }): Promise<Result<User, string>> => {
 		const keys = getForm(await request.formData())
 		if (!keys) {
-			return fail(400, { message: 'Missing required fields' })
+			return Err('Missing required fields')
 		}
 		const { username, password, passwordConfirm } = keys
 
+		if (!username) {
+			return Err('Username cannot be empty')
+		}
 		if (password !== passwordConfirm) {
-			return fail(400, {
-				message: 'Passwords do not match'
-			})
+			return Err('Passwords do not match')
 		}
-
-		try {
-			const user = await auth.createUser({
-				primaryKey: {
-					providerId: 'username',
-					providerUserId: username ?? '',
-					password: password ?? ''
-				},
-				attributes: {
-					username: username ?? '',
-					apikey: randomString(8)
-				}
-			})
-			const session = await auth.createSession(user.id)
-			locals.auth.setSession(session)
-		} catch (error) {
-			if (error instanceof LuciaError && error.message === 'AUTH_DUPLICATE_KEY_ID') {
-				return fail(400, {
-					message: 'Username already in use'
-				})
-			}
-			console.log(error)
-			return fail(500, {
-				message: 'Unknown error occurred'
-			})
+		if (privateEnv.userPasswords && !password) {
+			return Err('Password cannot be empty')
 		}
+		const existing = await DB.user.getBy('name', username)
+		if (existing) {
+			return Err('Username already in use')
+		}
+		const user = await DB.user.create({
+			name: username,
+			key: randomString(8)
+		})
+		if (user instanceof Error) {
+			return Err(user.message)
+		}
+		return Ok(user)
 	}
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const session = await locals.auth.validate()
+	const session = await locals.getSession()
 	if (session) {
 		throw redirect(302, '/canvas')
 	}
 	return {
+		// TODO: Rename to usePassword
 		password: privateEnv.userPasswords
 	}
 }

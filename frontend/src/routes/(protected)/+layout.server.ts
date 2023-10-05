@@ -16,12 +16,12 @@ function stringToLocation(key: string) {
 }
 
 export const load = async ({ locals }) => {
-	const { user } = await locals.auth.validateUser()
-	if (!user) {
+	const session = await locals.getSession()
+	if (!session?.user) {
 		throw redirect(307, '/login')
 	}
 	return {
-		user,
-		infoPixel: stringToLocation(user.apikey)
+		user: session,
+		infoPixel: stringToLocation(session.user?.name ?? 'abc') // TODO use key
 	}
 }

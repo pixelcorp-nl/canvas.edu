@@ -1,6 +1,8 @@
 import { expect, test, type Page } from '@playwright/test'
 import { randomBytes } from 'crypto'
 
+test.describe.configure({ timeout: 10000 })
+
 type Pixel = {
 	x: number
 	y: number
@@ -86,7 +88,8 @@ test('Can create account', async ({ page }) => {
 	// TODO make separate test for this and share cookies between them
 	// })
 	// test('Check pixel can be put and then changed', async ({ page }) => {
-	await page.waitForTimeout(1000) // Wait for canvas to draw
+	await page.goto(`${root}/canvas`)
+	await page.waitForSelector('.canvas-loaded')
 
 	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50], key: 'joppe' }
 	await putPixel(pixel)
