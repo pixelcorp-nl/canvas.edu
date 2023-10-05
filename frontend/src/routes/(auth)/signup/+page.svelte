@@ -11,7 +11,7 @@
 	let mounted = false
 	onMount(() => (mounted = true))
 	$: if (mounted && form?.ok) {
-		signIn('credentials', form.data)
+		signIn('credentials', { ...form.data, callbackUrl: `${window.location.origin}/canvas` })
 	}
 </script>
 
