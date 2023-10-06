@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   frontend:
     container_name: frontend
@@ -6,13 +6,13 @@ services:
     build: ./frontend
     ports:
       - 5173:5173
-      - 5174:5174 # todo: remove this port when we can run production in docker
     env_file:
       - ./frontend/.env
     environment:
       PRIVATE_REDIS_URL: redis://redis:6379
     depends_on:
       - redis
+      - postgres
 
   postgres:
     container_name: postgres
