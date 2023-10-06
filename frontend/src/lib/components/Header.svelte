@@ -4,7 +4,7 @@
 	import { page } from '$app/stores'
 	import { slide } from 'svelte/transition'
 	import { cubicOut } from 'svelte/easing'
-	import { signOut } from '@auth/sveltekit/client'
+	import { signOut } from '$lib/public/util'
 	import type { User } from '$lib/server/schemas'
 
 	export let user: User | undefined
