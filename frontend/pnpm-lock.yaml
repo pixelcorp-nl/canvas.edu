@@ -6,14 +6,14 @@ settings:
 
 devDependencies:
   '@auth/core':
-    specifier: ^0.16.0
-    version: 0.16.0
+    specifier: 0.16.1
+    version: 0.16.1
   '@auth/drizzle-adapter':
-    specifier: ^0.3.2
-    version: 0.3.2
+    specifier: 0.3.3
+    version: 0.3.3
   '@auth/sveltekit':
-    specifier: ^0.3.7
-    version: 0.3.7(@sveltejs/kit@1.18.0)(svelte@3.59.1)
+    specifier: 0.3.9
+    version: 0.3.9(@sveltejs/kit@1.18.0)(svelte@3.59.1)
   '@carlosv2/adapter-node-ws':
     specifier: github:SirMorfield/adapter-node-ws#933fbd9506ebc2b2144e85e3dc018ada1cb432b5
     version: github.com/SirMorfield/adapter-node-ws/933fbd9506ebc2b2144e85e3dc018ada1cb432b5
@@ -148,8 +148,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /@auth/core@0.12.0:
-    resolution: {integrity: sha512-XYipdAc/nKu014VOgpcPyLlj1ghWlnwyloaB1UjQd9ElZRZQ9YpSizzXGLON23t/a0FyabOBBl0/awD2tW58Rg==}
+  /@auth/core@0.16.1:
+    resolution: {integrity: sha512-V+YifnjpyOadiiTbxfYDV2xYWo8xpKNtwYVskAEKUSwMvE0FlSlP+10QGBpf0axS/AJFOO61IR6GncFF/IOrHQ==}
     peerDependencies:
       nodemailer: ^6.8.0
     peerDependenciesMeta:
@@ -164,53 +164,21 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: true
 
-  /@auth/core@0.13.0:
-    resolution: {integrity: sha512-StjrzUenaKfMr68kmvhiqfY0xvxRvg8wllmem9JAULpPAAAt3uwRUDXICWOP/PfWB4OZ2wQT7rgfm0n42b+Mjg==}
-    peerDependencies:
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      nodemailer:
-        optional: true
+  /@auth/drizzle-adapter@0.3.3:
+    resolution: {integrity: sha512-HD936/q+uQIYHu50rwkC0yoMUNt+3pkf1UPUIx6wARVmqoBzHqhMykN5X3I0twtPR/oy3OBTNSyWCDBTv4uUBA==}
     dependencies:
-      '@panva/hkdf': 1.1.1
-      cookie: 0.5.0
-      jose: 4.14.6
-      oauth4webapi: 2.3.0
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3(preact@10.11.3)
-    dev: true
-
-  /@auth/core@0.16.0:
-    resolution: {integrity: sha512-g9Aj+N4dzGhZwOtR7qOW0T+OhpH7zbHa29tonLB5V+FxaQoWCsNTrZsjfzBVfvCI8VEkBqPbPHkIIyWSoTw0iA==}
-    peerDependencies:
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      nodemailer:
-        optional: true
-    dependencies:
-      '@panva/hkdf': 1.1.1
-      cookie: 0.5.0
-      jose: 4.14.6
-      oauth4webapi: 2.3.0
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3(preact@10.11.3)
-    dev: true
-
-  /@auth/drizzle-adapter@0.3.2:
-    resolution: {integrity: sha512-fHfzwaTomm/RKgFKBO5AJ8JTfR44rX1KX2ASaKRk+4jvVhDh9FCir5BV1Fv68b5ay7XBo9DtcNSQuZp4hbpLYw==}
-    dependencies:
-      '@auth/core': 0.12.0
+      '@auth/core': 0.16.1
     transitivePeerDependencies:
       - nodemailer
     dev: true
 
-  /@auth/sveltekit@0.3.7(@sveltejs/kit@1.18.0)(svelte@3.59.1):
-    resolution: {integrity: sha512-2aIQbACu4F6oBUMgi9c1yCPVzOd3VQmMslk4y7U1Ec5A8CGstJfvMyL1N2J4zc3bemmvzhlrZ9ng0baKc695lg==}
+  /@auth/sveltekit@0.3.9(@sveltejs/kit@1.18.0)(svelte@3.59.1):
+    resolution: {integrity: sha512-ZcnQVVYzERbtVHl5v7/GTrdqDwYOjIQkjnBss79KHQMunNwJNp6lGXlBHWkQxnmiav4yvEufoFbXTkB5FPvVkQ==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
       svelte: ^3.54.0 || ^4.0.0
     dependencies:
-      '@auth/core': 0.13.0
+      '@auth/core': 0.16.1
       '@sveltejs/kit': 1.18.0(svelte@3.59.1)(vite@4.3.8)
       svelte: 3.59.1
     transitivePeerDependencies:

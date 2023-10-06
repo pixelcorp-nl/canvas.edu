@@ -18,9 +18,9 @@
 		"lint:fix": "prettier --plugin-search-dir . --write . && DEBUG=eslint:cli-engine eslint --cache --cache-location node_modules/.eslintcache --fix ."
 	},
 	"devDependencies": {
-		"@auth/core": "^0.16.0",
-		"@auth/drizzle-adapter": "^0.3.2",
-		"@auth/sveltekit": "^0.3.7",
+		"@auth/core": "0.16.1",
+		"@auth/drizzle-adapter": "0.3.3",
+		"@auth/sveltekit": "0.3.9",
 		"@carlosv2/adapter-node-ws": "github:SirMorfield/adapter-node-ws#933fbd9506ebc2b2144e85e3dc018ada1cb432b5",
 		"@fontsource/fira-mono": "^5.0.0",
 		"@neoconfetti/svelte": "^1.0.0",
