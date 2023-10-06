@@ -8,5 +8,6 @@ export async function signIn(user: User) {
 		}
 		await new Promise(resolve => setTimeout(resolve, 500))
 	}
-	autJsSignIn('credentials', { ...user, redirect: false })
+	await autJsSignIn('credentials', { ...user, redirect: false })
+	window.location.href = '/canvas'
 }
