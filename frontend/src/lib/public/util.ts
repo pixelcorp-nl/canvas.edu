@@ -13,6 +13,7 @@ async function waitForWindow() {
 export async function signIn(user: User) {
 	await waitForWindow()
 	await autJsSignIn('credentials', { ...user, redirect: false })
+	window.location.href = '/canvas'
 }
 
 export async function signOut() {
