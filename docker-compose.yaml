@@ -5,11 +5,9 @@ services:
     restart: unless-stopped
     build: ./frontend
     ports:
-      - 5173:5173
+      - 80:5173
     env_file:
       - ./frontend/.env
-    environment:
-      PRIVATE_REDIS_URL: redis://redis:6379
     depends_on:
       - redis
       - postgres
