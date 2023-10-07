@@ -3,8 +3,8 @@ import { randomBytes } from 'crypto'
 
 test.describe.configure({ mode: 'parallel', timeout: 10_000 })
 
-const root = 'https://pixels.joppekoers.nl'
-// const root = 'http://localhost:5173'
+// const root = 'https://pixels.joppekoers.nl'
+const root = 'http://localhost:5173'
 
 async function signup(page: Page, userName: string) {
 	await page.goto(`${root}/signup`)
