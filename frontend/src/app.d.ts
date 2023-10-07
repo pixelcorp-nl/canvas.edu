@@ -8,7 +8,6 @@ declare global {
 		interface Locals {
 			io: Server
 			statsd: StatsD
-			getSession: () => Session | null
 		}
 	}
 }
