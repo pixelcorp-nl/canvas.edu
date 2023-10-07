@@ -1,5 +1,5 @@
 import { dev } from '$app/environment'
-import { PRIVATE_ENV_ADMINKEY, PRIVATE_POSTGRES_URL, PRIVATE_REDIS_URL, PRIVATE_STATSD_HOST, PRIVATE_STATSD_PORT } from '$env/static/private'
+import { PRIVATE_POSTGRES_URL, PRIVATE_REDIS_URL, PRIVATE_STATSD_HOST, PRIVATE_STATSD_PORT } from '$env/static/private'
 import { z } from 'zod'
 
 const PrivateEnv = z.strictObject({
@@ -20,7 +20,7 @@ export const privateEnv = {
 	statsdHost: PRIVATE_STATSD_HOST,
 	statsdPort: Number(PRIVATE_STATSD_PORT),
 	userPasswords: false, // wether we require a password to sign up
-	adminKey: PRIVATE_ENV_ADMINKEY || defaultAdminKey
+	adminKey: process.env['PRIVATE_ADMIN_KEY'] || defaultAdminKey
 } as const satisfies PrivateEnv
 
 PrivateEnv.parse(privateEnv)
