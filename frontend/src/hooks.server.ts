@@ -67,7 +67,7 @@ const credentials = Credentials({
 const authHandle = SvelteKitAuth({
 	providers: [credentials],
 	pages: {
-		signIn: '/signup' // TODO: up or in
+		// signIn: '/signup' // TODO: up or in
 	},
 	// Does it look like I care?
 	secret: '126b402ae7264a6497882db7876ebdfa356fc8440bccfba7c742f0afbb4fd967',
@@ -105,11 +105,7 @@ const authHandle = SvelteKitAuth({
 			} satisfies Token
 		}
 	},
-	// session: {
-	// 	strategy: 'jwt'
-	// }
 	trustHost: true
-	// adapter: DrizzleAdapter(db)
 })
 
 // TODO protect paths

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import Button from '$components/Button.svelte'
-	import { signIn } from '@auth/sveltekit/client'
+	import { signIn } from '$lib/public/util'
 	import type { ActionData, PageData } from './$types'
 	import { onMount } from 'svelte'
 
@@ -11,7 +11,7 @@
 	let mounted = false
 	onMount(() => (mounted = true))
 	$: if (mounted && form?.ok) {
-		signIn('credentials', form.data)
+		signIn(form.data)
 	}
 </script>
 

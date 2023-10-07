@@ -7,10 +7,9 @@
 
 	export let data
 
-	const apikey = $page.data['user'].apikey
+	const apikey = $page.data['user']['user'].key
 	const { x, y } = $page.data['infoPixel']
 	const root = `${$page.url.protocol}//${$page.url.host}`
-
 	const code = `import requests
 import json
 

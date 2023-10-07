@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import Button from '$components/Button.svelte'
-	import type { ActionData, PageData } from './$types'
 	import { signIn } from '$lib/public/util'
+	import type { ActionData, PageData } from './$types'
+
 	import { onMount } from 'svelte'
 
 	export let form: ActionData
