@@ -39,7 +39,9 @@ export type PixelRequest = z.infer<typeof PixelRequest>
 
 export type PixelKV = [Coordinate, RGBA]
 export function pixelObjToPixelKV(pixelObj: PixelObj): PixelKV {
-	const { x, y, color } = pixelObj
+	const { color } = pixelObj
+	const x = Math.round(pixelObj.x)
+	const y = Math.round(pixelObj.y)
 	const rgba = `${color[0]},${color[1]},${color[2]}`
 	return [`${x},${y}` as Coordinate, rgba as RGBA]
 }
