@@ -26,13 +26,9 @@ pixel = {'x': ${x}, 'y': ${y}, 'color': [0, 25, 255], 'key': '${apikey}' }
 # We gebruiken hiervoor de post functie uit de requests bibliotheek
 response = requests.post(url, headers=headers, data=json.dumps(pixel))
 
-# Hier wordt het resultaat geprint zodat we weten of ons script succesvol is uitgevoerd.
-if response.ok:
-    # If the request was successful, print a success message
-    print("Success!", response.content)
-else:
-    # If the request was unsuccessful, print an error message
-    print("Error!", response.content)
+# Hier wordt het resultaat geprint.
+print(response.content)
+
 `
 	const code2 = `# Pixel informatie in JSON formaat.
 # Deze pixel wordt rood, omdat de eerste waarde van "color" helemaal aan staat en de rest helemaal uit staat.
