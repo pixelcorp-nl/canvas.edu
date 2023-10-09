@@ -26,9 +26,11 @@ export const handleWs: HandleWs = (io: Server) => {
 	io.on('connection', async socket => {
 		listenerCount++
 		statsd.gauge('connections', listenerCount)
+		socket.broadcast.emit('listenerCount', listenerCount)
 		socket.on('disconnect', () => {
 			listenerCount--
 			statsd.gauge('connections', listenerCount)
+			socket.broadcast.emit('listenerCount', listenerCount)
 		})
 		const pixels = await getPixelMap(publicEnv.canvasId)
 		socket.emit('pixelMap', pixels)

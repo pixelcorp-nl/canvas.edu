@@ -22,12 +22,14 @@
 		canvas.height = canvasSize
 
 		socket.on('pixelMap', pixelMap => {
+			console.log('pixelMap', pixelMap)
 			forEachPixel(pixelMap, drawPixelOnCanvas)
 			canvas.classList.add('canvas-loaded')
 		})
 	})
 
 	onDestroy(() => {
+		socket.removeAllListeners()
 		socket.disconnect()
 	})
 
