@@ -7,6 +7,11 @@ export async function setupDBSingleton() {
 	}
 	dbIsSetup = true
 	const schema = `
+	CREATE TABLE IF NOT EXISTS "settings" (
+		"id" integer PRIMARY KEY DEFAULT 1 NOT NULL,
+		"settings" json NOT NULL
+	);
+	--> statement-breakpoint
 	CREATE TABLE IF NOT EXISTS "users" (
 		"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 		"name" text NOT NULL,
