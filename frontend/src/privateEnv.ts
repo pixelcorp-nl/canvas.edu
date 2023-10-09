@@ -1,7 +1,8 @@
 import { dev } from '$app/environment'
-import { PRIVATE_POSTGRES_URL, PRIVATE_REDIS_URL, PRIVATE_STATSD_HOST, PRIVATE_STATSD_PORT } from '$env/static/private'
+import { env } from '$env/dynamic/private'
 import { z } from 'zod'
 
+const { PRIVATE_POSTGRES_URL, PRIVATE_REDIS_URL, PRIVATE_STATSD_HOST, PRIVATE_STATSD_PORT, PRIVATE_ADMIN_KEY } = env
 const PrivateEnv = z.strictObject({
 	redisUrl: z.string().url(),
 	postgresUrl: z.string().url().endsWith('/postgres'),
@@ -20,7 +21,7 @@ export const privateEnv = {
 	statsdHost: PRIVATE_STATSD_HOST,
 	statsdPort: Number(PRIVATE_STATSD_PORT),
 	userPasswords: false, // wether we require a password to sign up
-	adminKey: process.env['PRIVATE_ADMIN_KEY'] || defaultAdminKey
+	adminKey: PRIVATE_ADMIN_KEY || defaultAdminKey
 } as const satisfies PrivateEnv
 
 PrivateEnv.parse(privateEnv)
