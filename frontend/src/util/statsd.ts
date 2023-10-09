@@ -18,21 +18,22 @@ export class StatsD {
 		if (!this.isValidDataDogStr(globalPrefix)) {
 			throw new Error(`Invalid globalPrefix ${globalPrefix}`)
 		}
+		console.log(`Connected to statsD: ${privateEnv.statsdHost}:${privateEnv.statsdPort}, prefix: ${globalPrefix}`)
 		this.globalPrefix = globalPrefix
 	}
 
 	public increment(stat: Stat, tag?: string): void {
 		if (!this.validInput(stat, tag)) {
-			return
+			return console.error(`Invalid increment for statsd: ${stat} ${tag}`)
 		}
-		this.client.increment(`${this.globalPrefix}-${stat}`, tag ? [tag] : [])
+		this.client.increment(`${this.globalPrefix}.${stat}`, tag ? [tag] : [])
 	}
 
 	public gauge(stat: Stat, value: number, tag?: string): void {
 		if (!this.validInput(stat, tag)) {
-			return
+			return console.error(`Invalid gauge for statsd: ${stat} ${tag}`)
 		}
-		this.client.gauge(`${this.globalPrefix}-${stat}`, value, tag ? [tag] : [])
+		this.client.gauge(`${this.globalPrefix}.${stat}`, value, tag ? [tag] : [])
 	}
 
 	private validInput(stat: string, tag?: string): boolean {
