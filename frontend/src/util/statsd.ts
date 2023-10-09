@@ -1,9 +1,11 @@
 import { StatsD as StatsDObj, type ClientOptions } from 'hot-shots'
 import { privateEnv } from '../privateEnv'
 
-const stats = ['pixel', 'connections'] as const
+const statsIncrement = ['pixel', 'request'] as const
+export type StatIncrement = (typeof statsIncrement)[number]
 
-export type Stat = (typeof stats)[number]
+const statsGauge = ['connections'] as const
+export type StatGauge = (typeof statsGauge)[number]
 
 export class StatsD {
 	private client: StatsDObj
@@ -22,14 +24,14 @@ export class StatsD {
 		this.globalPrefix = globalPrefix
 	}
 
-	public increment(stat: Stat, tag?: string): void {
+	public increment(stat: StatIncrement, tag?: string): void {
 		if (!this.validInput(stat, tag)) {
 			return console.error(`Invalid increment for statsd: ${stat} ${tag}`)
 		}
 		this.client.increment(`${this.globalPrefix}.${stat}`, tag ? [tag] : [])
 	}
 
-	public gauge(stat: Stat, value: number, tag?: string): void {
+	public gauge(stat: StatGauge, value: number, tag?: string): void {
 		if (!this.validInput(stat, tag)) {
 			return console.error(`Invalid gauge for statsd: ${stat} ${tag}`)
 		}

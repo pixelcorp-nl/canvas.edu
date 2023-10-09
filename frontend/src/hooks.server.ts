@@ -126,10 +126,11 @@ const logHandle: Handle = ({ event, resolve }) => {
 	if (!event.url.pathname.startsWith('/api')) {
 		console.log(event.url.pathname + event.url.search, '|', event.route.id)
 	}
+	event.locals.statsd.increment('request')
 	return resolve(event)
 }
 
-export const handle: Handle = sequence(logHandle, authHandle, injectHandle)
+export const handle: Handle = sequence(injectHandle, logHandle, authHandle)
 
 export const handleError: HandleServerError = a => {
 	if (a.event.route.id) {
