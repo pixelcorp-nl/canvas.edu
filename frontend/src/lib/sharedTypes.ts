@@ -9,6 +9,7 @@ export type PixelMap = Record<Coordinate, RGBA>
 // https://socket.io/docs/v4/typescript/
 export type ServerToClientEvents = {
 	pixelMap: (pixelMap: PixelMap) => void
+	listenerCount: (count: number) => void
 }
 
 export type ClientToServerEvents = {
