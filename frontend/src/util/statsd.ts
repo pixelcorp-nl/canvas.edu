@@ -1,7 +1,7 @@
 import { StatsD as StatsDObj, type ClientOptions } from 'hot-shots'
 import { privateEnv } from '../privateEnv'
 
-const statsIncrement = ['pixel', 'request'] as const
+const statsIncrement = ['pixel', 'request', 'user.signup'] as const
 export type StatIncrement = (typeof statsIncrement)[number]
 
 const statsGauge = ['connections'] as const
