@@ -58,6 +58,6 @@ export class StatsD {
 	}
 
 	private isValidDataDogStr(tag: string): boolean {
-		return /^[a-z0-9_:]+$/.test(tag)
+		return /^[a-z0-9_:.]+$/.test(tag)
 	}
 }
