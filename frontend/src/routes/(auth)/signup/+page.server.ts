@@ -28,6 +28,7 @@ export const actions: Actions = {
 			return Err('Missing required fields')
 		}
 		const { username, password, passwordConfirm } = keys
+		const { classId } = keys
 
 		if (!username) {
 			return Err('Username cannot be empty')
