@@ -22,7 +22,7 @@ function getForm(form: FormData) {
 }
 
 export const actions: Actions = {
-	default: async ({ request }): Promise<Result<User, string>> => {
+	default: async ({ request, locals }): Promise<Result<User, string>> => {
 		const keys = getForm(await request.formData())
 		if (!keys) {
 			return Err('Missing required fields')
@@ -49,6 +49,7 @@ export const actions: Actions = {
 		if (user instanceof Error) {
 			return Err(user.message)
 		}
+		locals.statsd.increment('user.signup')
 		return Ok(user)
 	}
 }
