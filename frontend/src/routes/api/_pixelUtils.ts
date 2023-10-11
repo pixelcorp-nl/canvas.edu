@@ -28,9 +28,11 @@ const pixelObj = {
 		.length(3)
 }
 
-export const PixelObj = z.object(pixelObj)
+export const PixelObj = z.strictObject(pixelObj)
 export type PixelObj = z.infer<typeof PixelObj>
 
+// Because this is a user send object, we want to be a bit less strict in parsing
+// so we use z.object instead of z.strictObject
 export const PixelRequest = z.object({
 	...pixelObj,
 	key: z.string()

@@ -1,9 +1,10 @@
 <script lang="ts">
 	export let type: 'submit' | 'reset' | undefined
 	export let enabled = true
+	export let id = ''
 </script>
 
-<button disabled={!enabled} {type}>
+<button disabled={!enabled} {type} {id}>
 	<slot />
 </button>
 
