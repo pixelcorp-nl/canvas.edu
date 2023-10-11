@@ -13,6 +13,9 @@ export const db = drizzle(pool)
 const defaultSettings: Settings = {
 	maxRequestsPerSecond: 10
 } as const
+
+const errors = ['CLASS_FULL', 'CLASS_DOES_NOT_EXIST'] as const
+
 export const DB = {
 	settings: {
 		get: async (): Promise<Settings> => {
@@ -130,7 +133,7 @@ export const DB = {
 		getClasses: async (userId: User['id']): Promise<Class[]> => {
 			const classUserMap = await db.select().from(classToUser).where(eq(classToUser.userId, userId))
 			const classes = await Promise.all(classUserMap.map(_class => DB.class.getBy('id', _class.classId)))
-			return classes.filter(d => Boolean(d)) as Class[]
+			return classes.filter(Boolean) as Class[]
 		},
 		getUsers: async (id: Class['id']) => {
 			const ids = await db.select().from(classToUser).where(eq(classToUser.classId, id))
