@@ -2,10 +2,24 @@
 	import Form from '$components/Form.svelte'
 	import { hasRole } from '$lib/public/util'
 	import type { PageData, ActionData } from './$types'
+	import { onDestroy } from 'svelte'
+	import { io } from 'socket.io-client'
+	import type { Socket } from '$lib/sharedTypes'
 
+	const socket: Socket = io()
 	export let data: PageData
 	export let form: ActionData
+
+	let listenerCount = 0
+	socket.on('listenerCount', count => (listenerCount = count))
+
+	onDestroy(() => {
+		socket.removeAllListeners()
+		socket.disconnect()
+	})
 </script>
+
+Users connected: {listenerCount}
 
 <article class="prose mx-auto">
 	{#if hasRole(data.roles, 'canvasSettings')}
@@ -57,7 +71,7 @@
 					<td>{_class.users.length}</td>
 					<td>
 						{#each _class.users as user}
-							{user.username} {','}
+							{user.name} {','}
 						{/each}
 					</td>
 				</tr>
@@ -77,8 +91,8 @@
 			{#each data.users as user}
 				<tr>
 					<td>{user.id}</td>
-					<td>{user.username}</td>
-					<td>{user.apikey}</td>
+					<td>{user.name}</td>
+					<td>{user.key}</td>
 				</tr>
 			{/each}
 		</table>

@@ -1,6 +1,6 @@
 import type { InferModel } from 'drizzle-orm'
-import { bigint, boolean, pgTable, text, varchar, json, integer } from 'drizzle-orm/pg-core'
-import { createInsertSchema } from 'drizzle-zod'
+import { integer, json, pgTable, text, uuid } from 'drizzle-orm/pg-core'
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
 // README
@@ -11,42 +11,30 @@ import { z } from 'zod'
 // 3. Paste these queries in the hooks.server.ts file that runs these queries on startup,
 //    ensuring all the tables are created
 
-// https://lucia-auth.com/adapters/drizzle?
-export const session = pgTable('auth_session', {
-	id: varchar('id', { length: 128 }).primaryKey(),
-	userId: varchar('user_id', { length: 15 })
-		.notNull()
-		.references(() => user.id),
-	activeExpires: bigint('active_expires', { mode: 'number' }).notNull(),
-	idleExpires: bigint('idle_expires', { mode: 'number' }).notNull()
+export const users = pgTable('users', {
+	id: uuid('id').defaultRandom().primaryKey(),
+	name: text('name').notNull(),
+	key: text('key').notNull()
 })
-
-// https://lucia-auth.com/adapters/drizzle?
-export const key = pgTable('auth_key', {
-	id: varchar('id', { length: 255 }).primaryKey(),
-	userId: varchar('user_id', { length: 15 })
-		.notNull()
-		.references(() => user.id),
-	primaryKey: boolean('primary_key').notNull(),
-	hashedPassword: varchar('hashed_password', { length: 255 }),
-	expires: bigint('expires', { mode: 'number' })
+export type User = InferModel<typeof users>
+export const User = createSelectSchema(users, {
+	name: schema => schema.name.min(1),
+	key: schema => schema.key.min(1)
 })
-
-// https://lucia-auth.com/adapters/drizzle?
-export const user = pgTable('auth_user', {
-	id: varchar('id', { length: 15 }).primaryKey(), // default value from lucia, do not change
-	username: text('username').notNull(),
-	apikey: text('apikey').notNull()
-})
-export const User = createInsertSchema(user)
-export type User = InferModel<typeof user>
-export type UserAttributes = Omit<User, 'id'>
-export type NewUser = InferModel<typeof user, 'insert'>
+// https://orm.drizzle.team/docs/zod
+export const UserInsert = createInsertSchema(users, {
+	name: schema => schema.name.min(1),
+	key: schema => schema.key.min(1)
+}) /*.pick({
+	name: true,
+	key: true
+})*/
+export type UserInsert = z.infer<typeof UserInsert>
 
 export const userRoles = pgTable('user_roles', {
-	userId: varchar('user_id', { length: 15 })
+	userId: uuid('user_id')
 		.notNull()
-		.references(() => user.id),
+		.references(() => users.id),
 	// we could use a enum for the role, but we will enforce the role at the application level
 	role: text('role').notNull()
 })
@@ -71,9 +59,9 @@ export const classToUser = pgTable('class_to_user', {
 	classId: text('class_id')
 		.references(() => classes.id)
 		.notNull(),
-	userId: varchar('user_id', { length: 15 })
+	userId: uuid('user_id')
 		.notNull()
-		.references(() => user.id)
+		.references(() => users.id)
 })
 
 export const settings = pgTable('settings', {

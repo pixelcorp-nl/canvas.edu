@@ -1,87 +1,66 @@
-import { auth } from '$lib/server/auth'
-import { fail, redirect, type Actions } from '@sveltejs/kit'
-import { LuciaError } from 'lucia-auth'
+import { redirect, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import { getFormData, randomString } from '$lib/public/util'
+import { Err, getFormData, Ok, randomString, type Result } from '$lib/public/util'
+import { privateEnv } from '$lib/../privateEnv'
 import { DB } from '$lib/server/db'
+import type { User } from '$lib/server/schemas'
 
-export const actions: Actions = {
-	default: async ({ request, locals }) => {
-		const keys = getFormData(await request.formData(), ['username', 'password', 'passwordConfirm', 'classId'])
-
-		if (!keys || !keys['classId']) {
-			return fail(400, { message: 'Missing required fields' })
+function getForm(form: FormData) {
+	if (privateEnv.userPasswords) {
+		return getFormData(form, ['username', 'password', 'passwordConfirm'])
+	} else {
+		const keys = getFormData(form, ['username'])
+		if (!keys) {
+			return undefined
 		}
-		const { username, password, passwordConfirm } = keys
-		let { classId } = keys
-
-		if (password !== passwordConfirm) {
-			return fail(400, {
-				message: 'Passwords do not match'
-			})
-		}
-
-		if (username !== 'admin' && !(await DB.class.getBy('id', classId))) {
-			return fail(400, {
-				message: `Class "${classId}" does not exist, please contact your teacher`
-			})
-		}
-
-		let user
-		try {
-			user = await auth.createUser({
-				primaryKey: {
-					providerId: 'username',
-					providerUserId: username ?? '',
-					password: password ?? ''
-				},
-				attributes: {
-					username: username ?? '',
-					apikey: randomString(8)
-				}
-			})
-			const session = await auth.createSession(user.id)
-			locals.auth.setSession(session)
-		} catch (error) {
-			if (error instanceof LuciaError && error.message === 'AUTH_DUPLICATE_KEY_ID') {
-				return fail(400, {
-					message: 'Username already in use'
-				})
-			}
-			console.log(error)
-			return fail(500, {
-				message: 'Unknown error occurred'
-			})
-		}
-
-		if (username === 'admin') {
-			await DB.user.addRole(user.id, 'admin')
-			const adminClassId = '0000000'
-			await DB.class.create(
-				{
-					maxUsers: 1,
-					name: 'admin'
-				},
-				adminClassId
-			)
-			classId = adminClassId
-			console.log('admin user created')
-		}
-
-		const error = await DB.class.addUser(classId, user.id).catch(error => error)
-		if (error instanceof Error) {
-			console.error(error)
-			return fail(500, {
-				message: 'Could not add user to class'
-			})
+		return {
+			username: keys['username'],
+			password: '',
+			passwordConfirm: ''
 		}
 	}
 }
 
+export const actions: Actions = {
+	default: async ({ request, locals }): Promise<Result<User, string>> => {
+		const keys = getForm(await request.formData())
+		if (!keys) {
+			return Err('Missing required fields')
+		}
+		const { username, password, passwordConfirm } = keys
+
+		if (!username) {
+			return Err('Username cannot be empty')
+		}
+		if (password !== passwordConfirm) {
+			return Err('Passwords do not match')
+		}
+		if (privateEnv.userPasswords && !password) {
+			return Err('Password cannot be empty')
+		}
+		const existing = await DB.user.getBy('name', username)
+		if (existing) {
+			return Err('Username already in use')
+		}
+		const user = await DB.user.create({
+			name: username,
+			key: randomString(8)
+		})
+		if (user instanceof Error) {
+			return Err(user.message)
+		}
+		locals.statsd.increment('user.signup')
+		return Ok(user)
+	}
+}
+
 export const load: PageServerLoad = async ({ locals }) => {
-	const session = await locals.auth.validate()
+	const session = await locals.getSession()
 	if (session) {
 		throw redirect(302, '/canvas')
 	}
-	return {}
+	return {
+		// TODO: Rename to usePassword
+		password: privateEnv.userPasswords
+	}
 }

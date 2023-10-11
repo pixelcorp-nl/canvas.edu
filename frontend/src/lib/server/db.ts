@@ -1,9 +1,9 @@
+import { eq } from 'drizzle-orm'
+import { drizzle } from 'drizzle-orm/node-postgres'
 import postgres from 'pg'
 import { privateEnv } from '../../privateEnv'
-import { Settings, User, settings, user, userRoles, type Role, classToUser, type Class, classes, NewClass } from './schemas'
-import { drizzle } from 'drizzle-orm/node-postgres'
-import { eq } from 'drizzle-orm'
 import { hasRole, randomString } from '../public/util'
+import { NewClass, Settings, User, UserInsert, classToUser, classes, settings, userRoles, users, type Class, type Role } from './schemas'
 
 export const pool = new postgres.Pool({
 	connectionString: privateEnv.postgresUrl
@@ -34,25 +34,31 @@ export const DB = {
 			}
 			// Make sure that we only ever have one row
 			if (!(await db.select().from(settings).limit(1).execute()).length) {
-				await db.insert(settings).values({ settings: newSettings }).execute()
-				return
+				return db.insert(settings).values({ settings: newSettings }).returning()
 			}
-			return db.update(settings).set({ settings: newSettings }).execute()
+			return db.update(settings).set({ settings: newSettings }).returning()
 		}
 	},
 	user: {
+		create: async (user: UserInsert) => {
+			const parse = await UserInsert.safeParseAsync(user)
+			if (!parse.success) {
+				return parse.error
+			}
+			return (await db.insert(users).values(parse.data).returning()).at(0) as User
+		},
 		getBy: async <T extends keyof User>(key: T, value: User[T]): Promise<User | undefined> => {
-			return (await db.select().from(user).where(eq(user[key], value)).limit(1)).at(0)
+			return (await db.select().from(users).where(eq(users[key], value)).limit(1)).at(0)
 		},
 		getAll: (): Promise<User[]> => {
-			return db.select().from(user).execute()
+			return db.select().from(users).execute()
 		},
 		getRoles: async (userId: User['id']): Promise<Role[]> => {
 			const rows = await db.select({ role: userRoles.role }).from(userRoles).where(eq(userRoles.userId, userId))
 			return rows.map(row => row.role) as Role[]
 		},
 		deleteBy: async <T extends keyof User>(key: T, value: User[T]): Promise<void> => {
-			await db.delete(user).where(eq(user[key], value))
+			await db.delete(users).where(eq(users[key], value))
 		},
 		addRole: async (userId: User['id'], role: Role): Promise<void> => {
 			const roles = await DB.user.getRoles(userId)
@@ -82,19 +88,19 @@ export const DB = {
 				.select()
 				.from(classes)
 				.leftJoin(classToUser, eq(classes.id, classToUser.classId))
-				.leftJoin(user, eq(classToUser.userId, user.id))
+				.leftJoin(users, eq(classToUser.userId, users.id))
 
 			const result = rows.reduce<(Class & { users: User[] })[]>((acc, row) => {
 				const existing = acc.find(({ id }) => id === row.classes.id)
 				if (!existing) {
 					acc.push({
 						...row.classes,
-						users: row.auth_user ? [row.auth_user] : []
+						users: row.users ? [row.users] : []
 					})
 					return acc
 				}
-				if (row.auth_user) {
-					existing.users.push(row.auth_user)
+				if (row.users) {
+					existing.users.push(row.users)
 				}
 				return acc
 			}, [])

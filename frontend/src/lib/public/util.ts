@@ -1,5 +1,6 @@
 import type { Field } from '$components/Form.svelte'
-import type { Role } from '$lib/server/schemas'
+import type { Role, User } from '$lib/server/schemas'
+import { signIn as autJsSignIn, signOut as authJsSignOut } from '@auth/sveltekit/client'
 
 /**
  * Get multiple values from a FormData object
@@ -72,6 +73,12 @@ export type Result<Ok, Err = Error> =
 			ok: false
 			error: Err
 	  }
+export function Ok<T>(data: T): { ok: true; data: T } {
+	return { ok: true, data }
+}
+export function Err<T>(error: T): { ok: false; error: T } {
+	return { ok: false, error }
+}
 
 export type Entries<T> = {
 	[K in keyof T]: [K, T[K]]
@@ -81,4 +88,24 @@ export type Optional<T> = { [P in keyof T]: T[P] | undefined }
 
 export function hasRole(roles: Role[], role: Role): boolean {
 	return roles.includes(role) || roles.includes('admin')
+}
+
+async function waitForWindow() {
+	for (let i = 0; i < 10; i++) {
+		if (window?.location?.origin !== undefined) {
+			break
+		}
+		await new Promise(resolve => setTimeout(resolve, 500))
+	}
+}
+
+export async function signIn(user: User) {
+	await waitForWindow()
+	await autJsSignIn('credentials', { ...user, redirect: false })
+	window.location.href = '/canvas'
+}
+
+export async function signOut() {
+	await waitForWindow()
+	await authJsSignOut({ callbackUrl: window.location.origin })
 }

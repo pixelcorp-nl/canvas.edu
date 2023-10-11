@@ -3,7 +3,7 @@ import { fail, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { ZodError } from 'zod'
 import { getFormData, getFormType, objectToForm, type Entries, type Result, toNumber, type Optional, hasRole } from '$lib/public/util'
-import type { NewClass } from '$lib/server/schemas'
+import type { NewClass, User } from '$lib/server/schemas'
 
 type ActionReturn<Name extends string, Ok, Err = Error> = { name: Name } & Result<Ok, Err>
 
@@ -13,7 +13,8 @@ export const actions: Actions = {
 		if (!settings) {
 			return { name: 'setSettings', ok: false, error: 'Invalid submission' }
 		}
-		const { user } = await locals.auth.validateUser()
+		const session = await locals.getSession()
+		const user = session?.user as User | null
 		if (!(await DB.user.hasRole(user?.id, 'canvasSettings'))) {
 			return { name: 'setSettings', ok: false, error: 'No roles' }
 		}
@@ -28,7 +29,9 @@ export const actions: Actions = {
 	},
 
 	createClass: async ({ request, locals }): Promise<ActionReturn<'createClass', string, string>> => {
-		const { user } = await locals.auth.validateUser()
+		const session = await locals.getSession()
+		const user = session?.user as User | null
+
 		if (!(await DB.user.hasRole(user?.id, 'classes:manage'))) {
 			return { name: 'createClass', ok: false, error: 'You do not have the roles to do that' }
 		}
@@ -52,7 +55,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const settings = Object.entries(await DB.settings.get()).map(([label, value]) => {
 		return { label, value: JSON.stringify(value), type: getFormType(value) }
 	})
-	const { user } = await locals.auth.validateUser()
+	const session = await locals.getSession()
+	const user = session?.user as User | null
 	if (!user) {
 		throw fail(401)
 	}
