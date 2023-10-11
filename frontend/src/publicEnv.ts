@@ -1,7 +1,7 @@
 import { PUBLIC_CANVAS_HEIGHT, PUBLIC_CANVAS_WIDTH, PUBLIC_CANVAS_ID } from '$env/static/public'
 import { z } from 'zod'
 
-const PublicEnv = z.object({
+const PublicEnv = z.strictObject({
 	canvasHeight: z.number().min(1),
 	canvasWidth: z.number().min(1),
 	canvasId: z.string().min(1)

@@ -6,9 +6,10 @@ import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$lib/server/ratelimit'
 import { DB } from '$lib/server/db'
 import memoizee from 'memoizee'
+import { privateEnv } from '../../../privateEnv'
 
-// Adjust this value to control how often data is sent to Redis (in milliseconds)
-const BATCH_INTERVAL = 100
+// Adjust this value to control how often data is sent to Redis
+const BATCH_INTERVAL_MS = 100
 
 let lastBatch = 0
 let timeout: NodeJS.Timeout | undefined
@@ -17,9 +18,9 @@ const queue = new Map<Coordinate, RGBA>()
 async function processBatch(io: Server) {
 	const now = Date.now()
 	const ago = now - lastBatch
-	if (ago < BATCH_INTERVAL) {
+	if (ago < BATCH_INTERVAL_MS) {
 		if (!timeout) {
-			timeout = setTimeout(() => processBatch(io), BATCH_INTERVAL - ago + 1)
+			timeout = setTimeout(() => processBatch(io), BATCH_INTERVAL_MS - ago + 1)
 		}
 		return
 	}
@@ -39,11 +40,10 @@ async function processBatch(io: Server) {
 	await setPixelMap(publicEnv.canvasId, queueObj)
 }
 
-const bypassApiKey = 'joppe'
 const apiKeyExists = memoizee(
 	async (key: string) => {
 		// temporary for testing
-		if (key === bypassApiKey) {
+		if (key === privateEnv.adminKey) {
 			return Promise.resolve(true)
 		}
 		return !!(await DB.user.getBy('key', key))
@@ -63,7 +63,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return text(`Error! Your API key you provided (${apiKey}) is not valid`, { status: 401 })
 	}
 
-	if (apiKey !== bypassApiKey) {
+	if (apiKey !== privateEnv.adminKey) {
 		const { success, timeToWait } = await ratelimit(apiKey, {
 			timePeriodSeconds: 1,
 			maxRequests: await maxRequests(),
