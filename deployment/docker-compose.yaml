@@ -1,8 +1,8 @@
-version: '3.7'
+version: "3.7"
 services:
   frontend:
     container_name: frontend
-    image: ghcr.io/pixelcorp-nl/canvas.edu/canvas.edu:latest
+    image: ghcr.io/pixelcorp-nl/canvas.edu/canvas.edu
     restart: unless-stopped
     ports:
       - 80:5173
@@ -12,6 +12,17 @@ services:
       - redis
       - postgres
       - datadog-agent
+
+  postgres:
+    container_name: postgres
+    restart: unless-stopped
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres-db:/var/lib/postgresql/data
 
   redis:
     container_name: redis
@@ -33,17 +44,6 @@ services:
       - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
     ports:
       - 8125:8125/udp
-
-  postgres:
-    container_name: postgres
-    restart: unless-stopped
-    image: postgres:alpine
-    environment:
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - 5432:5432
-    volumes:
-      - ./postgres-db:/var/lib/postgresql/data
 
   cloudflared:
     container_name: cloudflared

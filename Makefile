@@ -8,7 +8,7 @@ start:
 
 # Starts all containers detached
 start-detached:
-	docker compose up --remove-orphans --build --detach
+	docker compose up --remove-orphans --build --detach --timeout 4
 
 # Wait for services to start
 wait-for-healthcheck: $(eval SHELL:=/bin/bash)
@@ -22,7 +22,7 @@ wait-for-healthcheck: $(eval SHELL:=/bin/bash)
 
 # Stops all containers
 down:
-	docker-compose down --remove-orphans --timeout 4
+	docker compose down --remove-orphans --timeout 4
 
 # Run tests
 test:

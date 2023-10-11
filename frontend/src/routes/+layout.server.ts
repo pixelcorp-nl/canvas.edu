@@ -1,6 +1,10 @@
-export const load = async ({ locals }) => {
-	const { user } = await locals.auth.validateUser()
+import type { Session } from '../hooks.server'
+import type { LayoutServerLoad } from './$types'
+
+export const load = (async event => {
+	const session = await event.locals.getSession()
+
 	return {
-		user: !user ? undefined : user
+		session: session as Session | null
 	}
-}
+}) satisfies LayoutServerLoad

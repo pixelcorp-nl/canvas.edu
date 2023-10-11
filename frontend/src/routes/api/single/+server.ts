@@ -1,4 +1,4 @@
-import { json, type RequestHandler } from '@sveltejs/kit'
+import { json, text, type RequestHandler } from '@sveltejs/kit'
 import { setPixelMap } from '$lib/server/redis'
 import { publicEnv } from '../../../publicEnv'
 import { pixelObjToPixelKV, PixelRequest } from '../_pixelUtils'
@@ -46,8 +46,7 @@ const apiKeyExists = memoizee(
 		if (key === privateEnv.adminKey) {
 			return Promise.resolve(true)
 		}
-
-		return !!(await DB.user.getBy('apikey', key))
+		return !!(await DB.user.getBy('key', key))
 	},
 	{ promise: true, maxAge: 10 * 1000 }
 )
@@ -57,28 +56,28 @@ const maxRequests = memoizee(async () => (await DB.settings.get()).maxRequestsPe
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const parsed = await PixelRequest.safeParseAsync(await request.json())
 	if (!parsed.success) {
-		const pixel: PixelRequest = { x: 10, y: 10, color: [255, 0, 0], key: 'your-api-key' }
-		const resp = { success: false, error: `The request is not valid, your request should look like this ${JSON.stringify(pixel)}` }
-		return json(resp, { status: 400 })
+		return text(`Error! The request is not valid, ${parsed.error.errors.at(0)?.message}`, { status: 400 })
 	}
 	const apiKey = parsed.data.key
 	if (!(await apiKeyExists(apiKey))) {
-		const resp = { success: false, error: `The API key you provided (${apiKey}) is not valid` }
-		return json(resp, { status: 401 })
+		return text(`Error! Your API key you provided (${apiKey}) is not valid`, { status: 401 })
 	}
 
-	const { success, timeToWait } = await ratelimit(apiKey, {
-		timePeriodSeconds: 1,
-		maxRequests: await maxRequests(),
-		route: 'post-pixel'
-	})
-	if (!success) {
-		return json({ success: false, timeToWait }, { status: 429 })
+	if (apiKey !== privateEnv.adminKey) {
+		const { success, timeToWait } = await ratelimit(apiKey, {
+			timePeriodSeconds: 1,
+			maxRequests: await maxRequests(),
+			route: 'post-pixel'
+		})
+		if (!success) {
+			return json({ success: false, timeToWait }, { status: 429 })
+		}
 	}
 	const [coordinate, rgba] = pixelObjToPixelKV(parsed.data)
 	queue.set(coordinate, rgba)
 	void processBatch(locals.io)
 
 	locals.statsd.increment('pixel')
-	return json({ success: true, x: parsed.data.x, y: parsed.data.y, color: parsed.data.color })
+	const { x, y, color } = parsed.data
+	return text(`Success! Pixel with color ${color} placed at x=${x}, y=${y}`, { status: 200 })
 }

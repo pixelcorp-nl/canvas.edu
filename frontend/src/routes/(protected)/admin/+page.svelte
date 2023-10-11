@@ -2,10 +2,24 @@
 	import Form from '$components/Form.svelte'
 	import { hasRole } from '$lib/public/util'
 	import type { PageData, ActionData } from './$types'
+	import { onDestroy } from 'svelte'
+	import { io } from 'socket.io-client'
+	import type { Socket } from '$lib/sharedTypes'
 
+	const socket: Socket = io()
 	export let data: PageData
 	export let form: ActionData
+
+	let listenerCount = 0
+	socket.on('listenerCount', count => (listenerCount = count))
+
+	onDestroy(() => {
+		socket.removeAllListeners()
+		socket.disconnect()
+	})
 </script>
+
+Users connected: {listenerCount}
 
 <article class="prose mx-auto">
 	{#if hasRole(data.roles, 'canvasSettings')}
