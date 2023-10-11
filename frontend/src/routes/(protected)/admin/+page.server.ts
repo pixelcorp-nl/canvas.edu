@@ -5,6 +5,10 @@ import { ZodError } from 'zod'
 import { getFormData, getFormType, objectToForm, type Entries, type Result, toNumber, type Optional, hasRole } from '$lib/public/util'
 import type { NewClass, User } from '$lib/server/schemas'
 
+// Because we do some auth check in the frontend code, this is required
+export const prerender = false
+export const ssr = true
+
 type ActionReturn<Name extends string, Ok, Err = Error> = { name: Name } & Result<Ok, Err>
 
 export const actions: Actions = {

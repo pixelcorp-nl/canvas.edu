@@ -38,7 +38,7 @@ export const userRoles = pgTable('user_roles', {
 	// we could use a enum for the role, but we will enforce the role at the application level
 	role: text('role').notNull()
 })
-export const roles = ['canvasSettings', 'classes:manage', 'users:manage', 'admin'] as const
+export const roles = ['stats', 'canvasSettings', 'classes:manage', 'users:manage', 'admin'] as const
 export type Role = (typeof roles)[number]
 export type UserRole = InferModel<typeof userRoles>
 export type NewUserRole = InferModel<typeof userRoles, 'insert'>

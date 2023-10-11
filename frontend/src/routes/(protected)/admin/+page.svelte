@@ -19,42 +19,42 @@
 	})
 </script>
 
-Users connected: {listenerCount}
-
 <article class="prose mx-auto">
+	{#if hasRole(data.roles, 'stats')}
+		<h2 class="text-l mb-0">Stats</h2>
+		Users connected: {listenerCount}
+	{/if}
+
 	{#if hasRole(data.roles, 'canvasSettings')}
-		<h2 class="text-l">Global settings</h2>
-		<p>
-			<Form action={'?/setSettings'} fields={data.settings}>
-				{#if !form || form.name !== 'setSettings'}
-					<!-- -->
-				{:else if !form.ok}
-					<p class="text-red-700">{form.error}</p>
-				{:else}
-					<p class="text-green-700">Settings updated!</p>
-				{/if}
-			</Form>
-		</p>
+		<h2 class="text-l mt-8 mb-0">Global settings</h2>
+
+		<Form action={'?/setSettings'} fields={data.settings}>
+			{#if !form || form.name !== 'setSettings'}
+				<!-- -->
+			{:else if !form.ok}
+				<p class="text-red-700">{form.error}</p>
+			{:else}
+				<p class="text-green-700">Settings updated!</p>
+			{/if}
+		</Form>
 	{/if}
 
 	{#if hasRole(data.roles, 'classes:manage')}
-		<h2 class="text-l">Create class</h2>
-		<p>
-			<Form action={'?/createClass'} fields={data.newClass} buttonText="Create">
-				{#if !form || form.name !== 'createClass'}
-					<!-- -->
-				{:else if !form.ok}
-					<p class="text-red-700">{form.error}</p>
-				{:else}
-					<p class="text-green-700">Class created</p>
-				{/if}
-			</Form>
-		</p>
+		<h2 class="text-l mt-8 mb-0">Create class</h2>
+
+		<Form action={'?/createClass'} fields={data.newClass} buttonText="Create">
+			{#if !form || form.name !== 'createClass'}
+				<!-- -->
+			{:else if !form.ok}
+				<p class="text-red-700">{form.error}</p>
+			{:else}
+				<p class="text-green-700">Class created</p>
+			{/if}
+		</Form>
 	{/if}
 
 	{#if data.classes}
-		<h2 class="text-l">Existing classes - {data.classes.length}</h2>
-		<p />
+		<h2 class="text-l mt-8 mb-0">Existing classes - {data.classes.length}</h2>
 		<table id="classes">
 			<tr>
 				<th>Name</th>
@@ -80,8 +80,7 @@ Users connected: {listenerCount}
 	{/if}
 
 	{#if data.users}
-		<h2 class="text-l">Existing users - {data.users.length}</h2>
-		<p />
+		<h2 class="text-l mt-8 mb-0">Existing users - {data.users.length}</h2>
 		<table id="users">
 			<tr>
 				<th>Id</th>

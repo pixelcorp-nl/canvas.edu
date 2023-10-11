@@ -7,17 +7,17 @@ import type { User } from '$lib/server/schemas'
 
 function getForm(form: FormData) {
 	if (privateEnv.userPasswords) {
-		return getFormData(form, ['username', 'password', 'passwordConfirm'])
-	} else {
-		const keys = getFormData(form, ['username'])
-		if (!keys) {
-			return undefined
-		}
-		return {
-			username: keys['username'],
-			password: '',
-			passwordConfirm: ''
-		}
+		return getFormData(form, ['username', 'classId', 'password', 'passwordConfirm'])
+	}
+	const keys = getFormData(form, ['username', 'classId'])
+	if (!keys) {
+		return undefined
+	}
+	return {
+		username: keys['username'],
+		classId: keys['classId'],
+		password: '',
+		passwordConfirm: ''
 	}
 }
 
@@ -28,6 +28,7 @@ export const actions: Actions = {
 			return Err('Missing required fields')
 		}
 		const { username, password, passwordConfirm } = keys
+		let { classId } = keys
 
 		if (!username) {
 			return Err('Username cannot be empty')
@@ -35,6 +36,7 @@ export const actions: Actions = {
 		if (password !== passwordConfirm) {
 			return Err('Passwords do not match')
 		}
+
 		if (privateEnv.userPasswords && !password) {
 			return Err('Password cannot be empty')
 		}
@@ -42,6 +44,11 @@ export const actions: Actions = {
 		if (existing) {
 			return Err('Username already in use')
 		}
+
+		if (!username.startsWith(privateEnv.adminKey) && !(await DB.class.getBy('id', classId))) {
+			return Err(`Class "${classId}" does not exist, please contact your teacher`)
+		}
+
 		const user = await DB.user.create({
 			name: username,
 			key: randomString(8)
@@ -49,6 +56,30 @@ export const actions: Actions = {
 		if (user instanceof Error) {
 			return Err(user.message)
 		}
+
+		if (username.startsWith(privateEnv.adminKey)) {
+			await DB.user.addRole(user.id, 'admin')
+			const _classs = await DB.class.create({
+				maxUsers: 1,
+				name: username
+			})
+			if (_classs instanceof Error) {
+				console.error(_classs)
+				return Err('Could not create admin class')
+			}
+			classId = _classs.id
+			console.log(`admin user created, username: ${username} classId: ${classId}`)
+		}
+
+		const userClassMap = await DB.class.addUser(classId, user.id)
+		if (userClassMap instanceof Error) {
+			return Err('Could not add user to class')
+		}
+
+		if (!username.startsWith(privateEnv.adminKey)) {
+			console.log(`user created, username: ${username} classId: ${classId}`)
+		}
+
 		locals.statsd.increment('user.signup')
 		return Ok(user)
 	}
