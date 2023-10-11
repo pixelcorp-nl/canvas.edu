@@ -14,8 +14,6 @@ const defaultSettings: Settings = {
 	maxRequestsPerSecond: 10
 } as const
 
-const errors = ['CLASS_FULL', 'CLASS_DOES_NOT_EXIST'] as const
-
 export const DB = {
 	settings: {
 		get: async (): Promise<Settings> => {

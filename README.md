@@ -56,7 +56,6 @@ pnpm run dev
 ## Admin panel
 
 The admin page is available at `/admin` and can be used to manage users, classes and settings.
-You can create only one admin user by naming a user `admin` on the sign-up page. The class id field will be ignored.
-The admin will be added to the class with id `0000000`.
+You can create only one admin user by creating a user who's name starts with the value of the envoriment variable `PRIVATE_ADMIN_KEY`, default is `joppe`
 
 Pixels is released under the [MIT License](LICENSE)
