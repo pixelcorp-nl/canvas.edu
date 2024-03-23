@@ -1,6 +1,5 @@
 import { json, text, type RequestHandler } from '@sveltejs/kit'
 import { setPixelMap } from '$lib/server/redis'
-import { publicEnv } from '../../../publicEnv'
 import { pixelObjToPixelKV, PixelRequest } from '../_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$lib/server/ratelimit'
