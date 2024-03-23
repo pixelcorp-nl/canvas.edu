@@ -13,7 +13,7 @@ function tryCastToNumber(value: string): string | number {
 }
 
 export const actions: Actions = {
-	default: async ({ request }) => {
+	settings: async ({ request }) => {
 		const form = await request.formData()
 		const settings = Object.fromEntries(form.entries())
 		for (const [key, value] of Object.entries(settings)) {

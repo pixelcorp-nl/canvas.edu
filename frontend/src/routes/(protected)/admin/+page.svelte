@@ -20,7 +20,7 @@
 
 Users connected: {listenerCount}
 
-<Form fields={data.settings}>
+<Form fields={data.settings} action="?/settings">
 	{#if !form}
 		<!-- -->
 	{:else if !form.ok}
