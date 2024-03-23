@@ -34,27 +34,33 @@
 			valueChanged = false
 		}}
 	{action}>
-	{#each fields as { label, type, value }}
-		<label for={label}>{label}</label>
-		<input
-			id={label}
-			name={label}
-			class="rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-			type={typeToButton(type)}
-			{value}
-			step={type === 'float' ? 'any' : ''}
-			on:input={() => (valueChanged = true)} />
+	<table>
+		{#each fields as { label, type, value }}
+			<tr>
+				<td> <label for={label}>{label}</label></td>
+				<td>
+					<input
+						id={label}
+						name={label}
+						class="rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+						type={typeToButton(type)}
+						{value}
+						step={type === 'float' ? 'any' : ''}
+						on:input={() => (valueChanged = true)} />
+				</td>
+				<br />
+			</tr>
+		{/each}
 		<br />
-	{/each}
-	<br />
 
-	{#if valueChanged}
-		<Button type="submit" id={buttonText} enabled={valueChanged}>{buttonText}</Button>
-	{:else}
-		<Tooltip theme="tooltips" content="No changes to submit">
+		{#if valueChanged}
 			<Button type="submit" id={buttonText} enabled={valueChanged}>{buttonText}</Button>
-		</Tooltip>
-	{/if}
+		{:else}
+			<Tooltip theme="tooltips" content="No changes to submit">
+				<Button type="submit" id={buttonText} enabled={valueChanged}>{buttonText}</Button>
+			</Tooltip>
+		{/if}
+	</table>
 </form>
 
 {#if !valueChanged}
