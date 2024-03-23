@@ -63,6 +63,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return text(`Error! Your API key you provided (${apiKey}) is not valid`, { status: 401 })
 	}
 
+	parsed.data.x = Math.round(parsed.data.x)
+	parsed.data.y = Math.round(parsed.data.y)
+
 	if (apiKey !== privateEnv.adminKey) {
 		const { success, timeToWait } = await ratelimit(apiKey, {
 			timePeriodSeconds: 1,
