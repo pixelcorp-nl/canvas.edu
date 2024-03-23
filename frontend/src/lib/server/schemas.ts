@@ -36,6 +36,7 @@ export const settings = pgTable('settings', {
 	settings: json('settings').$type<Settings>().notNull()
 })
 export const Settings = z.object({
-	maxRequestsPerSecond: z.number().min(0)
+	maxRequestsPerSecond: z.number().min(0),
+	canvasId: z.string().min(1)
 })
 export type Settings = z.infer<typeof Settings>

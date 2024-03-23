@@ -19,8 +19,10 @@
 </script>
 
 Users connected: {listenerCount}
-
-<Form fields={data.settings}>
+<br />
+Canvas Ids: [{data.canvasIds}]
+<br />
+<Form fields={data.settings} action="?/settings">
 	{#if !form}
 		<!-- -->
 	{:else if !form.ok}

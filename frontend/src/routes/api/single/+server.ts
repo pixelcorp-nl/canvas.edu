@@ -1,6 +1,5 @@
 import { json, text, type RequestHandler } from '@sveltejs/kit'
 import { setPixelMap } from '$lib/server/redis'
-import { publicEnv } from '../../../publicEnv'
 import { pixelObjToPixelKV, PixelRequest } from '../_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$lib/server/ratelimit'
@@ -37,7 +36,9 @@ async function processBatch(io: Server) {
 	queue.clear()
 
 	io.emit('pixelMap', queueObj)
-	await setPixelMap(publicEnv.canvasId, queueObj)
+
+	const id = (await DB.settings.get()).canvasId
+	await setPixelMap(id, queueObj)
 }
 
 const apiKeyExists = memoizee(
@@ -62,6 +63,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!(await apiKeyExists(apiKey))) {
 		return text(`Error! Your API key you provided (${apiKey}) is not valid`, { status: 401 })
 	}
+
+	parsed.data.x = Math.round(parsed.data.x)
+	parsed.data.y = Math.round(parsed.data.y)
 
 	if (apiKey !== privateEnv.adminKey) {
 		const { success, timeToWait } = await ratelimit(apiKey, {
