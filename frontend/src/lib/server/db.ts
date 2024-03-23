@@ -10,13 +10,14 @@ export const pool = new postgres.Pool({
 export const db = drizzle(pool)
 
 const defaultSettings: Settings = {
-	maxRequestsPerSecond: 10
+	maxRequestsPerSecond: 10,
+	canvasId: '41'
 } as const
 export const DB = {
 	settings: {
 		get: async (): Promise<Settings> => {
 			const setting = (await db.select().from(settings)).at(-1)?.settings
-			if (!setting) {
+			if (!setting || !Settings.safeParse(setting).success) {
 				return defaultSettings
 			}
 			return setting

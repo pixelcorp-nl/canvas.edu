@@ -37,7 +37,9 @@ async function processBatch(io: Server) {
 	queue.clear()
 
 	io.emit('pixelMap', queueObj)
-	await setPixelMap(publicEnv.canvasId, queueObj)
+
+	const id = (await DB.settings.get()).canvasId
+	await setPixelMap(id, queueObj)
 }
 
 const apiKeyExists = memoizee(

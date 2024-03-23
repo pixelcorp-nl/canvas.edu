@@ -44,6 +44,7 @@
 			{value}
 			step={type === 'float' ? 'any' : ''}
 			on:input={() => (valueChanged = true)} />
+		<br />
 	{/each}
 	<br />
 

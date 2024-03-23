@@ -3,6 +3,7 @@ import { fail, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { ZodError } from 'zod'
 import type { Field } from '$components/Form.svelte'
+import { getAllPixelMapIds } from '$lib/server/redis'
 
 function tryCastToNumber(value: string): string | number {
 	if (!value) {
@@ -16,12 +17,10 @@ export const actions: Actions = {
 	settings: async ({ request }) => {
 		const form = await request.formData()
 		const settings = Object.fromEntries(form.entries())
-		for (const [key, value] of Object.entries(settings)) {
-			const setting = tryCastToNumber(value.toString())
-			const parse = await DB.settings.set({ [key]: setting })
-			if (parse instanceof ZodError) {
-				return fail(400, { ok: false, error: `key ${key} with value ${value} is invalid ${parse.message}` })
-			}
+		const settingsParsed = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, tryCastToNumber(value as string)] as const))
+		const response = await DB.settings.set(settingsParsed)
+		if (response instanceof ZodError) {
+			return fail(400, { ok: false, error: { message: response.errors } })
 		}
 		return { ok: true, value: JSON.stringify(Array.from(form)) }
 	}
@@ -41,8 +40,8 @@ function getFormType(type: unknown): Field['type'] {
 export const load: PageServerLoad = async () => {
 	const settings = Object.entries(await DB.settings.get()) /**/
 		.map(([label, value]) => {
-			return { label, value: JSON.stringify(value), type: getFormType(value) }
+			return { label, value: value.toString(), type: getFormType(value) }
 		})
 
-	return { settings }
+	return { settings, canvasIds: getAllPixelMapIds() }
 }

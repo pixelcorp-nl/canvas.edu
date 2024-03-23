@@ -7,7 +7,6 @@ import { SvelteKitAuth } from '@auth/sveltekit'
 import type { HandleWs } from '@carlosv2/adapter-node-ws'
 import type { Handle, HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
-import { publicEnv } from './publicEnv'
 import { StatsD } from './util/statsd'
 import { setupDBSingleton } from './setupDB'
 
@@ -32,7 +31,8 @@ export const handleWs: HandleWs = (io: Server) => {
 			statsd.gauge('connections', listenerCount)
 			io.emit('listenerCount', listenerCount)
 		})
-		const pixels = await getPixelMap(publicEnv.canvasId)
+		const id = (await DB.settings.get()).canvasId
+		const pixels = await getPixelMap(id)
 		socket.emit('pixelMap', pixels)
 	})
 }
