@@ -18,7 +18,7 @@ export const DB = {
 	settings: {
 		get: async (): Promise<Settings> => {
 			const setting = (await db.select().from(settings)).at(-1)?.settings
-			if (!setting) {
+			if (!setting || !Settings.safeParse(setting).success) {
 				return defaultSettings
 			}
 			return setting

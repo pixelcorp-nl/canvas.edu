@@ -4,6 +4,7 @@ import type { PageServerLoad } from './$types'
 import { ZodError } from 'zod'
 import { getFormData, getFormType, objectToForm, type Entries, type Result, toNumber, type Optional, hasRole } from '$lib/public/util'
 import type { NewClass, User } from '$lib/server/schemas'
+import { getAllPixelMapIds } from '$lib/server/redis'
 
 // Because we do some auth check in the frontend code, this is required
 export const prerender = false
@@ -71,5 +72,5 @@ export const load: PageServerLoad = async ({ locals }) => {
 		maxUsers: 0
 	}
 	const users = hasRole(roles, 'users:manage') ? await DB.user.getAll() : undefined
-	return { roles, settings, classes, newClass: objectToForm(newClass), users }
+	return { roles, settings, classes, newClass: objectToForm(newClass), users, canvasIds: getAllPixelMapIds() }
 }

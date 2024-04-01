@@ -1,7 +1,7 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { getPixelMap } from '$lib/server/redis'
-import { publicEnv } from '../../../publicEnv'
 import { ratelimit } from '$lib/server/ratelimit'
+import { DB } from '$lib/server/db'
 
 export const GET: RequestHandler = async ({ getClientAddress }) => {
 	try {
@@ -15,7 +15,8 @@ export const GET: RequestHandler = async ({ getClientAddress }) => {
 			return json(ratelimitResult, { status: 429 })
 		}
 
-		const pixelMap = await getPixelMap(publicEnv.canvasId)
+		const id = (await DB.settings.get()).canvasId
+		const pixelMap = await getPixelMap(id)
 		return json({ succes: true, canvas: pixelMap })
 	} catch (err) {
 		console.error('Error getting canvas:', err)

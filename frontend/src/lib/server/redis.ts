@@ -11,3 +11,7 @@ export async function setPixelMap(canvasId: string, pixelMap: PixelMap): Promise
 export async function getPixelMap(canvasId: string): Promise<PixelMap> {
 	return (await r.hgetall(canvasId)) as PixelMap
 }
+
+export function getAllPixelMapIds(): Promise<string[]> {
+	return r.keys('*')
+}
