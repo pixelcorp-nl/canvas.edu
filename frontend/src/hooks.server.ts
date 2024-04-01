@@ -1,6 +1,6 @@
 import { DB } from '$lib/server/db'
 import { getPixelMap } from '$lib/server/redis'
-import { User } from '$lib/server/schemas'
+import { User, type Class } from '$lib/server/schemas'
 import type { Server } from '$lib/sharedTypes'
 import Credentials from '@auth/core/providers/credentials'
 import { SvelteKitAuth } from '@auth/sveltekit'
@@ -39,9 +39,9 @@ export const handleWs: HandleWs = (io: Server) => {
 	})
 }
 
-export type Token = User
+export type FullUser = User & { classes: Class[] }
 export type Session = {
-	user: User
+	user: FullUser
 	expires: string
 }
 
@@ -63,8 +63,14 @@ const credentials = Credentials({
 		const user = await DB.user.getBy('id', parsed.data.id)
 		if (!user) {
 			console.log('User not found')
+			return null
 		}
-		return user ?? null
+		return {
+			id: user.id,
+			name: user.name,
+			key: user.key,
+			classes: await DB.user.getClasses(user.id)
+		} satisfies FullUser
 	}
 })
 
@@ -77,36 +83,14 @@ const authHandle = SvelteKitAuth({
 	secret: '126b402ae7264a6497882db7876ebdfa356fc8440bccfba7c742f0afbb4fd967',
 	callbacks: {
 		session({ session, token }) {
-			const t = token as Token
-
-			const u = {
-				id: t.id,
-				name: t.name,
-				key: t.key
-			} satisfies User
-
+			const t = token as FullUser
 			return {
 				...session,
-				user: u
+				user: t
 			} satisfies Session
 		},
 		jwt({ token, user }) {
-			if (user) {
-				const parsed = User.safeParse(user)
-				if (!parsed.success) {
-					throw new Error(`Invalid user: ${parsed.error}`)
-				}
-				return {
-					id: parsed.data.id,
-					name: parsed.data.name,
-					key: parsed.data.key
-				} satisfies Token
-			}
-			return {
-				id: token['id'] as string,
-				name: token.name as string,
-				key: token['key'] as string
-			} satisfies Token
+			return (user as FullUser) ?? token ?? null
 		}
 	},
 	trustHost: true

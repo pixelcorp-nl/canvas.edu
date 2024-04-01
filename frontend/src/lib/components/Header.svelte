@@ -5,9 +5,9 @@
 	import { slide } from 'svelte/transition'
 	import { cubicOut } from 'svelte/easing'
 	import { signOut } from '$lib/public/util'
-	import type { User } from '$lib/server/schemas'
+	import type { FullUser } from '../../hooks.server'
 
-	export let user: User | undefined
+	export let user: FullUser | undefined
 	let showPopout = false
 
 	function toggleLogout() {
@@ -19,6 +19,11 @@
 	<a href="/" class="flex h-10 items-center">
 		<img src="/pixels.svg" class="m-1 p-1 w-full h-full hover:scale-95 transition-all" alt="" srcset="" />
 		<p class="font-mono text-center">PixelCorp</p>
+		{#if user?.classes}
+			<div style="width:400px;padding-left:10px;">
+				classes: {user.classes.map(c => c.name).join(', ')}
+			</div>
+		{/if}
 	</a>
 
 	<ul class="flex items-center gap-2 text-sm font-medium text-gray-500">
