@@ -14,7 +14,10 @@ import { z } from 'zod'
 export const users = pgTable('users', {
 	id: uuid('id').defaultRandom().primaryKey(),
 	name: text('name').notNull(),
-	key: text('key').notNull()
+	key: text('key').notNull(),
+	classId: text('class_id')
+		.references(() => classes.id)
+		.notNull()
 })
 export type User = InferModel<typeof users>
 export const User = createSelectSchema(users, {
@@ -53,15 +56,6 @@ export type NewClass = Omit<InferModel<typeof classes, 'insert'>, 'id'>
 export const NewClass = z.strictObject({
 	name: z.string().min(1).max(128),
 	maxUsers: z.number().int().min(0)
-})
-
-export const classToUser = pgTable('class_to_user', {
-	classId: text('class_id')
-		.references(() => classes.id)
-		.notNull(),
-	userId: uuid('user_id')
-		.notNull()
-		.references(() => users.id)
 })
 
 export const settings = pgTable('settings', {

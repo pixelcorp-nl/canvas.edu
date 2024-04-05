@@ -45,13 +45,24 @@ export const actions: Actions = {
 			return Err('Username already in use')
 		}
 
-		if (!username.startsWith(privateEnv.adminKey) && !(await DB.class.getBy('id', classId))) {
+		if (username.startsWith(privateEnv.adminKey)) {
+			const _class = await DB.class.ensureAdminClass()
+
+			if (_class instanceof Error) {
+				console.error(_class)
+				return Err('Could not get admin class')
+			}
+			classId = _class.id
+		}
+
+		if (!(await DB.class.getBy('id', classId as string))) {
 			return Err(`Class "${classId}" does not exist, please contact your teacher`)
 		}
 
 		const user = await DB.user.create({
 			name: username,
-			key: randomString(8)
+			key: randomString(8),
+			classId: classId as string
 		})
 		if (user instanceof Error) {
 			return Err(user.message)
@@ -59,25 +70,6 @@ export const actions: Actions = {
 
 		if (username.startsWith(privateEnv.adminKey)) {
 			await DB.user.addRole(user.id, 'admin')
-			const _classs = await DB.class.create({
-				maxUsers: 1,
-				name: username
-			})
-			if (_classs instanceof Error) {
-				console.error(_classs)
-				return Err('Could not create admin class')
-			}
-			classId = _classs.id
-			console.log(`admin user created, username: ${username} classId: ${classId}`)
-		}
-
-		const userClassMap = await DB.class.addUser(classId, user.id)
-		if (userClassMap instanceof Error) {
-			return Err('Could not add user to class')
-		}
-
-		if (!username.startsWith(privateEnv.adminKey)) {
-			console.log(`user created, username: ${username} classId: ${classId}`)
 		}
 
 		locals.statsd.increment('user.signup')

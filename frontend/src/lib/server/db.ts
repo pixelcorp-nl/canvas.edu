@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 import postgres from 'pg'
 import { privateEnv } from '../../privateEnv'
 import { hasRole, randomString } from '../public/util'
-import { NewClass, Settings, User, UserInsert, classToUser, classes, settings, userRoles, users, type Class, type Role } from './schemas'
+import { NewClass, Settings, User, UserInsert, classes, settings, userRoles, users, type Class, type Role } from './schemas'
 
 export const pool = new postgres.Pool({
 	connectionString: privateEnv.postgresUrl
@@ -11,8 +11,12 @@ export const pool = new postgres.Pool({
 export const db = drizzle(pool)
 
 const defaultSettings: Settings = {
-	maxRequestsPerSecond: 10
+	maxRequestsPerSecond: 10,
+	canvasId: 'default'
 } as const
+
+export type FullUser = User & { class: Class }
+const defaultClassName = 'default class'
 
 export const DB = {
 	settings: {
@@ -46,10 +50,13 @@ export const DB = {
 			if (!parse.success) {
 				return parse.error
 			}
+			console.log(parse.data)
 			return (await db.insert(users).values(parse.data).returning()).at(0) as User
 		},
-		getBy: async <T extends keyof User>(key: T, value: User[T]): Promise<User | undefined> => {
-			return (await db.select().from(users).where(eq(users[key], value)).limit(1)).at(0)
+		getBy: async <T extends keyof User>(key: T, value: User[T]): Promise<FullUser | undefined> => {
+			const us = await db.select().from(users).where(eq(users[key], value)).innerJoin(classes, eq(users.classId, classes.id)).limit(1)
+			const u = us.at(0)
+			return u ? { ...u.users, class: u.classes } : undefined
 		},
 		getAll: (): Promise<User[]> => {
 			return db.select().from(users).execute()
@@ -76,36 +83,23 @@ export const DB = {
 			const roles = await DB.user.getRoles(userId)
 			return hasRole(roles, role)
 		},
-		getClasses: async (userId: User['id']): Promise<Class[]> => {
-			const classUserMap = await db.select().from(classToUser).where(eq(classToUser.userId, userId))
-
-			const classes = await Promise.all(classUserMap.map(map => DB.class.getBy('id', map.classId)))
-			return classes.filter(d => Boolean(d)) as Class[]
+		getClass: async (userId: User['id']): Promise<Class | undefined> => {
+			const user = await DB.user.getBy('id', userId)
+			if (!user) {
+				return undefined
+			}
+			return (await db.select().from(classes).where(eq(classes.id, user.classId)).limit(1)).at(0)
 		}
 	},
 	class: {
 		getAll: async () => {
-			const rows = await db /**/
-				.select()
-				.from(classes)
-				.leftJoin(classToUser, eq(classes.id, classToUser.classId))
-				.leftJoin(users, eq(classToUser.userId, users.id))
-
-			const result = rows.reduce<(Class & { users: User[] })[]>((acc, row) => {
-				const existing = acc.find(({ id }) => id === row.classes.id)
-				if (!existing) {
-					acc.push({
-						...row.classes,
-						users: row.users ? [row.users] : []
-					})
-					return acc
-				}
-				if (row.users) {
-					existing.users.push(row.users)
-				}
-				return acc
-			}, [])
-			return result
+			const all = await db.select().from(classes).execute()
+			const full = []
+			for (const _class of all) {
+				const users = await DB.class.getUsers(_class.id)
+				full.push({ ..._class, users })
+			}
+			return full
 		},
 		getBy: async <T extends keyof Class>(key: T, value: Class[T]): Promise<Class | undefined> => {
 			return (await db.select().from(classes).where(eq(classes[key], value)).limit(1)).at(0)
@@ -115,11 +109,22 @@ export const DB = {
 			if (!_classParse.success) {
 				return _classParse.error
 			}
+
 			const completeClass = {
 				id: id ?? randomString(7, '123456789'),
 				..._classParse.data
 			}
 			return (await db.insert(classes).values(completeClass).returning()).at(0) as Class
+		},
+		ensureAdminClass: async () => {
+			const existing = await DB.class.getBy('name', defaultClassName)
+			if (existing) {
+				return existing
+			}
+			return DB.class.create({
+				maxUsers: 99999,
+				name: defaultClassName
+			})
 		},
 		addRole: async (userId: User['id'], role: Role): Promise<void> => {
 			const roles = await DB.user.getRoles(userId)
@@ -128,29 +133,8 @@ export const DB = {
 			}
 			await db.insert(userRoles).values({ userId, role })
 		},
-		getClasses: async (userId: User['id']): Promise<Class[]> => {
-			const classUserMap = await db.select().from(classToUser).where(eq(classToUser.userId, userId))
-			const classes = await Promise.all(classUserMap.map(_class => DB.class.getBy('id', _class.classId)))
-			return classes.filter(Boolean) as Class[]
-		},
-		getUsers: async (id: Class['id']) => {
-			const ids = await db.select().from(classToUser).where(eq(classToUser.classId, id))
-			return Promise.all(ids.map(({ userId }) => DB.user.getBy('id', userId)))
-		},
-		addUser: async (classId: string, userId: User['id']) => {
-			const _class = await DB.class.getBy('id', classId)
-			if (!_class) {
-				return new Error(`Class with id ${classId} does not exist`)
-			}
-			const classes = await DB.user.getClasses(userId)
-			if (classes.map(({ id }) => id).includes(classId)) {
-				return
-			}
-			const users = (await DB.class.getUsers(classId)).length
-			if (users >= _class.maxUsers) {
-				return new Error(`Class with id ${classId} is full`)
-			}
-			return db.insert(classToUser).values({ userId, classId }).returning()
+		getUsers: (id: Class['id']) => {
+			return db.select().from(users).where(eq(users.classId, id)).execute()
 		}
 	}
 } as const

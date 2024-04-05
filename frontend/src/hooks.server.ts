@@ -1,6 +1,6 @@
-import { DB } from '$lib/server/db'
+import { DB, type FullUser } from '$lib/server/db'
 import { getPixelMap } from '$lib/server/redis'
-import { User, type Class } from '$lib/server/schemas'
+import { User } from '$lib/server/schemas'
 import type { Server } from '$lib/sharedTypes'
 import Credentials from '@auth/core/providers/credentials'
 import { SvelteKitAuth } from '@auth/sveltekit'
@@ -39,7 +39,6 @@ export const handleWs: HandleWs = (io: Server) => {
 	})
 }
 
-export type FullUser = User & { classes: Class[] }
 export type Session = {
 	user: FullUser
 	expires: string
@@ -69,7 +68,8 @@ const credentials = Credentials({
 			id: user.id,
 			name: user.name,
 			key: user.key,
-			classes: await DB.user.getClasses(user.id)
+			classId: user.classId,
+			class: user.class
 		} satisfies FullUser
 	}
 })

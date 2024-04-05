@@ -5,7 +5,7 @@
 	import { slide } from 'svelte/transition'
 	import { cubicOut } from 'svelte/easing'
 	import { signOut } from '$lib/public/util'
-	import type { FullUser } from '../../hooks.server'
+	import type { FullUser } from '$lib/server/db'
 
 	export let user: FullUser | undefined
 	let showPopout = false
@@ -19,11 +19,6 @@
 	<a href="/" class="flex h-10 items-center">
 		<img src="/pixels.svg" class="m-1 p-1 w-full h-full hover:scale-95 transition-all" alt="" srcset="" />
 		<p class="font-mono text-center">PixelCorp</p>
-		{#if user?.classes}
-			<div style="width:400px;padding-left:10px;">
-				classes: {user.classes.map(c => c.name).join(', ')}
-			</div>
-		{/if}
 	</a>
 
 	<ul class="flex items-center gap-2 text-sm font-medium text-gray-500">
@@ -38,9 +33,14 @@
 			<li>
 				<div class="h-8 w-0.5 bg-gray-300/50 mr-2" />
 			</li>
+
+			<div class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 font-mono">
+				{user.class.name}
+			</div>
+
 			<li class="flex p-1 rounded-lg group" on:mouseenter={toggleLogout} on:mouseleave={toggleLogout}>
 				<div class="flex h-8 gap-1">
-					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono" id="header-username">
+					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono">
 						{user.name}
 					</button>
 					{#if showPopout}
