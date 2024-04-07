@@ -1,4 +1,5 @@
 import type { Field } from '$components/Form.svelte'
+import { user } from '$lib/Stores/User'
 import type { Role, User } from '$lib/server/schemas'
 import { signIn as autJsSignIn, signOut as authJsSignOut } from '@auth/sveltekit/client'
 
@@ -108,4 +109,5 @@ export async function signIn(user: User) {
 export async function signOut() {
 	await waitForWindow()
 	await authJsSignOut({ callbackUrl: window.location.origin })
+	user.set(undefined)
 }

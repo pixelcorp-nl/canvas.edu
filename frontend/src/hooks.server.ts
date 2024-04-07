@@ -1,4 +1,4 @@
-import { DB, type FullUser } from '$lib/server/db'
+import { DB, getUserMemoized, type FullUser } from '$lib/server/db'
 import { getPixelMap } from '$lib/server/redis'
 import { User } from '$lib/server/schemas'
 import type { Server } from '$lib/sharedTypes'
@@ -24,7 +24,20 @@ export const handleWs: HandleWs = (io: Server) => {
 	}
 	globalIo = io
 
+	io.use((socket, next) => {
+		const user = socket.handshake.auth['user']
+		if (!user) {
+			return next(new Error('Authentication error'))
+		}
+		socket.data.user = user
+		next()
+	})
+
 	io.on('connection', async socket => {
+		const user = socket.data.user as FullUser
+		console.log('User connected1:', user.name)
+		socket.join(user.classId)
+
 		listenerCount++
 		statsd.gauge('connections', listenerCount)
 		io.emit('listenerCount', listenerCount)
@@ -33,8 +46,8 @@ export const handleWs: HandleWs = (io: Server) => {
 			statsd.gauge('connections', listenerCount)
 			io.emit('listenerCount', listenerCount)
 		})
-		const id = (await DB.settings.get()).canvasId
-		const pixels = await getPixelMap(id)
+
+		const pixels = await getPixelMap(user.classId)
 		socket.emit('pixelMap', pixels)
 	})
 }
@@ -110,7 +123,7 @@ const injectHandle: Handle = async ({ event, resolve }) => {
 
 const logHandle: Handle = ({ event, resolve }) => {
 	if (!event.url.pathname.startsWith('/api')) {
-		console.log(event.url.pathname + event.url.search, '|', event.route.id)
+		// console.log(event.url.pathname + event.url.search, '|', event.route.id)
 	}
 	event.locals.statsd.increment('request')
 	return resolve(event)

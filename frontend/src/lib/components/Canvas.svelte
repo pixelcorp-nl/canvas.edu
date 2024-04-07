@@ -4,6 +4,7 @@
 	import type { Socket } from '$lib/sharedTypes'
 	import { onDestroy, onMount } from 'svelte'
 	import { PixelObj, forEachPixel } from '$api/_pixelUtils'
+	import { user } from '$lib/Stores/User'
 
 	let xMouse = 0
 	let yMouse = 0
@@ -13,7 +14,11 @@
 	let sectionWidth = 0
 	let sectionHeight = 0
 
-	const socket: Socket = io()
+	const socket: Socket = io({
+		auth: {
+			user: $user
+		}
+	})
 	onMount(() => {
 		const size = Math.min(sectionWidth, sectionHeight)
 		pScalar = Math.floor(size / publicEnv.canvasWidth) || 1

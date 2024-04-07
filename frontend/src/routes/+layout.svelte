@@ -6,6 +6,7 @@
 	import { isLoading, locale, waitLocale } from 'svelte-i18n'
 	import '../app.postcss'
 	import type { LayoutData } from './$types'
+	import { user } from '$lib/Stores/User'
 	export let data: LayoutData
 
 	onMount(async () => {
@@ -15,6 +16,7 @@
 			locale.set(lang.locale || 'en')
 		}
 		await waitLocale()
+		user.set(data.session?.user)
 	})
 </script>
 
@@ -23,7 +25,7 @@
 {:else}
 	<div class="app">
 		{#key data.session?.user}
-			<Header user={data.session?.user} />
+			<Header />
 		{/key}
 		<main><slot /></main>
 

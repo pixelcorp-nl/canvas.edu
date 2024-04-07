@@ -4,6 +4,7 @@ import postgres from 'pg'
 import { privateEnv } from '../../privateEnv'
 import { hasRole, randomString } from '../public/util'
 import { NewClass, Settings, User, UserInsert, classes, settings, userRoles, users, type Class, type Role } from './schemas'
+import memoizee from 'memoizee'
 
 export const pool = new postgres.Pool({
 	connectionString: privateEnv.postgresUrl
@@ -138,3 +139,10 @@ export const DB = {
 		}
 	}
 } as const
+
+export const getUserMemoized = memoizee(
+	<T extends keyof User>(key: T, value: User[T]): Promise<FullUser | undefined> => {
+		return DB.user.getBy(key, value)
+	},
+	{ promise: true, maxAge: 10 * 1000 }
+)

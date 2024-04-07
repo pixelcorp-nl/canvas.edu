@@ -3,7 +3,7 @@ import { setPixelMap } from '$lib/server/redis'
 import { pixelObjToPixelKV, PixelRequest } from '../_pixelUtils'
 import type { Coordinate, RGBA, Server } from '$lib/sharedTypes'
 import { ratelimit } from '$lib/server/ratelimit'
-import { DB } from '$lib/server/db'
+import { DB, getUserMemoized } from '$lib/server/db'
 import memoizee from 'memoizee'
 import { privateEnv } from '../../../privateEnv'
 
@@ -41,17 +41,6 @@ async function processBatch(io: Server) {
 	await setPixelMap(id, queueObj)
 }
 
-const apiKeyExists = memoizee(
-	async (key: string) => {
-		// temporary for testing
-		if (key === privateEnv.adminKey) {
-			return Promise.resolve(true)
-		}
-		return !!(await DB.user.getBy('key', key))
-	},
-	{ promise: true, maxAge: 10 * 1000 }
-)
-
 const maxRequests = memoizee(async () => (await DB.settings.get()).maxRequestsPerSecond, { promise: true, maxAge: 10 * 1000 })
 
 export const POST: RequestHandler = async ({ request, locals }) => {
@@ -60,7 +49,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return text(`Error! The request is not valid, ${parsed.error.errors.at(0)?.message}`, { status: 400 })
 	}
 	const apiKey = parsed.data.key
-	if (!(await apiKeyExists(apiKey))) {
+	if (!(await getUserMemoized('key', apiKey))) {
 		return text(`Error! Your API key you provided (${apiKey}) is not valid`, { status: 401 })
 	}
 
