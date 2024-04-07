@@ -53,6 +53,11 @@ async function assertPixel(page: Page, pixel: Pixel) {
 	expect(canvasPixel).toStrictEqual(pixel)
 }
 
+function adminUsername() {
+	const prefix: Pixel['key'] = 'joppe'
+	return `${prefix}${randomBytes(10).toString('hex')}`
+}
+
 test('Can put pixel', async () => {
 	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42], key: 'joppe' }
 	expect(await putPixel(pixel)).toMatch('Success!')
@@ -68,29 +73,21 @@ test('Cannot put invalid pixel', async () => {
 	expect(await putPixel(pixel)).toMatch('Error!')
 })
 
-// for some reason this works in dev and in prod, but not in test
-test.skip('Can create account', async ({ page }) => {
+test('Check pixel can be put and then changed', async ({ page }) => {
+	const userName = adminUsername()
 	await page.goto(`${root}/signup`)
 	await page.waitForSelector('button[type="submit"]')
 
-	const userName = `joppe${randomBytes(10).toString('hex')}`
-	await page.evaluate(userName => {
-		;(document.querySelector('input[name="username"]') as HTMLInputElement).value = userName
-		try {
-			;(document.querySelector('#password') as HTMLInputElement).value = userName
-			;(document.querySelector('#password-confirm') as HTMLInputElement).value = userName
-		} catch (e) {
-			/**/
-		}
-		;(document.querySelector('button[type="submit"]') as HTMLButtonElement).click()
-	}, userName)
+	await page.waitForTimeout(1000)
+	await page.waitForSelector('input[name="username"]')
+	await page.locator('input[name="username"]').first().fill(userName)
+
+	await page.click('button[type="submit"]')
+	await page.waitForTimeout(1000)
 	await expect(page.locator('#header-username')).toHaveText(userName)
-
-	// TODO make separate test for this and share cookies between them
-})
-
-test('Check pixel can be put and then changed', async ({ page }) => {
-	await page.goto(`${root}/canvas?adminKey=joppe`)
+	await page.goto(`${root}/info`)
+	await expect(page.locator('#footer')).toContainText('Oswin, Mees & Joppe')
+	await page.goto(`${root}/canvas`)
 	await page.waitForSelector('.canvas-loaded')
 
 	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50], key: 'joppe' }

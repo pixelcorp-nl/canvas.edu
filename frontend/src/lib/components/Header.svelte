@@ -38,7 +38,7 @@
 
 			<li class="flex p-1 rounded-lg group" on:mouseenter={toggleLogout} on:mouseleave={toggleLogout}>
 				<div class="flex h-8 gap-1">
-					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono">
+					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono" id="header-username">
 						{$user.name}
 					</button>
 					{#if showPopout}
