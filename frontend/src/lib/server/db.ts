@@ -5,6 +5,7 @@ import { privateEnv } from '../../privateEnv'
 import { hasRole, randomString } from '../public/util'
 import { Settings, User, UserInsert, classes, settings, userRoles, users, Class, type Role } from './schemas'
 import memoizee from 'memoizee'
+import { building } from '$app/environment'
 
 export const pool = new postgres.Pool({
 	connectionString: privateEnv.postgresUrl
@@ -139,27 +140,29 @@ export const DB = {
 	}
 } as const
 
-DB.class.ensureAdminClass().then(async _class => {
-	if (_class instanceof Error) {
-		console.error(_class)
-		return
-	}
-	const admin = await DB.user.getBy('key', privateEnv.adminKey)
-	if (admin) {
-		return
-	}
-	const user = await DB.user.create({
-		name: privateEnv.adminKey,
-		key: privateEnv.adminKey,
-		classId: _class.id
+if (!building) {
+	DB.class.ensureAdminClass().then(async _class => {
+		if (_class instanceof Error) {
+			console.error(_class)
+			return
+		}
+		const admin = await DB.user.getBy('key', privateEnv.adminKey)
+		if (admin) {
+			return
+		}
+		const user = await DB.user.create({
+			name: privateEnv.adminKey,
+			key: privateEnv.adminKey,
+			classId: _class.id
+		})
+		if (user instanceof Error) {
+			console.error(user)
+			return
+		}
+		await DB.user.addRole(user.id, 'admin')
+		console.log('Admin user created')
 	})
-	if (user instanceof Error) {
-		console.error(user)
-		return
-	}
-	await DB.user.addRole(user.id, 'admin')
-	console.log('Admin user created')
-})
+}
 
 export const getUserMemoized = memoizee(
 	<T extends keyof User>(key: T, value: User[T]): Promise<FullUser | undefined> => {
