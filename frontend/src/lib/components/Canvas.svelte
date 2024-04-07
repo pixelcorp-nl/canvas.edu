@@ -3,7 +3,7 @@
 	import { publicEnv } from '../../publicEnv'
 	import type { Socket } from '$lib/sharedTypes'
 	import { onDestroy, onMount } from 'svelte'
-	import { PixelObj, forEachPixel } from '$api/_pixelUtils'
+	import { PixelBase, forEachPixel } from '$api/_pixelUtils'
 	import { user } from '$lib/Stores/User'
 
 	let xMouse = 0
@@ -37,7 +37,7 @@
 		socket.disconnect()
 	})
 
-	function drawPixelOnCanvas(pixelObj: PixelObj): void {
+	function drawPixelOnCanvas(pixelObj: PixelBase): void {
 		const { x, y, color } = pixelObj
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 		ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`

@@ -1,4 +1,4 @@
-import { DB, getUserMemoized, type FullUser } from '$lib/server/db'
+import { DB, type FullUser } from '$lib/server/db'
 import { getPixelMap } from '$lib/server/redis'
 import { User } from '$lib/server/schemas'
 import type { Server } from '$lib/sharedTypes'
@@ -35,7 +35,7 @@ export const handleWs: HandleWs = (io: Server) => {
 
 	io.on('connection', async socket => {
 		const user = socket.data.user as FullUser
-		console.log('User connected1:', user.name)
+		console.log('User connected:', user.name)
 		socket.join(user.classId)
 
 		listenerCount++
@@ -82,7 +82,8 @@ const credentials = Credentials({
 			name: user.name,
 			key: user.key,
 			classId: user.classId,
-			class: user.class
+			class: user.class,
+			roles: user.roles
 		} satisfies FullUser
 	}
 })

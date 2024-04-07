@@ -1,18 +1,18 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { getPixelMap } from '$lib/server/redis'
-import { ratelimit } from '$lib/server/ratelimit'
+import { rateLimit } from '$lib/server/ratelimit'
 import { DB } from '$lib/server/db'
 
 export const GET: RequestHandler = async ({ getClientAddress }) => {
 	try {
-		const ratelimitResult = await ratelimit(getClientAddress(), {
+		const rateLimitResult = await rateLimit(getClientAddress(), {
 			timePeriodSeconds: 60,
 			maxRequests: 10,
 			route: 'get-canvas'
 		})
 
-		if (!ratelimitResult.success) {
-			return json(ratelimitResult, { status: 429 })
+		if (!rateLimitResult.success) {
+			return json(rateLimitResult, { status: 429 })
 		}
 
 		const id = (await DB.settings.get()).canvasId

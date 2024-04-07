@@ -16,7 +16,7 @@ const defaultSettings: Settings = {
 	canvasId: 'default'
 } as const
 
-export type FullUser = User & { class: Class }
+export type FullUser = User & { class: Class; roles: Role[] }
 const defaultClassName = 'default class'
 
 export const DB = {
@@ -57,7 +57,11 @@ export const DB = {
 		getBy: async <T extends keyof User>(key: T, value: User[T]): Promise<FullUser | undefined> => {
 			const us = await db.select().from(users).where(eq(users[key], value)).innerJoin(classes, eq(users.classId, classes.id)).limit(1)
 			const u = us.at(0)
-			return u ? { ...u.users, class: u.classes } : undefined
+			if (!u) {
+				return undefined
+			}
+			// would have preferred a join
+			return u ? { ...u.users, class: u.classes, roles: await DB.user.getRoles(u.users.id) } : undefined
 		},
 		getAll: (): Promise<User[]> => {
 			return db.select().from(users).execute()

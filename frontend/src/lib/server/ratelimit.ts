@@ -9,7 +9,7 @@ interface RateLimitOptions {
 	maxRequests: number
 }
 
-export async function ratelimit(identifier: string | undefined | null, options: RateLimitOptions): Promise<{ success: boolean; timeToWait?: number }> {
+export async function rateLimit(identifier: string | undefined | null, options: RateLimitOptions): Promise<{ success: boolean; timeToWaitMs?: number }> {
 	try {
 		const now = Date.now()
 		const cutoff = now - options.timePeriodSeconds * 1000
@@ -17,7 +17,7 @@ export async function ratelimit(identifier: string | undefined | null, options: 
 		if (requests.length >= options.maxRequests) {
 			const oldestRequestTime = parseInt(requests[0] as string, 10)
 			const timeToWait = Math.max(oldestRequestTime + options.timePeriodSeconds * 1000 - now, 0) // in milliseconds
-			return { success: false, timeToWait }
+			return { success: false, timeToWaitMs: timeToWait }
 		}
 		await r.zadd(`ratelimit:${options.route}:(${identifier})`, now, now.toString())
 		await r.expire(`ratelimit:${options.route}:(${identifier})`, options.timePeriodSeconds)
