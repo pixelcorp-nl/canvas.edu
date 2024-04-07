@@ -24,8 +24,6 @@
 		<h2 class="text-l mb-0">Stats</h2>
 		Users connected: {listenerCount}
 		<br />
-		Canvas Ids: [{data.canvasIds}]
-		<br />
 	{/if}
 
 	{#if hasRole(data.roles, 'canvasSettings')}

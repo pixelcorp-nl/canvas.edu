@@ -3,7 +3,7 @@ import { fail, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { ZodError } from 'zod'
 import { getFormData, getFormType, objectToForm, type Entries, type Result, toNumber, type Optional, hasRole } from '$lib/public/util'
-import type { NewClass, User } from '$lib/server/schemas'
+import type { Class, User } from '$lib/server/schemas'
 import { getAllPixelMapIds } from '$lib/server/redis'
 
 // Because we do some auth check in the frontend code, this is required
@@ -42,12 +42,13 @@ export const actions: Actions = {
 		}
 
 		const form = await request.formData()
-		const newClass: Optional<NewClass> = {
+		const newClass: Optional<Class> = {
 			name: form.get('name')?.toString(),
-			maxUsers: toNumber(form.get('maxUsers')?.toString() ?? '')
+			maxUsers: toNumber(form.get('maxUsers')?.toString() ?? ''),
+			id: form.get('id')?.toString()
 		}
 
-		const result = await DB.class.create(newClass as unknown as NewClass)
+		const result = await DB.class.create(newClass as unknown as Class)
 		if (result instanceof ZodError) {
 			return { name: 'createClass', ok: false, error: `Invalid input ${result.message}` }
 		}
@@ -67,9 +68,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 	const roles = await DB.user.getRoles(user.id)
 	const classes = hasRole(roles, 'classes:manage') ? await DB.class.getAll() : undefined
-	const newClass: NewClass = {
+	const newClass: Class = {
 		name: '',
-		maxUsers: 0
+		maxUsers: 0,
+		id: ''
 	}
 	const users = hasRole(roles, 'users:manage') ? await DB.user.getAll() : undefined
 	return { roles, settings, classes, newClass: objectToForm(newClass), users, canvasIds: getAllPixelMapIds() }

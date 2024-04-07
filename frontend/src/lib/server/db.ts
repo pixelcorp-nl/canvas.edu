@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 import postgres from 'pg'
 import { privateEnv } from '../../privateEnv'
 import { hasRole, randomString } from '../public/util'
-import { NewClass, Settings, User, UserInsert, classes, settings, userRoles, users, type Class, type Role } from './schemas'
+import { Settings, User, UserInsert, classes, settings, userRoles, users, Class, type Role } from './schemas'
 import memoizee from 'memoizee'
 
 export const pool = new postgres.Pool({
@@ -12,8 +12,7 @@ export const pool = new postgres.Pool({
 export const db = drizzle(pool)
 
 const defaultSettings: Settings = {
-	maxRequestsPerSecond: 10,
-	canvasId: 'default'
+	maxRequestsPerSecond: 10
 } as const
 
 export type FullUser = User & { class: Class; roles: Role[] }
@@ -109,17 +108,13 @@ export const DB = {
 		getBy: async <T extends keyof Class>(key: T, value: Class[T]): Promise<Class | undefined> => {
 			return (await db.select().from(classes).where(eq(classes[key], value)).limit(1)).at(0)
 		},
-		create: async (_class: NewClass, id?: string) => {
-			const _classParse = await NewClass.safeParseAsync(_class)
+		create: async (_class: Class) => {
+			const _classParse = await Class.safeParseAsync(_class)
 			if (!_classParse.success) {
 				return _classParse.error
 			}
 
-			const completeClass = {
-				id: id ?? randomString(7, '123456789'),
-				..._classParse.data
-			}
-			return (await db.insert(classes).values(completeClass).returning()).at(0) as Class
+			return (await db.insert(classes).values(_class).returning()).at(0) as Class
 		},
 		ensureAdminClass: async () => {
 			const existing = await DB.class.getBy('name', defaultClassName)
@@ -128,7 +123,8 @@ export const DB = {
 			}
 			return DB.class.create({
 				maxUsers: 99999,
-				name: defaultClassName
+				name: defaultClassName,
+				id: randomString(6)
 			})
 		},
 		addRole: async (userId: User['id'], role: Role): Promise<void> => {
