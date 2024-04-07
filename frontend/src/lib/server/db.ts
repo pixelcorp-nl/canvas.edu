@@ -50,7 +50,6 @@ export const DB = {
 			if (!parse.success) {
 				return parse.error
 			}
-			console.log(parse.data)
 			return (await db.insert(users).values(parse.data).returning()).at(0) as User
 		},
 		getBy: async <T extends keyof User>(key: T, value: User[T]): Promise<FullUser | undefined> => {

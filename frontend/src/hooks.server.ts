@@ -124,7 +124,7 @@ const injectHandle: Handle = async ({ event, resolve }) => {
 
 const logHandle: Handle = ({ event, resolve }) => {
 	if (!event.url.pathname.startsWith('/api')) {
-		// console.log(event.url.pathname + event.url.search, '|', event.route.id)
+		console.log(event.url.pathname + event.url.search, '|', event.route.id)
 	}
 	event.locals.statsd.increment('request')
 	return resolve(event)
