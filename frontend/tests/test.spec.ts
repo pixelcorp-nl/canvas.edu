@@ -10,7 +10,7 @@ type Pixel = {
 	key: 'joppe'
 }
 
-const root = 'http://127.0.0.1:5173'
+const root = 'http://localhost:5173'
 async function putPixel(pixel: Pixel): Promise<string | undefined> {
 	try {
 		const resp = await fetch(`${root}/api/single`, {
