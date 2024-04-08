@@ -28,3 +28,4 @@ PrivateEnv.parse(privateEnv)
 if (privateEnv.adminKey === defaultAdminKey) {
 	console.warn('ADMIN KEY IS DEFAULT, PLEASE CHANGE IT')
 }
+console.log(privateEnv)
