@@ -17,7 +17,7 @@ const defaultAdminKey = 'joppe' as const
 
 export const privateEnv = {
 	redisUrl: dev ? 'redis://localhost:6379' : PRIVATE_REDIS_URL,
-	postgresUrl: dev ? 'postgres://postgres:postgres@localhost:5432/postgres' : PRIVATE_POSTGRES_URL,
+	postgresUrl: dev ? 'postgres://postgres:postgres@127.0.0.1:5432/postgres' : PRIVATE_POSTGRES_URL,
 	statsdHost: PRIVATE_STATSD_HOST,
 	statsdPort: Number(PRIVATE_STATSD_PORT),
 	userPasswords: false, // wether we require a password to sign up

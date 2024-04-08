@@ -9,7 +9,6 @@ import type { Handle, HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 import { StatsD } from './util/statsd'
 import util from 'util'
-import { setupDBSingleton } from './setupDB'
 
 util.inspect.defaultOptions.depth = 10
 let listenerCount = 0
@@ -113,12 +112,10 @@ const authHandle = SvelteKitAuth({
 // TODO protect paths
 
 // Injecting global variables into the event object
-const injectHandle: Handle = async ({ event, resolve }) => {
+const injectHandle: Handle = ({ event, resolve }) => {
 	event.locals.io = globalIo as Server
 	event.locals.statsd = statsd
 
-	// make sure the database is setup
-	await setupDBSingleton()
 	return resolve(event)
 }
 
