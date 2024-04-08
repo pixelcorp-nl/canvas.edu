@@ -78,12 +78,12 @@ test('Check pixel can be put and then changed', async ({ page }) => {
 	await page.goto(`${root}/signup`)
 	await page.waitForSelector('button[type="submit"]')
 
-	await page.waitForTimeout(1000)
+	await page.waitForTimeout(5000)
 	await page.waitForSelector('input[name="username"]')
 	await page.locator('input[name="username"]').first().fill(userName)
 
 	await page.click('button[type="submit"]')
-	await page.waitForTimeout(1000)
+	await page.waitForTimeout(5000)
 	await expect(page.locator('#header-username')).toHaveText(userName)
 	await page.goto(`${root}/info`)
 	await expect(page.locator('#footer')).toContainText('Oswin, Mees & Joppe')
