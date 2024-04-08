@@ -52,15 +52,14 @@
 			</tr>
 		{/each}
 		<br />
-
-		{#if valueChanged}
-			<Button type="submit" id={buttonText} enabled={valueChanged}>{buttonText}</Button>
-		{:else}
-			<Tooltip theme="tooltips" content="No changes to submit">
-				<Button type="submit" id={buttonText} enabled={valueChanged}>{buttonText}</Button>
-			</Tooltip>
-		{/if}
 	</table>
+	{#if valueChanged}
+		<Button type="submit" id={buttonText} enabled={valueChanged}>{buttonText}</Button>
+	{:else}
+		<Tooltip theme="tooltips" content="No changes to submit">
+			<Button type="submit" id={buttonText} enabled={valueChanged}>{buttonText}</Button>
+		</Tooltip>
+	{/if}
 </form>
 
 {#if !valueChanged}

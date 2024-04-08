@@ -14,7 +14,10 @@ import { z } from 'zod'
 export const users = pgTable('users', {
 	id: uuid('id').defaultRandom().primaryKey(),
 	name: text('name').notNull(),
-	key: text('key').notNull()
+	key: text('key').notNull(),
+	classId: text('class_id')
+		.references(() => classes.id)
+		.notNull()
 })
 export type User = InferModel<typeof users>
 export const User = createSelectSchema(users, {
@@ -31,12 +34,39 @@ export const UserInsert = createInsertSchema(users, {
 })*/
 export type UserInsert = z.infer<typeof UserInsert>
 
+export const userRoles = pgTable('user_roles', {
+	userId: uuid('user_id')
+		.notNull()
+		.references(() => users.id),
+	// we could use a enum for the role, but we will enforce the role at the application level
+	role: text('role').notNull()
+})
+export const roles = ['stats', 'canvasSettings', 'classes:manage', 'users:manage', 'admin'] as const
+export type Role = (typeof roles)[number]
+export type UserRole = InferModel<typeof userRoles>
+export type NewUserRole = InferModel<typeof userRoles, 'insert'>
+
+export const classes = pgTable('classes', {
+	id: text('id').primaryKey(),
+	name: text('name').notNull(),
+	maxUsers: integer('max_users').notNull()
+})
+export type Class = InferModel<typeof classes>
+export const Class = z.strictObject({
+	id: z
+		.string()
+		.min(1)
+		.max(128)
+		.regex(/^[a-zA-Z0-9]+$/),
+	name: z.string().min(1).max(128),
+	maxUsers: z.number().int().min(0)
+})
+
 export const settings = pgTable('settings', {
 	id: integer('id').primaryKey().default(1),
 	settings: json('settings').$type<Settings>().notNull()
 })
-export const Settings = z.object({
-	maxRequestsPerSecond: z.number().min(0),
-	canvasId: z.string().min(1)
+export const Settings = z.strictObject({
+	maxRequestsPerSecond: z.number().min(0)
 })
 export type Settings = z.infer<typeof Settings>

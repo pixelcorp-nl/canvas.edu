@@ -5,9 +5,7 @@
 	import { slide } from 'svelte/transition'
 	import { cubicOut } from 'svelte/easing'
 	import { signOut } from '$lib/public/util'
-	import type { User } from '$lib/server/schemas'
-
-	export let user: User | undefined
+	import { user } from '$lib/Stores/User'
 	let showPopout = false
 
 	function toggleLogout() {
@@ -22,7 +20,7 @@
 	</a>
 
 	<ul class="flex items-center gap-2 text-sm font-medium text-gray-500">
-		{#if user}
+		{#if $user}
 			<li><a class="rounded-lg px-3 py-2" class:bg-gray-100={$page.route?.id === '/canvas'} href="/canvas"> {$_('header.canvas')} </a></li>
 
 			<li>
@@ -33,10 +31,15 @@
 			<li>
 				<div class="h-8 w-0.5 bg-gray-300/50 mr-2" />
 			</li>
+
+			<div class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 font-mono">
+				{$user.class.name}
+			</div>
+
 			<li class="flex p-1 rounded-lg group" on:mouseenter={toggleLogout} on:mouseleave={toggleLogout}>
 				<div class="flex h-8 gap-1">
 					<button class="flex h-full px-2 py-1 my-auto rounded-md items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all font-mono" id="header-username">
-						{user.name}
+						{$user.name}
 					</button>
 					{#if showPopout}
 						<div transition:slide={{ duration: 300, delay: 0, axis: 'x', easing: cubicOut }}>

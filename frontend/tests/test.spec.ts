@@ -1,7 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
-import { randomBytes } from 'crypto'
 
-test.describe.configure({ timeout: 10000 })
+test.describe.configure({ timeout: 20000 })
 
 type Pixel = {
 	x: number
@@ -17,7 +16,9 @@ async function putPixel(pixel: Pixel): Promise<string | undefined> {
 			method: 'POST',
 			body: JSON.stringify(pixel)
 		})
-		return resp?.text()
+		const text = await resp.text()
+		console.log(text)
+		return text
 	} catch (err) {
 		console.error(err)
 		throw new Error('Failed to put pixel')
@@ -53,8 +54,17 @@ async function assertPixel(page: Page, pixel: Pixel) {
 	expect(canvasPixel).toStrictEqual(pixel)
 }
 
+function randomPixel(): Pixel {
+	return {
+		x: Math.floor(Math.random() * 200),
+		y: Math.floor(Math.random() * 200),
+		color: [Math.floor(Math.random() * 255), Math.floor(Math.random() * 255), Math.floor(Math.random() * 255)],
+		key: 'joppe'
+	}
+}
+
 test('Can put pixel', async () => {
-	const pixel: Pixel = { x: 0, y: 0, color: [42, 42, 42], key: 'joppe' }
+	const pixel = randomPixel()
 	expect(await putPixel(pixel)).toMatch('Success!')
 })
 
@@ -68,32 +78,28 @@ test('Cannot put invalid pixel', async () => {
 	expect(await putPixel(pixel)).toMatch('Error!')
 })
 
-// for some reason this works in dev and in prod, but not in test
-test.skip('Can create account', async ({ page }) => {
-	await page.goto(`${root}/signup`)
+test('Check pixel can be put and then changed', async ({ page }) => {
+	const userName: Pixel['key'] = 'joppe'
+	await page.goto(`${root}/login`)
 	await page.waitForSelector('button[type="submit"]')
 
-	const userName = `joppe${randomBytes(10).toString('hex')}`
-	await page.evaluate(userName => {
-		;(document.querySelector('input[name="username"]') as HTMLInputElement).value = userName
-		try {
-			;(document.querySelector('#password') as HTMLInputElement).value = userName
-			;(document.querySelector('#password-confirm') as HTMLInputElement).value = userName
-		} catch (e) {
-			/**/
-		}
-		;(document.querySelector('button[type="submit"]') as HTMLButtonElement).click()
-	}, userName)
+	await page.waitForTimeout(1000)
+	await page.waitForSelector('input[name="username"]')
+	await page.locator('input[name="username"]').first().fill(userName)
+
+	await page.waitForTimeout(3000)
+	await page.click('button[type="submit"]')
+	await page.waitForTimeout(3000)
 	await expect(page.locator('#header-username')).toHaveText(userName)
+	await page.goto(`${root}/info`)
+	await expect(page.locator('#footer')).toContainText('Oswin, Mees & Joppe')
 
-	// TODO make separate test for this and share cookies between them
-})
-
-test('Check pixel can be put and then changed', async ({ page }) => {
-	await page.goto(`${root}/canvas?adminKey=joppe`)
+	// making sure that the canvas scaling factor is 1
+	await page.setViewportSize({ width: 200, height: 200 })
+	await page.goto(`${root}/canvas`)
 	await page.waitForSelector('.canvas-loaded')
 
-	const pixel: Pixel = { x: 0, y: 0, color: [50, 50, 50], key: 'joppe' }
+	const pixel: Pixel = randomPixel()
 	await putPixel(pixel)
 	await page.waitForTimeout(1000)
 	await assertPixel(page, pixel)

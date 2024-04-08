@@ -2,46 +2,77 @@ import { DB } from '$lib/server/db'
 import { fail, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { ZodError } from 'zod'
-import type { Field } from '$components/Form.svelte'
+import { getFormData, getFormType, objectToForm, type Entries, type Result, toNumber, type Optional, hasRole } from '$lib/public/util'
+import type { Class, User } from '$lib/server/schemas'
 import { getAllPixelMapIds } from '$lib/server/redis'
 
-function tryCastToNumber(value: string): string | number {
-	if (!value) {
-		return value
-	}
-	const parsed = Number(value)
-	return Number.isFinite(parsed) ? parsed : value
-}
+// Because we do some auth check in the frontend code, this is required
+export const prerender = false
+export const ssr = true
+
+type ActionReturn<Name extends string, Ok, Err = Error> = { name: Name } & Result<Ok, Err>
 
 export const actions: Actions = {
-	settings: async ({ request }) => {
-		const form = await request.formData()
-		const settings = Object.fromEntries(form.entries())
-		const settingsParsed = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, tryCastToNumber(value as string)] as const))
-		const response = await DB.settings.set(settingsParsed)
-		if (response instanceof ZodError) {
-			return fail(400, { ok: false, error: { message: response.errors } })
+	setSettings: async ({ request, locals }): Promise<ActionReturn<'setSettings', string, string>> => {
+		const settings = getFormData(await request.formData(), ['maxRequestsPerSecond'])
+		if (!settings) {
+			return { name: 'setSettings', ok: false, error: 'Invalid submission' }
 		}
-		return { ok: true, value: JSON.stringify(Array.from(form)) }
+		const session = await locals.getSession()
+		const user = session?.user as User | null
+		if (!(await DB.user.hasRole(user?.id, 'canvasSettings'))) {
+			return { name: 'setSettings', ok: false, error: 'No roles' }
+		}
+
+		for (const [key, value] of Object.entries(settings) as Entries<typeof settings>) {
+			const parse = await DB.settings.set({ [key]: Number(value) })
+			if (parse instanceof ZodError) {
+				return { name: 'setSettings', ok: false, error: `key ${key} with value ${value} is invalid ${parse.message}` }
+			}
+		}
+		return { name: 'setSettings', ok: true, data: 'Success' }
+	},
+
+	createClass: async ({ request, locals }): Promise<ActionReturn<'createClass', string, string>> => {
+		const session = await locals.getSession()
+		const user = session?.user as User | null
+
+		if (!(await DB.user.hasRole(user?.id, 'classes:manage'))) {
+			return { name: 'createClass', ok: false, error: 'You do not have the roles to do that' }
+		}
+
+		const form = await request.formData()
+		const newClass: Optional<Class> = {
+			name: form.get('name')?.toString(),
+			maxUsers: toNumber(form.get('maxUsers')?.toString() ?? ''),
+			id: form.get('id')?.toString()
+		}
+
+		const result = await DB.class.create(newClass as unknown as Class)
+		if (result instanceof ZodError) {
+			return { name: 'createClass', ok: false, error: `Invalid input ${result.message}` }
+		}
+
+		return { name: 'createClass', ok: true, data: 'success' }
 	}
 }
 
-function getFormType(type: unknown): Field['type'] {
-	switch (typeof type) {
-		case 'number':
-			return 'float'
-		case 'boolean':
-			return 'checkbox'
-		default:
-			return 'text'
+export const load: PageServerLoad = async ({ locals }) => {
+	const settings = Object.entries(await DB.settings.get()).map(([label, value]) => {
+		return { label, value: JSON.stringify(value), type: getFormType(value) }
+	})
+	const session = await locals.getSession()
+	const user = session?.user as User | null
+	if (!user) {
+		throw fail(401)
 	}
-}
-
-export const load: PageServerLoad = async () => {
-	const settings = Object.entries(await DB.settings.get()) /**/
-		.map(([label, value]) => {
-			return { label, value: value.toString(), type: getFormType(value) }
-		})
-
-	return { settings, canvasIds: getAllPixelMapIds() }
+	const roles = await DB.user.getRoles(user.id)
+	const classes = hasRole(roles, 'classes:manage') ? await DB.class.getAll() : undefined
+	const newClass: Class = {
+		name: '',
+		maxUsers: 0,
+		id: ''
+	}
+	const users = hasRole(roles, 'users:manage') ? await DB.user.getAll() : undefined
+	return { roles, settings, classes, newClass: objectToForm(newClass), users, canvasIds: getAllPixelMapIds() }
 }

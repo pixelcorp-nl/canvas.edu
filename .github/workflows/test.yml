@@ -39,5 +39,8 @@ jobs:
     - name: Start services
       run: make start-detached
 
+    - name: Wait for services to start
+      run: make wait-for-healthcheck
+
     - name: Run tests
       run: (cd frontend && npm test)
