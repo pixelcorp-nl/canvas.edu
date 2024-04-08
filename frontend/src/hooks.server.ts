@@ -120,7 +120,7 @@ const injectHandle: Handle = ({ event, resolve }) => {
 }
 
 const logHandle: Handle = ({ event, resolve }) => {
-	if (!event.url.pathname.startsWith('/api')) {
+	if (!event.url.pathname.startsWith('/api') && !event.url.pathname.startsWith('/health')) {
 		console.log(event.url.pathname + event.url.search, '|', event.route.id)
 	}
 	event.locals.statsd.increment('request')
