@@ -1,5 +1,4 @@
 import { expect, test, type Page } from '@playwright/test'
-import { randomBytes } from 'crypto'
 
 test.describe.configure({ timeout: 20000 })
 
