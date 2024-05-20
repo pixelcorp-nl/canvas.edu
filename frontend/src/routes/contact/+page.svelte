@@ -32,18 +32,18 @@
 		<div class="mx-auto">
 			<h2 class="text-xl font-extrabold sm:text-xl">Our journey</h2>
 			<p>
-				We started this project during our studies at Codam because we believe strongly that the best way to learn is by doing.<br>
-				We wanted to create a platform where people can learn programming in a fun and interactive way.<br><br>
+				We started this project during our studies at Codam because we believe strongly that the best way to learn is by doing.<br />
+				We wanted to create a platform where people can learn programming in a fun and interactive way.<br /><br />
 			</p>
 			<p>
-				Our focus with the platform is highschool students because we believe that programming is a skill that will be very important in the future.<br>
-				During our own highschool years we had quite a different experience with the school provided resources.<br>
-				We wanted to create a platform that is more engaging and fun to use.<br><br>
+				Our focus with the platform is highschool students because we believe that programming is a skill that will be very important in the future.<br />
+				During our own highschool years we had quite a different experience with the school provided resources.<br />
+				We wanted to create a platform that is more engaging and fun to use.<br /><br />
 			</p>
 			<p>
-				There are a lot of features we would like to add and we will keep inproving the platform.<br>
-				Our goal for the next year is to make the platform ready for use in schools.<br>
-				We hope you enjoy using our platform as much as we enjoyed creating it.<br>
+				There are a lot of features we would like to add and we will keep inproving the platform.<br />
+				Our goal for the next year is to make the platform ready for use in schools.<br />
+				We hope you enjoy using our platform as much as we enjoyed creating it.<br />
 			</p>
 		</div>
 		<div class="mx-auto py-16">
@@ -64,6 +64,5 @@
 			<p>info<span style="display:none">foo</span>@pixel<span style="display:none">s</span>corp.nl</p>
 		</div>
 	</div>
-	<div class="mx-auto max-w-screen-xl px-4 lg:flex lg:items-center">
-	</div>
+	<div class="mx-auto max-w-screen-xl px-4 lg:flex lg:items-center" />
 </section>
