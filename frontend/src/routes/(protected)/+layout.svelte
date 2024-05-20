@@ -5,10 +5,10 @@
 <slot />
 
 <footer id="footer" class="mx-auto mt-5">
-	<blockquote>
+	<!-- <blockquote>
 		{$_('footer')} <a class="person" href="https://github.com/Obult">Oswin</a>, <a class="person" href="https://github.com/LithiumOx">Mees</a> &
 		<a class="person" href="https://github.com/SirMorfield">Joppe</a>
-	</blockquote>
+	</blockquote> -->
 </footer>
 
 <style>
