@@ -4,6 +4,7 @@
 	import { page } from '$app/stores'
 	import Codeblock from '$components/Codeblock.svelte'
 	import Opdracht from '$components/Opdracht.svelte'
+	import Exercise from '$components/Exercise.svelte'
 
 	export let data
 
@@ -53,6 +54,7 @@ pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0], 'key': '${apikey}' }`
 
 <!-- HTML -->
 <article class="text-column prose-md lg:prose-lg mx-auto mb-5 mt-10">
+
 	<h2 id="over-dit-project">Over dit project</h2>
 	<p>
 		<em>Op dit digitale canvas is het alleen mogelijk om pixels te plaatsen door middel van code.</em>
@@ -129,3 +131,10 @@ pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0], 'key': '${apikey}' }`
 
 	<blockquote>Voor een extra challenge vraag aan Joppe!</blockquote>
 </article>
+
+<style>
+p
+{
+    margin:0px; 
+}
+</style>
