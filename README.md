@@ -29,7 +29,7 @@ Pixels introduces students to the exciting world of programming by enabling them
 
 ```sh
 git clone https://github.com/pixelcorp-nl/canvas.edu.git
-cd pixels
+cd canvas.edu
 ```
 
 2. Set up environment variables
