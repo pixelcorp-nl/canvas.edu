@@ -2,7 +2,7 @@
 	const contributors = [
 		{
 			name: 'Oswin',
-			avatar: 'https://avatars.githubusercontent.com/u/69460150?v=4',
+			avatar: '/images/oswin.webp',
 			github: 'https://github.com/Obult'
 		},
 		{
@@ -12,7 +12,7 @@
 		},
 		{
 			name: 'Joppe',
-			avatar: 'https://avatars.githubusercontent.com/u/31915428?v=4',
+			avatar: '/images/joppe.webp',
 			github: 'https://github.com/SirMorfield'
 		}
 	]
@@ -53,7 +53,7 @@
 					<a
 						href={contributor.github}
 						class="flex flex-col items-center gap-3 bg-gray-200 p-2 rounded-lg shadow-lg hover:scale-[99%] hover:shadow-md transition-all duration-300 hover:bg-gray-100">
-						<img src={contributor.avatar} class="h-32 w-32 mt-2 mx-2 rounded-full" alt="" />
+						<img src={contributor.avatar} class="h-32 w-32 mt-2 mx-2 rounded-full object-cover" alt="" />
 						<p class="text-lg font-bold">{contributor.name}</p>
 					</a>
 				{/each}
