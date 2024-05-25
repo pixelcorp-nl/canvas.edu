@@ -16,7 +16,7 @@ services:
   postgres:
     container_name: postgres
     restart: unless-stopped
-    image: postgres:alpine
+    image: postgres:16-alpine
     environment:
       POSTGRES_PASSWORD: postgres
     ports:
@@ -26,7 +26,7 @@ services:
 
   redis:
     container_name: redis
-    image: redis:alpine
+    image: redis:7-alpine
     restart: unless-stopped
     volumes:
       - ./redis-db:/data

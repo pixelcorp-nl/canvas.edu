@@ -1,8 +1,9 @@
 <script context="module" lang="ts">
 	export type Field = {
 		label: string
-		type: 'int' | 'float' | 'checkbox' | 'text'
+		type: 'int' | 'float' | 'checkbox' | 'text' | 'textarea'
 		value: string
+		rows?: number
 	}
 </script>
 
@@ -34,19 +35,31 @@
 			valueChanged = false
 		}}
 	{action}>
-	<table>
-		{#each fields as { label, type, value }}
+	<table class="w-full">
+		{#each fields as { label, type, value, rows }}
 			<tr>
-				<td> <label for={label}>{label}</label></td>
-				<td>
-					<input
-						id={label}
-						name={label}
-						class="rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-						type={typeToButton(type)}
-						{value}
-						step={type === 'float' ? 'any' : ''}
-						on:input={() => (valueChanged = true)} />
+				{#if type !== 'textarea'}
+					<td><label for={label}>{label}</label></td>
+				{/if}
+				<td colspan={type === 'textarea' ? 2 : 1}>
+					{#if type === 'textarea'}
+						<textarea
+							id={label}
+							name={label}
+							class="rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm w-full"
+							{value}
+							rows={rows ?? 5}
+							on:input={() => (valueChanged = true)} />
+					{:else}
+						<input
+							id={label}
+							name={label}
+							class="rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+							type={typeToButton(type)}
+							{value}
+							step={type === 'float' ? 'any' : ''}
+							on:input={() => (valueChanged = true)} />
+					{/if}
 				</td>
 				<br />
 			</tr>

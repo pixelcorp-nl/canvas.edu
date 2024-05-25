@@ -44,6 +44,8 @@
 		"highlight.js": "^11.8.0",
 		"hot-shots": "^10.0.0",
 		"ioredis": "^5.3.2",
+		"markdown-it": "^14.1.0",
+		"markdown-it-container": "^4.0.0",
 		"memoizee": "^0.4.15",
 		"pg": "^8.11.3",
 		"postcss": "^8.4.31",
@@ -68,5 +70,9 @@
 		"node": ">=18.0.0",
 		"npm": ">=8.8.0",
 		"pnpm": ">=7.0.0"
+	},
+	"dependencies": {
+		"@types/markdown-it": "^14.1.1",
+		"@types/markdown-it-container": "^2.0.10"
 	}
 }
