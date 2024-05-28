@@ -37,6 +37,14 @@
 	"copy": "Copy",
 	"copy.success": "Copied!",
 	"footer": "Made with ❤️ by",
+	"comments": {
+		"one": "# This is the URL of the server where we send the pixels.",
+		"two": "# Pixel information in JSON format.\n# The \"key\" contains a secret code that is unique to everyone.\n# This way the server knows who sent which pixel.",
+		"three": "# Here the pixel information is sent to the server.\n# We use the post function from the requests library for this.",
+		"four": "# Here the result is printed so we know if our script was executed successfully.",
+		"five": "# If it succeeded, a success message is printed.",
+		"six": "# If it didn't succeed, an error message is printed with the HTTP status code."
+	},
 	"code": {
 		"python": {
 			"putPixel": "import requests\nimport json\n\n# This is the url of the server where we send the pixels.url = '${root}/api/single'\nheaders = {'Content-Type': 'application/json'}\n\n# This is a function.\n# We will use this function to send a pixel to the canvas.\ndef sendPixel(pixel):\n    response = requests.post(url, headers=headers, data=json.dumps({**pixel, 'key': '${apikey}'}))\n    print(response.content)\n\n# First, we will create a pixel.\n# This is a variable that contains the following information.\n#    x: the x coordinate where we want to place the pixel.\n#    y: the y coordinate where we want to place the pixel.\n#    color: the color the pixel should be in RGB.\npixel = {'x': ${x}, 'y': ${y}, 'color': [0, 25, 255]}\n\n# By passing this pixel variable to the sendPixel function, it will be sent to the server.\nsendPixel(pixel)",

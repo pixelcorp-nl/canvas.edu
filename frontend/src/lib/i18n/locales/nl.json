@@ -37,6 +37,14 @@
 	"copy": "Kopieer",
 	"copy.success": "Gekopieerd!",
 	"footer": "Gemaakt met ❤️ door",
+	"comments": {
+		"one": "# Dit is de url van de server waar we de pixels heen sturen.",
+		"two": "# Pixel informatie in JSON formaat.\n# De \"key\" bevat een geheime code die voor iedereen uniek is.\n# Zo weet de server wie welke pixel gestuurd heeft.",
+		"three": "# Hier wordt de pixelinformatie naar de server verstuurd.\n# We gebruiken hiervoor de post functie uit de requests bibliotheek",
+		"four": "# Hier wordt het resultaat geprint zodat we weten of ons script succesvol is uitgevoerd.",
+		"five": "# Als het gelukt is wordt er een succesbericht geprint.",
+		"six": "# Als het niet gelukt is wordt er een foutbericht geprint met de HTTP status code."
+	},
 	"code": {
 		"python": {
 			"putPixel": "import requests\nimport json\n\n# Dit is de url van de server waar we depixels heensturen.url = '${root}/api/single'\nheaders = {'Content-Type': 'application/json'}\n\n# Dit is een functie.\n# Deze functie gaan we straks gebruiken om een pixel te sturen naar het canvas.\ndef sendPixel(pixel):\n    response = requests.post(url, headers=headers, data=json.dumps({**pixel, 'key': '${apikey}'}))\n    print(response.content)\n\n# Eerst gaan we een pixel aanmaken.\n# Dit is een variabele die de volgende informatie bevat.\n#    x: het x coordinaat waar we de pixel willen plaatsen.\n#    y: het y coordinaat waar we de pixel willen plaatsen.\n#    color: de kleur dat de pixel moet worden in RGB.\npixel = {'x': ${x}, 'y': ${y}, 'color': [0, 25, 255]}\n\n# Door deze pixel variabele mee te geven aan de sendPixel functie wordt hij naar de server verstuurd.\nsendPixel(pixel)",
