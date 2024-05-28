@@ -1,4 +1,7 @@
 {
+	"base": {
+		"hint": "tip"
+	},
 	"header.info": "Informatie",
 	"header.canvas": "Canvas",
 	"header.color": "Kleur",
@@ -15,7 +18,7 @@
 	"info.indentation": "In Python is het belangrijk dat je de code op de juiste manier indeelt. Dit betekend dat je de code die bij elkaar hoort evenveel spaties naar rechts moet zetten.",
 	"info.functions1": "Tot nu toe hebben we alleen functies gebruikt die door al gemaakt zijn. Python laat ons ook zelf nieuwe functies toevoegen. Dit is heel handig, zodat we code niet moeten herhalen.",
 	"info.functions2": "In ons script is het handig om een paar hulp functies te maken zodat het script overzichtelijk blijft.",
-	"info.extra1": "Vanaf nu mag je alles doen wat je wilt. Hieronder zijn wat optionele eind opdrachten voor als je iets verder wilt gaan dan wat we in de opdrachten hiervoor hebben gedaan.",
+	"info.extra1": "Vanaf hier mag je alles doen wat je wilt. Hieronder zijn wat optionele eind opdrachten voor als je iets verder wilt gaan dan wat we in de opdrachten hiervoor hebben gedaan.",
 	"info.loops2": "Bij de volgende opdracht gaan we gebruik maken van een for loop om meerdere pixels te plaatsen terwijl we het script maar 1x aan hoeven te zetten.",
 	"info.challenges": "Je mag om een extra uitdaging vragen aan de begleiders of zelf iets bedenken.",
 	"info.color1": "In het programmeren kan je verschillende kleuren maken door 3 verschillende basiskleuren te mengen. Door een kleur sterker of minder sterk naar voren te laten komen kan je alle kleuren maken.",
@@ -39,25 +42,41 @@
 	"footer": "Gemaakt met ❤️ door",
 	"code": {
 		"python": {
-			"putPixel": "import requests\nimport json\n\n# Dit is de url van de server waar we depixels heensturen.url = '${root}/api/single'\nheaders = {'Content-Type': 'application/json'}\n\n# Dit is een functie.\n# Deze functie gaan we straks gebruiken om een pixel te sturen naar het canvas.\ndef sendPixel(pixel):\n    response = requests.post(url, headers=headers, data=json.dumps({**pixel, 'key': '${apikey}'}))\n    print(response.content)\n\n# Eerst gaan we een pixel aanmaken.\n# Dit is een variabele die de volgende informatie bevat.\n#    x: het x coordinaat waar we de pixel willen plaatsen.\n#    y: het y coordinaat waar we de pixel willen plaatsen.\n#    color: de kleur dat de pixel moet worden in RGB.\npixel = {'x': ${x}, 'y': ${y}, 'color': [0, 25, 255]}\n\n# Door deze pixel variabele mee te geven aan de sendPixel functie wordt hij naar de server verstuurd.\nsendPixel(pixel)",
-			"comment1": "Definieer de URL van het API-eindpunt en de aanvraagheaders",
+			"putPixel1": "import requests\nimport json\n\n# Dit is de url van de server waar we depixels heensturen.url = '${root}/api/single'\nheaders = {'Content-Type': 'application/json'}\n\n# Dit is een functie.\n# Deze functie gaan we straks gebruiken om een pixel te sturen naar het canvas.\ndef sendPixel(pixel):\n",
+			"putPixel2": "\n    print(response.content)\n\n# Eerst gaan we een pixel aanmaken.\n# Dit is een variabele die de volgende informatie bevat.\n#    x: het x coordinaat waar we de pixel willen plaatsen.\n#    y: het y coordinaat waar we de pixel willen plaatsen.\n#    color: de kleur dat de pixel moet worden in RGB.\n",
+			"putPixel3": "\n\n# Door deze pixel variabele mee te geven aan de sendPixel functie wordt hij naar de server verstuurd.\nsendPixel(pixel)",
+			"color": "# Pixel informatie in JSON formaat.\n# Deze pixel wordt rood, omdat de eerste waarde van color helemaal aan staat en de rest helemaal uit staat.\n",
+			"comment1": "# De # aan het begin van deze regel geeft aan dat dit een comment is.\n# Comments worden niet uitgevoerd wanneer we een script runnen.\n# Ze zijn wel heel handig voor onszelf om aan te geven waarom we iets hebben gedaan!",
 			"comment2": "Definieer de pixelgegevens als een Python-dictionary",
 			"comment3": "Verstuur een POST-aanvraag naar het API-eindpunt met de pixelgegevens als JSON",
 			"comment4": "Controleer of de aanvraag succesvol was",
 			"comment5": "Als de aanvraag succesvol was, print dan een succesbericht",
-			"comment6": "Als de aanvraag niet succesvol was, print dan een foutbericht dat de HTTP-statuscode bevat"
+			"comment6": "Als de aanvraag niet succesvol was, print dan een foutbericht dat de HTTP-statuscode bevat",
+			"loop": "# Dit script gebruikt een for loop om 1 tot en met 10 te printen.\nfor i in range(0, 10):\n    # Alles wat op deze indentatie staat valt in de for loop.\n    p = i + 1\n    print(p)\n# Zodra er weer iets zonder extra indentatie staat valt het buiten de for loop.\nprint(\"buiten de for loop\")",
+			"function": "# Het keyword def geeft aan dat we een eigen functie maken\n# tussen de haakjes staat world, dit is een variabel die we mee kunnen geven die in de functie gebruikt kan worden.\ndef hello_world(world):\n    print(\"hello world:\", world, \"!\")\n\nhello_world(\"aarde\")",
+			"prototypes": "# len is het aantal pixels dat de lijn lang is.\ndef create_horizontal_line(x, y, color, len):\n\ndef create_vertical_line(x, y, color, len):",
+			"helloworld": "# Dit is de print functie, deze kan infomatie weergeven en een venster wat wij de console noemen.\nprint(\"hello world!\")",
+			"printx": "x = 42\nprint(x)",
+			"addition": "x = x + 1"
 		}
 	},
 	"exercise": {
 		"addition": "Maak met behulp van de 2 bovenstaande codes een programma dat 43 uitprint.",
 		"putPixel": "Kopier de code en controleer of we een pixel op het canvas hebben geplaatst nadat je het uitgevoerd hebt met de Run knop",
 		"putPixel2": "Is de pixel geplaatst op deze locatie?",
+		"color1": "Plaats een gekleurde pixel op het canvas",
+		"color2": "Plaats een roze, oranje, paarse en lichtgroene pixel op het canvas",
+		"color3": "Plaats 2 pixels op het canvas door één keer het script te runnen.",
 		"loop": "Gebruik een for loop om een lijn van 10 pixels te plaatsen.",
 		"functions1": "Maak functies met de prototypen in het voorbeeld hieronder.",
 		"functions2": "Gebruik de functies die je net hebt gemaakt om een vierkant te maken.",
 		"functions3": "Maak een functie die een vierkant kan tekenen.",
 		"extra1": "Maak een functie die een cirkel kan tekenen.",
 		"extra2": "Maak een functie die kleine pixelfiguur kan tekenen op een random locatie",
-		"extra3": "Maak een functie die een lijn kan tekenen."
+		"extra3": "Maak een functie die een lijn kan tekenen.",
+		"helloworld": "Kopier dit stukje code en run het in Trinket. En controleer of de tekst op de rechter kant verschijnt."
+	},
+	"hint": {
+		"colab": "Als je er niet uikomt kijk hoe anderen het voor elkaar krijgen."
 	}
 }
