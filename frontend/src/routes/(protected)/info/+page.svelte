@@ -7,39 +7,16 @@
 	import Codeblock from '$components/Codeblock.svelte'
 	import Opdracht from '$components/Opdracht.svelte'
 	import Info from '$components/Info.svelte'
+	import Trinket from '$components/Trinket.svelte'
 
 	export let data
 
 	const apikey = $page.data['user']['user'].key
 	const { x, y } = $page.data['infoPixel']
 	const root = `${$page.url.protocol}//${$page.url.host}`
-
 	const location = `(${x}:${y})`
-	const code = `import requests
-import json
-
-${$_('comments.one')}
-url = '${root}/api/single'
-headers = {'Content-Type': 'application/json'}
-
-${$_('comments.two')}
-pixel = {'x': ${x}, 'y': ${y}, 'color': [0, 25, 255], 'key': '${apikey}' }
-
-${$_('comments.three')}
-response = requests.post(url, headers=headers, data=json.dumps(pixel))
-
-${$_('comments.four')}
-if response.ok:
-	${$_('comments.five')}
-    print("Success!", response.content)
-else:
-	${$_('comments.six')}
-    print("Error!", response.content)
-`
-	const code2 = `# Pixel informatie in JSON formaat.
-# Deze pixel wordt rood, omdat de eerste waarde van "color" helemaal aan staat en de rest helemaal uit staat.
-pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0], 'key': '${apikey}' }`
-	const comment1 = `Plaats een pixel op deze coordinaten (${x}:${y})`
+	const pixel = `pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0]}`
+	const sendPixel = `    response = requests.post(url, headers=headers, data=json.dumps({**pixel, 'key': '${apikey}'}))`
 </script>
 
 <svelte:head>
@@ -56,30 +33,29 @@ pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0], 'key': '${apikey}' }`
 	<h2 id="inleiding">{$_('info.header1')}</h2>
 	<p>{$_('info.content1')}</p>
 	<Info content={$_('info.info1')} />
-	<div class="rounded-lg bg-white p-4 flex justify-between">
+	<Trinket content={$_('trinket')} />
+	<!-- <div class="rounded-lg bg-white p-4 flex justify-between">
 		{$_('info.codeEnvironment')}
 		<a href="https://trinket.io/embed/python3" target="_blank" class="">Trinket</a>
-	</div>
+	</div> -->
 
 	<!-- Basics -->
-	<Codeblock code={data.comment} />
+	<Codeblock code={$_('code.python.comment1')} />
 	<p>{$_('info.helloworld')}</p>
-	<Codeblock code={data.helloworld} />
-	<Opdracht
-		content="Kopier dit stukje code en run het in de browser. Kijk nu waar de tekst die we willen printen op het
-		scherm verschijnt." />
+	<Codeblock code={$_('code.python.helloworld')} />
+	<Opdracht content={$_('exercise.helloworld')} />
 	<p>{$_('info.variables')}</p>
-	<Codeblock code={data.printx} />
+	<Codeblock code={$_('code.python.printx')} />
 
 	<!-- Basics | Math -->
 	<p>{$_('info.math')}</p>
-	<Codeblock code={data.addition} />
+	<Codeblock code={$_('code.python.addition')} />
 	<Opdracht content={$_('exercise.addition')} />
 
 	<!-- First pixel -->
 	<h3 id="color">{$_('info.header2')}</h3>
 	<p>{$_('info.putPixel')}</p>
-	<Codeblock {code} />
+	<Codeblock code="{$_('code.python.putPixel1')}{sendPixel}{$_('code.python.putPixel2')}{pixel}{$_('code.python.putPixel3')}" />
 	<Opdracht content={$_('exercise.putPixel')} />
 	<Opdracht content="{$_('exercise.putPixel2')} {location} " />
 
@@ -89,26 +65,24 @@ pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0], 'key': '${apikey}' }`
 	<p>{$_('info.color2')}</p>
 	<p>{$_('info.color3')}</p>
 
-	<p class="bg-blue-100 p-2 rounded-lg">
-		<span class="bg-yellow text-blue-500 font-semibold">ℹ️ Tip:</span> Als je er niet uikomt kijk hoe anderen het voor elkaar krijgen.
-	</p>
-	<Codeblock code={code2} />
-	<Opdracht content="Plaats een gekleurde pixel op het canvas" />
-	<Opdracht content="Plaats een roze, oranje, paarse en lichtgroene pixel op het canvas" />
-	<Opdracht content="Plaats 2 pixels op het canvas door één keer het script te runnen." />
+	<Info content={$_('hint.colab')} />
+	<Codeblock code="{$_('code.python.color')}{pixel}" />
+	<Opdracht content={$_('exercise.color1')} />
+	<Opdracht content={$_('exercise.color2')} />
+	<Opdracht content={$_('exercise.color3')} />
 
 	<!-- Loops -->
 	<h3 id="loops">Loops</h3>
 	<p>{$_('info.loops1')}</p>
 	<p>{$_('info.loops2')}</p>
-	<Codeblock code={data.loop} />
+	<Codeblock code={$_('code.python.loop')} />
 	<Info content={$_('info.indentation')} />
 	<Opdracht content={$_('exercise.loop')} />
 	<p>{$_('info.functions1')}</p>
-	<Codeblock code={data.func} />
+	<Codeblock code={$_('code.python.function')} />
 	<p>{$_('info.functions2')}</p>
 	<Opdracht content={$_('exercise.functions1')} />
-	<Codeblock code={data.prototype} />
+	<Codeblock code={$_('code.python.prototypes')} />
 	<Opdracht content={$_('exercise.functions2')} />
 	<Opdracht content={$_('exercise.functions3')} />
 
