@@ -9,11 +9,9 @@
 	import Info from '$components/Info.svelte'
 	import Trinket from '$components/Trinket.svelte'
 
-	export let data
-
 	const apikey = $page.data['user']['user'].key
 	const { x, y } = $page.data['infoPixel']
-	const root = `${$page.url.protocol}//${$page.url.host}`
+	const root = `url = "${$page.url.protocol}//${$page.url.host}/api/single"`
 	const location = `(${x}:${y})`
 	const pixel = `pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0]}`
 	const sendPixel = `    response = requests.post(url, headers=headers, data=json.dumps({**pixel, 'key': '${apikey}'}))`
@@ -55,7 +53,7 @@
 	<!-- First pixel -->
 	<h3 id="color">{$_('info.header2')}</h3>
 	<p>{$_('info.putPixel')}</p>
-	<Codeblock code="{$_('code.python.putPixel1')}{sendPixel}{$_('code.python.putPixel2')}{pixel}{$_('code.python.putPixel3')}" />
+	<Codeblock code="{$_('code.python.putPixel1')}{root}{$_('code.python.putPixel2')}{sendPixel}{$_('code.python.putPixel3')}{pixel}{$_('code.python.putPixel4')}" />
 	<Opdracht content={$_('exercise.putPixel')} />
 	<Opdracht content="{$_('exercise.putPixel2')} {location} " />
 

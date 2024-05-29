@@ -53,10 +53,11 @@
 	},
 	"code": {
 		"python": {
-			"putPixel1": "import requests\nimport json\n\n# This is the URL of the server where we send the pixels.url = '${root}/api/single'\nheaders = {'Content-Type': 'application/json'}\n\n# This is a function.\n# We will use this function to send a pixel to the canvas.\ndef sendPixel(pixel):\n",
-			"putPixel2": "\n    print(response.content)\n\n# First, we will create a pixel.\n# This is a variable that contains the following information.\n#    x: the x coordinate where we want to place the pixel.\n#    y: the y coordinate where we want to place the pixel.\n#    color: the color the pixel should be in RGB.\n",
-			"putPixel3": "\n\n# By passing this pixel variable to the sendPixel function, it will be sent to the server.\nsendPixel(pixel)",
-			"color": "# Pixel information in JSON format.\n# This pixel will be red because the first value of color is fully on, and the rest are fully off.\n",
+			"putPixel1": "import requests\nimport json\n\n# This is the URL of the server where we send the pixels.\n",
+			"putPixel2": "\nheaders = {'Content-Type': 'application/json'}\n\n# This is a function.\n# We will use this function to send a pixel to the canvas.\ndef sendPixel(pixel):\n",
+			"putPixel3": "\n    print(response.content)\n\n# First, we will create a pixel.\n# This is a variable that contains the following information.\n#    x: the x coordinate where we want to place the pixel.\n#    y: the y coordinate where we want to place the pixel.\n#    color: the color the pixel should be in RGB.\n",
+			"putPixel4": "\n\n# By passing this pixel variable to the sendPixel function, it will be sent to the server.\nsendPixel(pixel)",
+			"color": "# Pixel information in JSON format.\n# This pixel will be red because the first value of color is fully on and the rest are fully off.\n",
 			"comment1": "# The # at the beginning of this line indicates that this is a comment.\n# Comments are not executed when we run a script.\n# They are very useful for us to indicate why we did something!",
 			"comment2": "Define the pixel data as a Python dictionary",
 			"comment3": "Send a POST request to the API endpoint with the pixel data as JSON",
