@@ -4,7 +4,7 @@
 	"main": "build/app.js",
 	"type": "module",
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"generate-schema": "drizzle-kit generate:pg --out db-migrations --schema src/lib/server/schemas.ts",

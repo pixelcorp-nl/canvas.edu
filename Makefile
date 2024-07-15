@@ -24,6 +24,22 @@ wait-for-healthcheck: $(eval SHELL:=/bin/bash)
 down:
 	docker compose down --remove-orphans --timeout 4
 
+nuke-postgres:
+	docker compose down --remove-orphans --timeout 4 postgres
+	rm -rf frontend/postgres-db
+	docker compose up --remove-orphans --build --detach postgres
+
+nuke-redis:
+	docker compose down --remove-orphans --timeout 4 redis
+	rm -rf frontend/redis-db
+	docker compose up --remove-orphans --build --detach redis
+
+nuke-all:
+	docker compose down --remove-orphans --timeout 4
+	rm -rf frontend/postgres-db
+	rm -rf frontend/redis-db
+	docker compose up --remove-orphans --build --detach redis postgres
+
 # Run tests
 test:
 	docker compose up --remove-orphans --build --detach
