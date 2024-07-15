@@ -22,4 +22,14 @@
 	<div style="display: contents">%sveltekit.body%</div>
 </body>
 
+<style>
+	.revert-tailwind {
+		all: initial;
+	}
+
+	.revert-tailwind > * {
+		all: revert;
+	}
+</style>
+
 </html>

@@ -55,6 +55,23 @@ pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0], 'key': '${apikey}' }`
 <!-- HTML -->
 <article class="text-column prose-md lg:prose-lg mx-auto mb-5 mt-10">
 
+	<h1>This file is for testing the renderer</h1>
+	<p>We need to atleast have one codeblock:</p>
+
+	<pre><code class="language-python"><Codeblock code="# comment
+def function(var):
+	print(&quot;forty-two&quot;)" /></code></pre>
+
+	<Codeblock code="# comment
+def function(var):
+	print(&quot;forty-two&quot;)" />
+	<h2>This will be a special block with our own styling.</h2>
+	<Exercise>
+	<p>maak een lijn met pixelz</p>
+	</Exercise>
+
+
+
 	<h2 id="over-dit-project">Over dit project</h2>
 	<p>
 		<em>Op dit digitale canvas is het alleen mogelijk om pixels te plaatsen door middel van code.</em>
@@ -133,6 +150,13 @@ pixel = {'x': ${x}, 'y': ${y}, 'color': [255, 0, 0], 'key': '${apikey}' }`
 </article>
 
 <style>
+
+pre
+{
+	margin:0px;
+	padding:0px;
+	
+}
 p
 {
     margin:0px; 
