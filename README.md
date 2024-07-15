@@ -34,7 +34,7 @@ cd canvas.edu
 
 2. Set up environment variables
 ```shell
-cp frontend/.env.example frontend/.env
+cp frontend/.env-example frontend/.env
 # by default you don't have to change anything in the .env file
 ```
 
