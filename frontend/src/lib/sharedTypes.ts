@@ -18,3 +18,6 @@ export type ClientToServerEvents = {
 
 export type Socket = LibSocket<ServerToClientEvents, ServerToClientEvents>
 export type Server = LibServer<ClientToServerEvents, ServerToClientEvents>
+
+// All custom elements should have at least one - in them, that's why we prefix it with md-, also to prevent name collisions
+export type CustomHtmlElements = 'md-exercise' | 'md-codeblock'
