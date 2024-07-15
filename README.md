@@ -20,7 +20,7 @@ Pixels introduces students to the exciting world of programming by enabling them
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) >=18.x
-- [pnpm](https://pnpm.io/) >=8.x
+- [pnpm](https://pnpm.io/installation) >=8.x
 - [Docker](https://www.docker.com/) >=23.x
 
 ## Development
@@ -29,13 +29,13 @@ Pixels introduces students to the exciting world of programming by enabling them
 
 ```sh
 git clone https://github.com/pixelcorp-nl/canvas.edu.git
-cd pixels
+cd canvas.edu
 ```
 
 2. Set up environment variables
 ```shell
 cp frontend/.env.example frontend/.env
-# fill in the variables in .env
+# by default you don't have to change anything in the .env file
 ```
 
 3. Start dependencies (database, etc.)
@@ -52,6 +52,21 @@ pnpm run dev
 ```
 
 5. Pixels is ready at http://localhost:5173
+
+## Code structure
+The project consists of 3 parts:
+1. `frontend` - The frontend of the application, built with [SvelteKit](https://kit.svelte.dev/)
+2. `redis` - The Redis database for storing pixel data
+3. `postgres` - The Postgres database for storing user data and other information
+
+If you break the database(s), you can clear them by:
+```shell
+# cd to the root of the project
+make nuke-postgres # if you want to clear the postgres database
+make nuke-redis # if you want to clear the redis database
+make nuke-all # if you want to clear both databases
+```
+
 
 
 Pixels is released under the [MIT License](LICENSE)
