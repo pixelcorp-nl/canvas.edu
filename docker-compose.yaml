@@ -30,4 +30,4 @@ services:
     volumes:
       - ./redis-db:/data
     ports:
-      - 6379:6379
+      - 16379:6379

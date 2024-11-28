@@ -46,12 +46,29 @@ make start-deps
 4. Start the development server
 
 ```sh
+# Install pnpm if you do not have it already.
+# npm install -g pnpm
+
 cd frontend
 pnpm install
 pnpm run dev
 ```
 
 5. Pixels is ready at http://localhost:5173
+
+6. Send pixels.
+Since your development environment is running on localhost you will not be able to reach it with trinket.
+Instead you can use python locally on your computer.
+The Key from the info page does not work in the development env currently, untill this is fixed the key "joppe" can be used.
+
+Here are some python cli tips to get you started:
+```sh
+# install a python package
+pip3 install <package>
+
+# run a python script
+python3 putpixels.py
+```
 
 ## Code structure
 The project consists of 3 parts:
