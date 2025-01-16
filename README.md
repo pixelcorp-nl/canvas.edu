@@ -19,9 +19,9 @@ Pixels introduces students to the exciting world of programming by enabling them
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) >=18.x
+- [Node.js](https://github.com/nodesource/distributions) >=20.x
 - [pnpm](https://pnpm.io/installation) >=8.x
-- [Docker](https://www.docker.com/) >=23.x
+- [Docker](https://docs.docker.com/get-started/get-docker/) >=25.x
 
 ## Development
 
@@ -34,11 +34,11 @@ cd canvas.edu
 
 2. Set up environment variables
 ```shell
-cp frontend/.env-example frontend/.env
-# by default you don't have to change anything in the .env file
+cp frontend/.env.example frontend/.env
+# You probably don't have to change anything in the .env file, but take a look nonetheless
 ```
 
-3. Start dependencies (database, etc.)
+3. Start dependencies (postgres database, etc.)
 ```sh
 make start-deps
 ```
