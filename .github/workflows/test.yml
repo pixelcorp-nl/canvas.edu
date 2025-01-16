@@ -39,12 +39,13 @@ jobs:
         secrets: ${{ toJSON(secrets) }}
 
     - name: Setup .env file
-      run: env >> frontend/.env
+      run: cp frontend/.env-example frontend/.env
 
     - name: Start services
       run: make start-detached
 
     - name: Wait for services to start
+      timeout-minutes: 2
       run: make wait-for-healthcheck
 
     - name: Run tests

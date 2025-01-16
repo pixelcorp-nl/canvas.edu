@@ -26,18 +26,18 @@ down:
 
 nuke-postgres:
 	docker compose down --remove-orphans --timeout 4 canvas-postgres
-	rm -rf frontend/postgres-db
+	rm -rf frontend/postgres-db postgres-db
 	docker compose up --remove-orphans --build --detach canvas-postgres
 
 nuke-redis:
 	docker compose down --remove-orphans --timeout 4 canvas-redis
-	rm -rf frontend/redis-db
+	rm -rf frontend/redis-db redis-db
 	docker compose up --remove-orphans --build --detach canvas-redis
 
-nuke-all:
-	docker compose down --remove-orphans --timeout 4
-	rm -rf frontend/postgres-db
-	rm -rf frontend/redis-db
+nuke-db:
+	docker compose down --remove-orphans --timeout 4 canvas-redis canvas-postgres
+	rm -rf frontend/postgres-db postgres-db
+	rm -rf frontend/redis-db redis-db
 	docker compose up --remove-orphans --build --detach canvas-redis canvas-postgres
 
 # Run tests

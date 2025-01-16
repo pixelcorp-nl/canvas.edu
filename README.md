@@ -34,7 +34,7 @@ cd canvas.edu
 
 2. Set up environment variables
 ```shell
-cp frontend/.env.example frontend/.env
+cp frontend/.env-example frontend/.env
 # You probably don't have to change anything in the .env file, but take a look nonetheless
 ```
 
@@ -81,7 +81,7 @@ If you break the database(s), you can clear them by:
 # cd to the root of the project
 make nuke-postgres # if you want to clear the postgres database
 make nuke-redis # if you want to clear the redis database
-make nuke-all # if you want to clear both databases
+make nuke-db # if you want to clear both databases
 ```
 
 
