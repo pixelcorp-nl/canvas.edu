@@ -19,9 +19,9 @@ Pixels introduces students to the exciting world of programming by enabling them
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) >=18.x
+- [Node.js](https://github.com/nodesource/distributions) >=20.x
 - [pnpm](https://pnpm.io/installation) >=8.x
-- [Docker](https://www.docker.com/) >=23.x
+- [Docker](https://docs.docker.com/get-started/get-docker/) >=25.x
 
 ## Development
 
@@ -35,10 +35,10 @@ cd canvas.edu
 2. Set up environment variables
 ```shell
 cp frontend/.env-example frontend/.env
-# by default you don't have to change anything in the .env file
+# You probably don't have to change anything in the .env file, but take a look nonetheless
 ```
 
-3. Start dependencies (database, etc.)
+3. Start dependencies (postgres database, etc.)
 ```sh
 make start-deps
 ```
@@ -81,7 +81,7 @@ If you break the database(s), you can clear them by:
 # cd to the root of the project
 make nuke-postgres # if you want to clear the postgres database
 make nuke-redis # if you want to clear the redis database
-make nuke-all # if you want to clear both databases
+make nuke-db # if you want to clear both databases
 ```
 
 
