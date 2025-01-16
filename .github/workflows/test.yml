@@ -10,12 +10,13 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
-    - uses: docker-practice/actions-setup-docker@master
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@v3.8.0
 
     - name: Install pnpm
-      uses: pnpm/action-setup@v2
+      uses: pnpm/action-setup@v4
       with:
         version: latest
 
@@ -38,6 +39,9 @@ jobs:
 
     - name: Start services
       run: make start-detached
+
+    - name: Wait for services to start
+      run: make wait-for-healthcheck
 
     - name: Run tests
       run: (cd frontend && npm test)
