@@ -3,6 +3,10 @@ name: Tests
 on:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -12,7 +16,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Workaround: https://github.com/docker/build-push-action/issues/461
     - name: Setup Docker buildx
       uses: docker/setup-buildx-action@v3.8.0
 
@@ -36,12 +39,13 @@ jobs:
         secrets: ${{ toJSON(secrets) }}
 
     - name: Setup .env file
-      run: env >> frontend/.env
+      run: cp frontend/.env-example frontend/.env
 
     - name: Start services
       run: make start-detached
 
     - name: Wait for services to start
+      timeout-minutes: 2
       run: make wait-for-healthcheck
 
     - name: Run tests
