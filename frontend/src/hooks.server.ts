@@ -127,7 +127,7 @@ const logHandle: Handle = ({ event, resolve }) => {
 	return resolve(event)
 }
 
-export const handle: Handle = sequence(injectHandle, logHandle, authHandle)
+export const handle: Handle = sequence(injectHandle, logHandle, authHandle.handle)
 
 export const handleError: HandleServerError = a => {
 	if (a.event.route.id) {

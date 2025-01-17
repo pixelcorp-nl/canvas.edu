@@ -57,44 +57,48 @@
 	{#if data.classes}
 		<h2 class="text-l mt-8 mb-0">Existing classes - {data.classes.length}</h2>
 		<table id="classes">
-			<tr>
-				<th>Name</th>
-				<th>ID</th>
-				<th>Max users</th>
-				<th>n.o. Users</th>
-				<th>Users</th>
-			</tr>
-			{#each data.classes as _class}
+			<tbody>
 				<tr>
-					<td>{_class.name}</td>
-					<td id={`${_class.name}-id`}>{_class.id}</td>
-					<td>{_class.maxUsers}</td>
-					<td>{_class.users.length}</td>
-					<td>
-						{#each _class.users as user}
-							{user.name} {','}
-						{/each}
-					</td>
+					<th>Name</th>
+					<th>ID</th>
+					<th>Max users</th>
+					<th>n.o. Users</th>
+					<th>Users</th>
 				</tr>
-			{/each}
+				{#each data.classes as _class}
+					<tr>
+						<td>{_class.name}</td>
+						<td id={`${_class.name}-id`}>{_class.id}</td>
+						<td>{_class.maxUsers}</td>
+						<td>{_class.users.length}</td>
+						<td>
+							{#each _class.users as user}
+								{user.name} {','}
+							{/each}
+						</td>
+					</tr>
+				{/each}
+			</tbody>
 		</table>
 	{/if}
 
 	{#if data.users}
 		<h2 class="text-l mt-8 mb-0">Existing users - {data.users.length}</h2>
 		<table id="users">
-			<tr>
-				<th>Id</th>
-				<th>Username</th>
-				<th>ApiKey</th>
-			</tr>
-			{#each data.users as user}
+			<tbody>
 				<tr>
-					<td>{user.id}</td>
-					<td>{user.name}</td>
-					<td>{user.key}</td>
+					<th>Id</th>
+					<th>Username</th>
+					<th>ApiKey</th>
 				</tr>
-			{/each}
+				{#each data.users as user}
+					<tr>
+						<td>{user.id}</td>
+						<td>{user.name}</td>
+						<td>{user.key}</td>
+					</tr>
+				{/each}
+			</tbody>
 		</table>
 	{/if}
 </article>

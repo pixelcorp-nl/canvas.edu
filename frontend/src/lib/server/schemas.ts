@@ -1,4 +1,3 @@
-import type { InferModel } from 'drizzle-orm'
 import { integer, json, pgTable, text, uuid } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
@@ -19,15 +18,15 @@ export const users = pgTable('users', {
 		.references(() => classes.id)
 		.notNull()
 })
-export type User = InferModel<typeof users>
+export type User = typeof users.$inferSelect;
 export const User = createSelectSchema(users, {
-	name: schema => schema.name.min(1),
-	key: schema => schema.key.min(1)
+	name: schema => schema.min(1),
+	key: schema => schema.min(1)
 })
 // https://orm.drizzle.team/docs/zod
 export const UserInsert = createInsertSchema(users, {
-	name: schema => schema.name.min(1),
-	key: schema => schema.key.min(1)
+	name: schema => schema.min(1),
+	key: schema => schema.min(1)
 }) /*.pick({
 	name: true,
 	key: true
@@ -43,15 +42,15 @@ export const userRoles = pgTable('user_roles', {
 })
 export const roles = ['stats', 'canvasSettings', 'classes:manage', 'users:manage', 'admin'] as const
 export type Role = (typeof roles)[number]
-export type UserRole = InferModel<typeof userRoles>
-export type NewUserRole = InferModel<typeof userRoles, 'insert'>
+export type UserRole = typeof userRoles.$inferSelect
+export type NewUserRole = typeof userRoles.$inferInsert
 
 export const classes = pgTable('classes', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),
 	maxUsers: integer('max_users').notNull()
 })
-export type Class = InferModel<typeof classes>
+export type Class = typeof classes.$inferSelect
 export const Class = z.strictObject({
 	id: z
 		.string()
