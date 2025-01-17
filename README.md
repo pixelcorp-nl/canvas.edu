@@ -1,11 +1,9 @@
-
 <h1> <img height="25" src="./frontend/static/icons/android-chrome-192x192.png" alt="Pixels Logo"> Pixels - Learn Programming through Pixel Art </h1>
 <p align="center">
   <img width="400" src="./frontend/static/images/example.gif" alt="sample gif">
 </p>
 
 Pixels is an interactive learning platform that aims to teach highschool students programming by allowing them to create pixel art on a canvas using any programming language.
-
 
 ## Introduction
 
@@ -33,6 +31,7 @@ cd canvas.edu
 ```
 
 2. Set up environment variables
+
 ```shell
 cp frontend/.env-example frontend/.env
 # You probably don't have to change anything in the .env file, but take a look nonetheless
@@ -69,6 +68,10 @@ pip3 install <package>
 # run a python script
 python3 putpixels.py
 ```
+
+## Admin panel
+The admin page is available at `/admin` and can be used to manage users, classes and settings.
+You can create a admin user by creating a user who's name starts with the value of the environment variable `PRIVATE_ADMIN_KEY`, default is `joppe`
 
 ## Code structure
 The project consists of 3 parts:

@@ -2,3 +2,6 @@
 /questdb
 /grafana
 /postgres-db
+/a.py
+/.idea
+/frontend/test-results

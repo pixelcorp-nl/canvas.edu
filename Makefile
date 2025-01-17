@@ -15,7 +15,6 @@ wait-for-healthcheck: $(eval SHELL:=/bin/bash)
 	while [ 1 ]; do \
 		STATUS=$$(docker inspect -f {{.State.Health.Status}} canvas-frontend); \
 		echo "$$STATUS"; \
-		[[ "$$STATUS" = "unhealthy" ]] && sleep 1 && docker compose logs && exit 1; \
 		[[ "$$STATUS" = "healthy" ]] && exit 0; \
 		sleep 1; \
 	done;

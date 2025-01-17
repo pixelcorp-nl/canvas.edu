@@ -1,4 +1,4 @@
-import { DB } from '$lib/server/db'
+import { DB, type FullUser } from '$lib/server/db'
 import { getPixelMap } from '$lib/server/redis'
 import { User } from '$lib/server/schemas'
 import type { Server } from '$lib/sharedTypes'
@@ -8,8 +8,9 @@ import type { HandleWs } from '@carlosv2/adapter-node-ws'
 import type { Handle, HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 import { StatsD } from './util/statsd'
-import { setupDBSingleton } from './setupDB'
+import util from 'util'
 
+util.inspect.defaultOptions.depth = 10
 let listenerCount = 0
 let globalIo: Server | undefined = undefined
 const statsd = new StatsD('pixels')
@@ -22,7 +23,20 @@ export const handleWs: HandleWs = (io: Server) => {
 	}
 	globalIo = io
 
+	io.use((socket, next) => {
+		const user = socket.handshake.auth['user']
+		if (!user) {
+			return next(new Error('Authentication error'))
+		}
+		socket.data.user = user
+		next()
+	})
+
 	io.on('connection', async socket => {
+		const user = socket.data.user as FullUser
+		console.log('User connected:', user.name)
+		socket.join(user.classId)
+
 		listenerCount++
 		statsd.gauge('connections', listenerCount)
 		io.emit('listenerCount', listenerCount)
@@ -31,15 +45,14 @@ export const handleWs: HandleWs = (io: Server) => {
 			statsd.gauge('connections', listenerCount)
 			io.emit('listenerCount', listenerCount)
 		})
-		const id = (await DB.settings.get()).canvasId
-		const pixels = await getPixelMap(id)
+
+		const pixels = await getPixelMap(user.classId)
 		socket.emit('pixelMap', pixels)
 	})
 }
 
-export type Token = User
 export type Session = {
-	user: User
+	user: FullUser
 	expires: string
 }
 
@@ -61,8 +74,16 @@ const credentials = Credentials({
 		const user = await DB.user.getBy('id', parsed.data.id)
 		if (!user) {
 			console.log('User not found')
+			return null
 		}
-		return user ?? null
+		return {
+			id: user.id,
+			name: user.name,
+			key: user.key,
+			classId: user.classId,
+			class: user.class,
+			roles: user.roles
+		} satisfies FullUser
 	}
 })
 
@@ -75,36 +96,14 @@ const authHandle = SvelteKitAuth({
 	secret: '126b402ae7264a6497882db7876ebdfa356fc8440bccfba7c742f0afbb4fd967',
 	callbacks: {
 		session({ session, token }) {
-			const t = token as Token
-
-			const u = {
-				id: t.id,
-				name: t.name,
-				key: t.key
-			} satisfies User
-
+			const t = token as FullUser
 			return {
 				...session,
-				user: u
+				user: t
 			} satisfies Session
 		},
 		jwt({ token, user }) {
-			if (user) {
-				const parsed = User.safeParse(user)
-				if (!parsed.success) {
-					throw new Error(`Invalid user: ${parsed.error}`)
-				}
-				return {
-					id: parsed.data.id,
-					name: parsed.data.name,
-					key: parsed.data.key
-				} satisfies Token
-			}
-			return {
-				id: token['id'] as string,
-				name: token.name as string,
-				key: token['key'] as string
-			} satisfies Token
+			return (user as FullUser) ?? token ?? null
 		}
 	},
 	trustHost: true
@@ -113,17 +112,15 @@ const authHandle = SvelteKitAuth({
 // TODO protect paths
 
 // Injecting global variables into the event object
-const injectHandle: Handle = async ({ event, resolve }) => {
+const injectHandle: Handle = ({ event, resolve }) => {
 	event.locals.io = globalIo as Server
 	event.locals.statsd = statsd
 
-	// make sure the database is setup
-	await setupDBSingleton()
 	return resolve(event)
 }
 
 const logHandle: Handle = ({ event, resolve }) => {
-	if (!event.url.pathname.startsWith('/api')) {
+	if (!event.url.pathname.startsWith('/api') && !event.url.pathname.startsWith('/health')) {
 		console.log(event.url.pathname + event.url.search, '|', event.route.id)
 	}
 	event.locals.statsd.increment('request')

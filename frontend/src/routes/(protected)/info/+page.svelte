@@ -1,6 +1,5 @@
 <!-- Script -->
 <script lang="ts">
-	export const csr = true
 	import { _ } from 'svelte-i18n'
 	import atomOneDark from 'svelte-highlight/styles/github-dark'
 	import { page } from '$app/stores'

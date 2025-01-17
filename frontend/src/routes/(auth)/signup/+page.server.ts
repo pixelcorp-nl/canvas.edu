@@ -1,23 +1,23 @@
 import { redirect, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import { Err, getFormData, Ok, randomString, type Result } from '$lib/server/util'
+import { Err, getFormData, Ok, randomString, type Result } from '$lib/public/util'
 import { privateEnv } from '$lib/../privateEnv'
 import { DB } from '$lib/server/db'
 import type { User } from '$lib/server/schemas'
 
 function getForm(form: FormData) {
 	if (privateEnv.userPasswords) {
-		return getFormData(form, ['username', 'password', 'passwordConfirm'])
-	} else {
-		const keys = getFormData(form, ['username'])
-		if (!keys) {
-			return undefined
-		}
-		return {
-			username: keys['username'],
-			password: '',
-			passwordConfirm: ''
-		}
+		return getFormData(form, ['username', 'classId', 'password', 'passwordConfirm'])
+	}
+	const keys = getFormData(form, ['username', 'classId'])
+	if (!keys) {
+		return undefined
+	}
+	return {
+		username: keys['username'],
+		classId: keys['classId'],
+		password: '',
+		passwordConfirm: ''
 	}
 }
 
@@ -27,7 +27,7 @@ export const actions: Actions = {
 		if (!keys) {
 			return Err('Missing required fields')
 		}
-		const { username, password, passwordConfirm } = keys
+		const { username, password, passwordConfirm, classId } = keys
 
 		if (!username) {
 			return Err('Username cannot be empty')
@@ -35,6 +35,7 @@ export const actions: Actions = {
 		if (password !== passwordConfirm) {
 			return Err('Passwords do not match')
 		}
+
 		if (privateEnv.userPasswords && !password) {
 			return Err('Password cannot be empty')
 		}
@@ -42,13 +43,20 @@ export const actions: Actions = {
 		if (existing) {
 			return Err('Username already in use')
 		}
+
+		if (!(await DB.class.getBy('id', classId as string))) {
+			return Err(`Class "${classId}" does not exist, please contact your teacher`)
+		}
+
 		const user = await DB.user.create({
 			name: username,
-			key: randomString(8)
+			key: randomString(8),
+			classId: classId as string
 		})
 		if (user instanceof Error) {
 			return Err(user.message)
 		}
+
 		locals.statsd.increment('user.signup')
 		return Ok(user)
 	}

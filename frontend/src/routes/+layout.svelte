@@ -6,6 +6,7 @@
 	import { isLoading, locale, waitLocale } from 'svelte-i18n'
 	import '../app.postcss'
 	import type { LayoutData } from './$types'
+	import { user } from '$lib/Stores/User'
 	import { page } from '$app/stores'
 	export let data: LayoutData
 
@@ -16,6 +17,7 @@
 			locale.set(lang.locale || 'en')
 		}
 		await waitLocale()
+		user.set(data.session?.user)
 	})
 </script>
 
@@ -24,11 +26,11 @@
 {:else}
 	<div class="app">
 		{#key data.session?.user}
-			<Header user={data.session?.user} />
+			<Header />
 		{/key}
 		<main><slot /></main>
 
-		<div class="mx-auto lg:flex lg:items-center">
+		<div class="mx-auto lg:flex lg:items-center" id="footer">
 			<a class="mx-auto" href="https://github.com/pixelcorp-nl/canvas.edu"><img src="/images/github.svg" class="m-1 w-8 h-8 hover:scale-95" alt="github" /></a>
 			<a class="rounded-lg" class:bg-gray-100={$page.route?.id === '/contact'} href="/contact">Contact</a>
 		</div>

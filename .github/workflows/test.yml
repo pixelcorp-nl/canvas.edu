@@ -49,4 +49,12 @@ jobs:
       run: make wait-for-healthcheck
 
     - name: Run tests
-      run: (cd frontend && npm test)
+      working-directory:  frontend
+      run: npm test -- --reporter=html --output=test-results
+
+    - name: upload playwright artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-results
+        path: frontend/test-results
