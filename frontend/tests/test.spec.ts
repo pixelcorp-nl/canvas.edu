@@ -2,6 +2,15 @@ import { expect, test, type Page } from '@playwright/test'
 
 test.describe.configure({ timeout: 20000 })
 
+test.afterEach(async ({ page }, testInfo) => {
+	if (testInfo.status === testInfo.expectedStatus) {
+		return
+	}
+	const screenshotPath = testInfo.outputPath(`failure.png`)
+	testInfo.attachments.push({ name: 'screenshot', path: screenshotPath, contentType: 'image/png' })
+	await page.screenshot({ path: screenshotPath, timeout: 5000 })
+})
+
 type Pixel = {
 	x: number
 	y: number
@@ -79,6 +88,8 @@ test('Cannot put invalid pixel', async () => {
 })
 
 test('Check pixel can be put and then changed', async ({ page }) => {
+	await page.setViewportSize({ width: 1280, height: 720 })
+
 	const userName: Pixel['key'] = 'joppe'
 	await page.goto(`${root}/login`)
 	await page.waitForSelector('button[type="submit"]')
@@ -90,7 +101,7 @@ test('Check pixel can be put and then changed', async ({ page }) => {
 	await page.waitForTimeout(3000)
 	await page.click('button[type="submit"]')
 	await page.waitForTimeout(3000)
-	await expect(page.locator('#header-username')).toHaveText(userName)
+	await expect(page.locator('#header-username')).toHaveText(`${userName}a`)
 	await page.goto(`${root}/info`)
 	await expect(page.locator('#footer')).toContainText('Contact')
 
