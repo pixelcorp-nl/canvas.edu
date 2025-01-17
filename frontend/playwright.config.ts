@@ -3,7 +3,8 @@ import type { PlaywrightTestConfig } from '@playwright/test'
 const config: PlaywrightTestConfig = {
 	testDir: 'tests',
 	use: {
-		video: 'on-first-retry'
+		video: 'retain-on-failure',
+		trace: 'retain-on-failure'
 	}
 }
 

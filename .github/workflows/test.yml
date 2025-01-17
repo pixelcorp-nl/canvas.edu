@@ -50,7 +50,7 @@ jobs:
 
     - name: Run tests
       working-directory:  frontend
-      run: npm test -- --reporter=github
+      run: npm test -- --reporter=html --output=test-results
 
     - name: upload playwright artifacts
       if: always()
