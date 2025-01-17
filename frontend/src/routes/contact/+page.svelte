@@ -64,5 +64,5 @@
 			<p>info<span style="display:none">foo</span>@pixel<span style="display:none">s</span>corp.nl</p>
 		</div>
 	</div>
-	<div class="mx-auto max-w-screen-xl px-4 lg:flex lg:items-center" />
+	<div class="mx-auto max-w-screen-xl px-4 lg:flex lg:items-center"></div>
 </section>

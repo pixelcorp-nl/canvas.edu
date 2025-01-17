@@ -3,12 +3,13 @@ import { getPixelMap } from '$lib/server/redis'
 import { User } from '$lib/server/schemas'
 import type { Server } from '$lib/sharedTypes'
 import Credentials from '@auth/core/providers/credentials'
-import { SvelteKitAuth } from '@auth/sveltekit'
+import { SvelteKitAuth, type SvelteKitAuthConfig } from '@auth/sveltekit'
 import type { HandleWs } from '@carlosv2/adapter-node-ws'
 import type { Handle, HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 import { StatsD } from './util/statsd'
 import util from 'util'
+import { building } from '$app/environment'
 
 util.inspect.defaultOptions.depth = 10
 let listenerCount = 0
@@ -18,7 +19,7 @@ const statsd = new StatsD('pixels')
 // This file is rather weird because of a hack in adapter-node-ws
 // only allowing the handleWs function to have access to the socket.io server
 export const handleWs: HandleWs = (io: Server) => {
-	if (globalIo) {
+	if (globalIo || building) {
 		return
 	}
 	globalIo = io
@@ -85,7 +86,7 @@ const credentials = Credentials({
 			roles: user.roles
 		} satisfies FullUser
 	}
-})
+}) as SvelteKitAuthConfig['providers'][number]
 
 const authHandle = SvelteKitAuth({
 	providers: [credentials],

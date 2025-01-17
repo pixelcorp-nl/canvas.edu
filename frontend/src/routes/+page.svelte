@@ -33,7 +33,7 @@
 		<div class="mx-auto max-w-xl text-center">
 			<h1 class="text-2xl font-extrabold sm:text-5xl mb-10">
 				Our mission
-				<strong class="font-extrabold text-[#f2ac93] sm:block" />
+				<strong class="font-extrabold text-[#f2ac93] sm:block"></strong>
 			</h1>
 			<p>
 				We make programming exciting by providing a platform for you to learn and improve your programming skills together with others. We believe that learning programming should
