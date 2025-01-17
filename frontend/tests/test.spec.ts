@@ -92,7 +92,7 @@ test('Check pixel can be put and then changed', async ({ page }) => {
 	await page.waitForTimeout(3000)
 	await expect(page.locator('#header-username')).toHaveText(userName)
 	await page.goto(`${root}/info`)
-	await expect(page.locator('#footer')).toContainText('Oswin, Mees & Joppe')
+	await expect(page.locator('#footer')).toContainText('Contact')
 
 	// making sure that the canvas scaling factor is 1
 	await page.setViewportSize({ width: 200, height: 200 })

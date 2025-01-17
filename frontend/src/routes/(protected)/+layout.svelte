@@ -1,6 +1,6 @@
 <slot />
 
-<footer id="footer" class="mx-auto mt-5" />
+<footer class="mx-auto mt-5" />
 
 <style>
 	footer {
