@@ -3,10 +3,6 @@ name: Tests
 on:
   pull_request:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -49,8 +45,8 @@ jobs:
       run: make wait-for-healthcheck
 
     - name: Run tests
-      working-directory:  frontend
-      run: npm test -- --reporter=html --output=test-results
+      working-directory: frontend
+      run: docker run -v $PWD:/app -w /app mcr.microsoft.com/playwright bash -c "npm test -- --reporter=html --output=test-results"
 
     - name: upload playwright artifacts
       if: always()

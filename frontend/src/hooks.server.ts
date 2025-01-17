@@ -5,7 +5,7 @@ import type { Server } from '$lib/sharedTypes'
 import Credentials from '@auth/core/providers/credentials'
 import { SvelteKitAuth, type SvelteKitAuthConfig } from '@auth/sveltekit'
 import type { HandleWs } from '@carlosv2/adapter-node-ws'
-import type { Handle, HandleServerError } from '@sveltejs/kit'
+import { isActionFailure, type Handle, type HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 import { StatsD } from './util/statsd'
 import util from 'util'
@@ -131,14 +131,23 @@ const logHandle: Handle = ({ event, resolve }) => {
 export const handle: Handle = sequence(injectHandle, logHandle, authHandle.handle)
 
 export const handleError: HandleServerError = a => {
-	if (a.event.route.id) {
-		console.error(a.error)
-		return {
-			status: 500,
-			message: a.error instanceof Error ? a.error.message : String(a.error)
-		}
+	const path = a.event.route.id || '?'
+	let code = 500
+	let message = 'Internal server error'
+
+	if (a.error instanceof Error) {
+		message = a.error.message
 	}
-	const message = `404: page ${a.event.url.pathname} not found`
-	console.log(message)
-	return { message }
+
+	if (isActionFailure(a.error)) {
+		code = a.error.status
+		message = a.error.data ? 'Unknown error' : JSON.stringify(a.error.data)
+	}
+
+	if (code === 401 || code === 403) {
+		message = `Path ${path} requires admin privileges, login with a admin user first`
+	}
+
+	console.log(path, code, message)
+	return { code, message }
 }
