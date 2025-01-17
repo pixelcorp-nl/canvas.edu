@@ -17,9 +17,9 @@ Pixels introduces students to the exciting world of programming by enabling them
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) >=18.x
-- [pnpm](https://pnpm.io/) >=8.x
-- [Docker](https://www.docker.com/) >=23.x
+- [Node.js](https://github.com/nodesource/distributions) >=20.x
+- [pnpm](https://pnpm.io/installation) >=8.x
+- [Docker](https://docs.docker.com/get-started/get-docker/) >=25.x
 
 ## Development
 
@@ -27,18 +27,17 @@ Pixels introduces students to the exciting world of programming by enabling them
 
 ```sh
 git clone https://github.com/pixelcorp-nl/canvas.edu.git
-cd pixels
+cd canvas.edu
 ```
 
 2. Set up environment variables
 
 ```shell
-cp frontend/.env.example frontend/.env
-# fill in the variables in .env
+cp frontend/.env-example frontend/.env
+# You probably don't have to change anything in the .env file, but take a look nonetheless
 ```
 
-3. Start dependencies (database, etc.)
-
+3. Start dependencies (postgres database, etc.)
 ```sh
 make start-deps
 ```
@@ -46,6 +45,9 @@ make start-deps
 4. Start the development server
 
 ```sh
+# Install pnpm if you do not have it already.
+# npm install -g pnpm
+
 cd frontend
 pnpm install
 pnpm run dev
@@ -53,9 +55,38 @@ pnpm run dev
 
 5. Pixels is ready at http://localhost:5173
 
-## Admin panel
+6. Send pixels.
+Since your development environment is running on localhost you will not be able to reach it with trinket.
+Instead you can use python locally on your computer.
+The Key from the info page does not work in the development env currently, untill this is fixed the key "joppe" can be used.
 
+Here are some python cli tips to get you started:
+```sh
+# install a python package
+pip3 install <package>
+
+# run a python script
+python3 putpixels.py
+```
+
+## Admin panel
 The admin page is available at `/admin` and can be used to manage users, classes and settings.
-You can create only one admin user by creating a user who's name starts with the value of the envoriment variable `PRIVATE_ADMIN_KEY`, default is `joppe`
+You can create a admin user by creating a user who's name starts with the value of the environment variable `PRIVATE_ADMIN_KEY`, default is `joppe`
+
+## Code structure
+The project consists of 3 parts:
+1. `frontend` - The frontend of the application, built with [SvelteKit](https://kit.svelte.dev/)
+2. `redis` - The Redis database for storing pixel data
+3. `postgres` - The Postgres database for storing user data and other information
+
+If you break the database(s), you can clear them by:
+```shell
+# cd to the root of the project
+make nuke-postgres # if you want to clear the postgres database
+make nuke-redis # if you want to clear the redis database
+make nuke-db # if you want to clear both databases
+```
+
+
 
 Pixels is released under the [MIT License](LICENSE)

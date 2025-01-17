@@ -1,4 +1,4 @@
-import type { Coordinate, PixelMap, RGBA } from '$lib/sharedTypes'
+import type { Coordinate, PixelMap, RGB } from '$lib/sharedTypes'
 import { publicEnv } from '../../publicEnv'
 import { z } from 'zod'
 const { canvasHeight, canvasWidth } = publicEnv
@@ -28,8 +28,9 @@ const pixelObj = {
 		.length(3)
 }
 
-export const PixelObj = z.strictObject(pixelObj)
-export type PixelObj = z.infer<typeof PixelObj>
+// contains the minimum required fields for a pixel object
+export const PixelBase = z.strictObject(pixelObj)
+export type PixelBase = z.infer<typeof PixelBase>
 
 // Because this is a user send object, we want to be a bit less strict in parsing
 // so we use z.object instead of z.strictObject
@@ -39,21 +40,22 @@ export const PixelRequest = z.object({
 })
 export type PixelRequest = z.infer<typeof PixelRequest>
 
-export type PixelKV = [Coordinate, RGBA]
-export function pixelObjToPixelKV(pixelObj: PixelObj): PixelKV {
+export type Pixel = PixelBase & { classId: string }
+
+export type PixelKV = [Coordinate, RGB]
+export function pixelObjToPixelKV(pixelObj: PixelBase): PixelKV {
 	const { x, y, color } = pixelObj
-	const rgba = `${color[0]},${color[1]},${color[2]}`
-	return [`${x},${y}` as Coordinate, rgba as RGBA]
+	return [`${x},${y}`, `${color[0] as number},${color[1] as number},${color[2] as number}`]
 }
 
-export function pixelKVToPixelObj(pixelKV: PixelKV): PixelObj {
+export function pixelKVToPixelObj(pixelKV: PixelKV): PixelBase {
 	const [coordinate, rgba] = pixelKV
-	const [x, y] = coordinate.split(',').map(Number) as [number, number]
+	const [x, y] = coordinate.split(',')
 	const color = rgba.split(',').map(Number) as [number, number, number]
-	return { x, y, color }
+	return { x: Number(x), y: Number(y), color }
 }
 
-export function forEachPixel(pixels: PixelMap, callback: (pixelObj: PixelObj) => void): void {
+export function forEachPixel(pixels: PixelMap, callback: (pixelObj: PixelBase) => void): void {
 	for (const kv of Object.entries(pixels)) {
 		callback(pixelKVToPixelObj(kv as PixelKV))
 	}

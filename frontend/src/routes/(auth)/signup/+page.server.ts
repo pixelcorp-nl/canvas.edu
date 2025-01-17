@@ -27,8 +27,7 @@ export const actions: Actions = {
 		if (!keys) {
 			return Err('Missing required fields')
 		}
-		const { username, password, passwordConfirm } = keys
-		let { classId } = keys
+		const { username, password, passwordConfirm, classId } = keys
 
 		if (!username) {
 			return Err('Username cannot be empty')
@@ -45,16 +44,6 @@ export const actions: Actions = {
 			return Err('Username already in use')
 		}
 
-		if (username.startsWith(privateEnv.adminKey)) {
-			const _class = await DB.class.ensureAdminClass()
-
-			if (_class instanceof Error) {
-				console.error(_class)
-				return Err('Could not get admin class')
-			}
-			classId = _class.id
-		}
-
 		if (!(await DB.class.getBy('id', classId as string))) {
 			return Err(`Class "${classId}" does not exist, please contact your teacher`)
 		}
@@ -66,10 +55,6 @@ export const actions: Actions = {
 		})
 		if (user instanceof Error) {
 			return Err(user.message)
-		}
-
-		if (username.startsWith(privateEnv.adminKey)) {
-			await DB.user.addRole(user.id, 'admin')
 		}
 
 		locals.statsd.increment('user.signup')

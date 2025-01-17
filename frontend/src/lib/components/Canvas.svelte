@@ -3,7 +3,8 @@
 	import { publicEnv } from '../../publicEnv'
 	import type { Socket } from '$lib/sharedTypes'
 	import { onDestroy, onMount } from 'svelte'
-	import { PixelObj, forEachPixel } from '$api/_pixelUtils'
+	import { PixelBase, forEachPixel } from '$api/_pixelUtils'
+	import { user } from '$lib/Stores/User'
 
 	let xMouse = 0
 	let yMouse = 0
@@ -13,7 +14,11 @@
 	let sectionWidth = 0
 	let sectionHeight = 0
 
-	const socket: Socket = io()
+	const socket: Socket = io({
+		auth: {
+			user: $user
+		}
+	})
 	onMount(() => {
 		const size = Math.min(sectionWidth, sectionHeight)
 		pScalar = Math.floor(size / publicEnv.canvasWidth) || 1
@@ -22,7 +27,6 @@
 		canvas.height = canvasSize
 
 		socket.on('pixelMap', pixelMap => {
-			console.log('pixelMap', pixelMap)
 			forEachPixel(pixelMap, drawPixelOnCanvas)
 			canvas.classList.add('canvas-loaded')
 		})
@@ -33,7 +37,7 @@
 		socket.disconnect()
 	})
 
-	function drawPixelOnCanvas(pixelObj: PixelObj): void {
+	function drawPixelOnCanvas(pixelObj: PixelBase): void {
 		const { x, y, color } = pixelObj
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 		ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`

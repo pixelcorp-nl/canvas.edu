@@ -9,7 +9,6 @@ import type { Handle, HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 import { StatsD } from './util/statsd'
 import util from 'util'
-import { setupDBSingleton } from './setupDB'
 
 util.inspect.defaultOptions.depth = 10
 let listenerCount = 0
@@ -24,7 +23,20 @@ export const handleWs: HandleWs = (io: Server) => {
 	}
 	globalIo = io
 
+	io.use((socket, next) => {
+		const user = socket.handshake.auth['user']
+		if (!user) {
+			return next(new Error('Authentication error'))
+		}
+		socket.data.user = user
+		next()
+	})
+
 	io.on('connection', async socket => {
+		const user = socket.data.user as FullUser
+		console.log('User connected:', user.name)
+		socket.join(user.classId)
+
 		listenerCount++
 		statsd.gauge('connections', listenerCount)
 		io.emit('listenerCount', listenerCount)
@@ -33,8 +45,8 @@ export const handleWs: HandleWs = (io: Server) => {
 			statsd.gauge('connections', listenerCount)
 			io.emit('listenerCount', listenerCount)
 		})
-		const id = (await DB.settings.get()).canvasId
-		const pixels = await getPixelMap(id)
+
+		const pixels = await getPixelMap(user.classId)
 		socket.emit('pixelMap', pixels)
 	})
 }
@@ -69,7 +81,8 @@ const credentials = Credentials({
 			name: user.name,
 			key: user.key,
 			classId: user.classId,
-			class: user.class
+			class: user.class,
+			roles: user.roles
 		} satisfies FullUser
 	}
 })
@@ -99,17 +112,15 @@ const authHandle = SvelteKitAuth({
 // TODO protect paths
 
 // Injecting global variables into the event object
-const injectHandle: Handle = async ({ event, resolve }) => {
+const injectHandle: Handle = ({ event, resolve }) => {
 	event.locals.io = globalIo as Server
 	event.locals.statsd = statsd
 
-	// make sure the database is setup
-	await setupDBSingleton()
 	return resolve(event)
 }
 
 const logHandle: Handle = ({ event, resolve }) => {
-	if (!event.url.pathname.startsWith('/api')) {
+	if (!event.url.pathname.startsWith('/api') && !event.url.pathname.startsWith('/health')) {
 		console.log(event.url.pathname + event.url.search, '|', event.route.id)
 	}
 	event.locals.statsd.increment('request')

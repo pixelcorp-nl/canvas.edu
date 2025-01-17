@@ -1,7 +1,7 @@
 version: "3.7"
 services:
-  frontend:
-    container_name: frontend
+  canvas-frontend:
+    container_name: canvas-frontend
     restart: unless-stopped
     build: ./frontend
     ports:
@@ -9,13 +9,13 @@ services:
     env_file:
       - ./frontend/.env
     depends_on:
-      - redis
-      - postgres
+      - canvas-redis
+      - canvas-postgres
 
-  postgres:
-    container_name: postgres
+  canvas-postgres:
+    container_name: canvas-postgres
     restart: unless-stopped
-    image: postgres:alpine
+    image: postgres:17.2-alpine3.21
     environment:
       POSTGRES_PASSWORD: postgres
     ports:
@@ -23,11 +23,11 @@ services:
     volumes:
       - ./postgres-db:/var/lib/postgresql/data
 
-  redis:
-    container_name: redis
-    image: redis:alpine
+  canvas-redis:
+    container_name: canvas-redis
+    image: redis:7.4.2-alpine
     restart: unless-stopped
     volumes:
       - ./redis-db:/data
     ports:
-      - 6379:6379
+      - 16379:6379
