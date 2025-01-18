@@ -63,6 +63,7 @@
 					<th>ID</th>
 					<th>Max users</th>
 					<th>n.o. Users</th>
+					<th>Copy link</th>
 					<th>Users</th>
 				</tr>
 				{#each data.classes as _class}
@@ -72,8 +73,13 @@
 						<td>{_class.maxUsers}</td>
 						<td>{_class.users.length}</td>
 						<td>
+							<button class="underline cursor-pointer focus:no-underline" on:click={() => navigator.clipboard.writeText(`${window.location.origin}/signup?classId=${_class.id}`)}>
+								Copy link
+							</button>
+						</td>
+						<td class="max-w-[20rem] whitespace-normal">
 							{#each _class.users as user}
-								{user.name} {','}
+								{user.name}{', '}
 							{/each}
 						</td>
 					</tr>
@@ -102,3 +108,13 @@
 		</table>
 	{/if}
 </article>
+
+<style>
+	th {
+		white-space: nowrap;
+		padding: 0 15px 0 0;
+	}
+	td {
+		white-space: nowrap;
+	}
+</style>

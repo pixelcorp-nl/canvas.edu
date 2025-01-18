@@ -45,6 +45,7 @@ export const handleWs: HandleWs = (io: Server) => {
 			listenerCount--
 			statsd.gauge('connections', listenerCount)
 			io.emit('listenerCount', listenerCount)
+			console.log('User disconnected:', user.name)
 		})
 
 		const pixels = await getPixelMap(user.classId)

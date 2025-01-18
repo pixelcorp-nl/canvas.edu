@@ -32,6 +32,11 @@ export const actions: Actions = {
 		if (!username) {
 			return Err('Username cannot be empty')
 		}
+
+		if (!classId) {
+			return Err('Class ID cannot be empty, ask your teacher for the class ID')
+		}
+
 		if (password !== passwordConfirm) {
 			return Err('Passwords do not match')
 		}
@@ -39,9 +44,9 @@ export const actions: Actions = {
 		if (privateEnv.userPasswords && !password) {
 			return Err('Password cannot be empty')
 		}
-		const existing = await DB.user.getBy('name', username)
-		if (existing) {
-			return Err('Username already in use')
+
+		if (await DB.user.getBy('name', username)) {
+			return Err('Username already in use, please choose a different one')
 		}
 
 		if (!(await DB.class.getBy('id', classId as string))) {
@@ -50,7 +55,7 @@ export const actions: Actions = {
 
 		const user = await DB.user.create({
 			name: username,
-			key: randomString(8),
+			key: randomString(5),
 			classId: classId as string
 		})
 		if (user instanceof Error) {

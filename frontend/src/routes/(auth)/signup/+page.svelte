@@ -9,18 +9,32 @@
 	export let data: PageData
 
 	let mounted = false
-	onMount(() => (mounted = true))
+	onMount(() => {
+		mounted = true
+
+		const queryParams = new URLSearchParams(location.search)
+		const classId = queryParams.get('class')
+		if (!classId) return
+		const input = document.getElementById('classId') as HTMLInputElement | null
+		if (!input) return
+		input.value = classId
+	})
 	$: if (mounted && form?.ok) {
 		signIn(form.data)
 	}
 </script>
 
 <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-	<div class="mx-auto max-w-lg text-center">
+	<div class="mx-auto text-center">
 		<h1 class="text-2xl font-bold sm:text-3xl">Create an account</h1>
 	</div>
 
-	<form method="post" use:enhance class="mx-auto mb-0 mt-8 min-w-[11vw] space-y-4">
+	<form
+		method="post"
+		class="mx-auto mb-0 mt-8 w-[22rem] space-y-4"
+		use:enhance={() =>
+			async ({ update }) =>
+				update({ reset: false })}>
 		<div>
 			<label for="username" class="sr-only">Username</label>
 
@@ -41,7 +55,7 @@
 		<div>
 			<label for="class" class="sr-only">Class</label>
 			<div class="relative">
-				<input id="classId" name="classId" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Class ID" />
+				<input id="classId" name="classId" class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="Class ID (ask your teacher)" />
 			</div>
 		</div>
 
@@ -91,7 +105,7 @@
 				</div>
 			{/if}
 
-			<div class="flex items-center justify-between">
+			<div class="flex items-center justify-between gap-5">
 				<p class="text-sm text-gray-500">
 					Already have an account?
 					<a class="underline" href="/login">Login</a>
@@ -101,7 +115,7 @@
 		</div>
 	</form>
 	{#if form?.ok === false}
-		<p class="error bg-red-200 rounded-full text-red-500 my-5 text-center flex h-8 items-center justify-center gap-2.5">
+		<p class="error bg-red-200 rounded-full text-red-500 my-5 text-center flex h-8 items-center justify-center gap-2.5 px-3">
 			<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-6 w-6 inline">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
 			</svg>{form.error}
