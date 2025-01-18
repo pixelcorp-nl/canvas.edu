@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n'
+	import copy from 'copy-to-clipboard'
 	export let code: string
 	let active = false
 	function handleCopy(code: string) {
-		navigator.clipboard.writeText(code)
+		copy(code)
 		active = true
 		setTimeout(function () {
 			active = false

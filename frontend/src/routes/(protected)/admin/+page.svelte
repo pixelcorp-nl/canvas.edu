@@ -5,6 +5,7 @@
 	import { onDestroy } from 'svelte'
 	import { io } from 'socket.io-client'
 	import type { Socket } from '$lib/sharedTypes'
+	import copy from 'copy-to-clipboard'
 
 	const socket: Socket = io()
 	export let data: PageData
@@ -20,11 +21,11 @@
 </script>
 
 <article class="prose mx-auto">
-	{#if hasRole(data.roles, 'stats')}
+	<!-- {#if hasRole(data.roles, 'stats')}
 		<h2 class="text-l mb-0">Stats</h2>
 		Users connected: {listenerCount}
 		<br />
-	{/if}
+	{/if} -->
 
 	{#if hasRole(data.roles, 'canvasSettings')}
 		<h2 class="text-l mt-8 mb-0">Global settings</h2>
@@ -55,7 +56,7 @@
 	{/if}
 
 	{#if data.classes}
-		<h2 class="text-l mt-8 mb-0">Existing classes - {data.classes.length}</h2>
+		<h2 class="text-l mt-8 mb-0">Existing classes: {data.classes.length}</h2>
 		<table id="classes">
 			<tbody>
 				<tr>
@@ -73,9 +74,7 @@
 						<td>{_class.maxUsers}</td>
 						<td>{_class.users.length}</td>
 						<td>
-							<button class="underline cursor-pointer focus:no-underline" on:click={() => navigator.clipboard.writeText(`${window.location.origin}/signup?classId=${_class.id}`)}>
-								Copy link
-							</button>
+							<button class="underline cursor-pointer focus:no-underline" on:click={() => copy(`${window.location.origin}/signup?classId=${_class.id}`)}> Copy signup link </button>
 						</td>
 						<td class="max-w-[20rem] whitespace-normal">
 							{#each _class.users as user}
@@ -89,7 +88,7 @@
 	{/if}
 
 	{#if data.users}
-		<h2 class="text-l mt-8 mb-0">Existing users - {data.users.length}</h2>
+		<h2 class="text-l mt-8 mb-0">Existing users: {data.users.length}</h2>
 		<table id="users">
 			<tbody>
 				<tr>
