@@ -1,7 +1,7 @@
 version: "3.7"
 services:
-  frontend:
-    container_name: frontend
+  canvas-frontend:
+    container_name: canvas-frontend
     image: ghcr.io/pixelcorp-nl/canvas.edu/canvas.edu
     restart: unless-stopped
     ports:
@@ -9,14 +9,14 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
-      - postgres
-      - datadog-agent
+      - canvas-redis
+      - canvas-postgres
+      - canvas-datadog-agent
 
-  postgres:
-    container_name: postgres
+  canvas-postgres:
+    container_name: canvas-postgres
     restart: unless-stopped
-    image: postgres:alpine
+    image: postgres:17.2-alpine3.21
     environment:
       POSTGRES_PASSWORD: postgres
     ports:
@@ -24,15 +24,15 @@ services:
     volumes:
       - ./postgres-db:/var/lib/postgresql/data
 
-  redis:
-    container_name: redis
-    image: redis:alpine
+  canvas-redis:
+    container_name: canvas-redis
+    image: redis:7.4.2-alpine
     restart: unless-stopped
     volumes:
       - ./redis-db:/data
 
-  datadog-agent:
-    container_name: datadog-agent
+  canvas-datadog-agent:
+    container_name: canvas-datadog-agent
     image: gcr.io/datadoghq/agent:latest
     pid: host
     volumes:
@@ -45,14 +45,14 @@ services:
     ports:
       - 8125:8125/udp
 
-  cloudflared:
-    container_name: cloudflared
+  canvas-cloudflared:
+    container_name: canvas-cloudflared
     image: cloudflare/cloudflared
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token <token>
 
-  watchtower:
-    container_name: watchtower
+  canvas-watchtower:
+    container_name: canvas-watchtower
     image: containrrr/watchtower
     restart: unless-stopped
     volumes:
