@@ -1,9 +1,9 @@
 FROM node:18-alpine AS builder-main
 WORKDIR /app
 
-RUN npm i -g pnpm
+RUN npm i -g pnpm@8
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 COPY . ./
 
 RUN pnpm run check
